@@ -6,12 +6,12 @@ import GameCardType from '../../models/iGameCard';
 
 export const GameCard = (props: GameCardType): JSX.Element => {
   const { title, value } = props;
-  const [numberCard, setNumberCard] = useState<number | string>(value);
+  const [cardNumber, setCardNumber] = useState<number | string>(value);
   const [edit, setEdit] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNumberCard(e.target.value);
+    setCardNumber(e.target.value);
   };
 
   const handleFocus = () => {
@@ -30,7 +30,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
         <input
           className={edit ? 'game-card__input game-card__input--edit' : 'game-card__input'}
           readOnly={!edit}
-          value={numberCard}
+          value={cardNumber}
           onChange={handleChange}
           ref={ref}
           onFocus={() => setEdit(true)}
@@ -44,7 +44,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
         )}
       </div>
       <h5 className="game-card__title">{title}</h5>
-      <div className="game-card__number">{numberCard}</div>
+      <div className="game-card__number">{cardNumber}</div>
     </div>
   );
 };
