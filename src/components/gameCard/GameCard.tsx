@@ -38,7 +38,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
           onKeyPress={keyPressHandler}
         />
         {!edit && (
-          <IconButton onClick={handleFocus}>
+          <IconButton className="game-card__edit-btn" onClick={handleFocus}>
             <EditOutlinedIcon />
           </IconButton>
         )}
