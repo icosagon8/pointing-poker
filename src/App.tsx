@@ -1,3 +1,5 @@
+import { GameCard } from './components/gameCard/GameCard';
+
 export function App(): JSX.Element {
-  return <h1>Pointing Poker</h1>;
+  return <GameCard title="SP" value={1} />;
 }
