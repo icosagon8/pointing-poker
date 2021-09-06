@@ -1,3 +1,5 @@
+import { Header } from './components/Header/Header';
+
 export function App(): JSX.Element {
-  return <h1>Pointing Poker</h1>;
+  return <Header />;
 }
