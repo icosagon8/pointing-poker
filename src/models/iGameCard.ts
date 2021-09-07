@@ -1,4 +1,4 @@
 export default interface GameCardType {
   title: string;
-  value: string | number;
+  value: string;
 }
