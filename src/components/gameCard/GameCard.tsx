@@ -36,6 +36,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
           onFocus={() => setEdit(true)}
           onBlur={() => setEdit(false)}
           onKeyPress={keyPressHandler}
+          tabIndex={-1}
         />
         {!edit && (
           <IconButton className="game-card__edit-btn" onClick={handleFocus}>
