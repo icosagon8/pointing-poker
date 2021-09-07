@@ -43,7 +43,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
           </IconButton>
         )}
       </div>
-      <h5 className="game-card__title">{title}</h5>
+      <span className="game-card__title">{title}</span>
       <div className="game-card__number">{cardNumber}</div>
     </div>
   );
