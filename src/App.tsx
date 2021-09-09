@@ -6,7 +6,6 @@ export function App(): JSX.Element {
   return (
     <StylesProvider injectFirst>
       <Header />
-      <GamePage titlePage="Тут будет заглавие страницы" />
     </StylesProvider>
   );
 }
