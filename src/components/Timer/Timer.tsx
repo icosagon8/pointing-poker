@@ -1,0 +1,44 @@
+import './Timer.scss';
+import { Card } from '@material-ui/core';
+import { useState, useEffect } from 'react';
+
+interface TimeType {
+  time: number;
+}
+
+export function Timer(props: TimeType): JSX.Element {
+  const { time } = props;
+  const [count, setCount] = useState<number>(time);
+
+  const getZero = (num: number) => {
+    return String(num).length === 1 ? `0${num}` : `${num}`;
+  };
+
+  const convertToFormat = (num: number) => {
+    const min = Math.floor(time / 60);
+    const sec = num % 60;
+    return `${getZero(min)}:${getZero(sec)}`;
+  };
+
+  useEffect(() => {
+    let timer: number;
+    if (count > 0) {
+      timer = setTimeout(() => setCount((prev) => prev - 1), 1000) as unknown as number;
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [count]);
+
+  return (
+    <Card className="timer">
+      <div className="timer__title">
+        <span className="timer__title-min">minutes</span>
+        <span className="timer__title-sec">seconds</span>
+      </div>
+      <div className="timer__counter">{convertToFormat(count)}</div>
+    </Card>
+  );
+}
