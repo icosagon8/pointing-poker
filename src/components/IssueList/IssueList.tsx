@@ -6,6 +6,8 @@ const issues = [
   { title: 'Issue 1', prority: 'Low prority' },
   { title: 'Issue 2', prority: 'High prority' },
   { title: 'Issue 3', prority: 'Low prority' },
+  { title: 'Issue 4', prority: 'Low prority' },
+  { title: 'Issue 5', prority: 'Low prority' },
 ];
 
 export function IssueList(): JSX.Element {

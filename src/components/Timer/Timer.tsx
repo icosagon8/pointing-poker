@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 
 interface TimeType {
   time: number;
+  start: boolean;
 }
 
 export function Timer(props: TimeType): JSX.Element {
-  const { time } = props;
+  const { time, start } = props;
   const [count, setCount] = useState<number>(time);
 
   const getZero = (num: number) => {
@@ -15,7 +16,7 @@ export function Timer(props: TimeType): JSX.Element {
   };
 
   const convertToFormat = (num: number) => {
-    const min = Math.floor(time / 60);
+    const min = Math.floor(num / 60);
     const sec = num % 60;
     return `${getZero(min)}:${getZero(sec)}`;
   };
@@ -38,7 +39,7 @@ export function Timer(props: TimeType): JSX.Element {
         <span className="timer__title-min">minutes</span>
         <span className="timer__title-sec">seconds</span>
       </div>
-      <div className="timer__counter">{convertToFormat(count)}</div>
+      <div className="timer__counter">{start ? convertToFormat(count) : '00:00'}</div>
     </Card>
   );
 }

@@ -1,0 +1,16 @@
+.member-list {
+  &__title-box {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  &__item {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-around;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
