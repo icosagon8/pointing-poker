@@ -1,0 +1,29 @@
+.statistics {
+
+  &__title {
+    font-size: 24px;
+    line-height: 30px;
+    font-family: Ruda;
+    font-weight: 700;
+  }
+
+  &__items {
+    display: flex;
+  }
+
+  &__item {
+    margin-right: 14px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &__percent {
+    text-align: center;
+    font-size: 24px;
+    line-height: 30px;
+    font-family: Ruda;
+    font-weight: 700;
+  }
+}

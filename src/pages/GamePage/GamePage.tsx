@@ -4,6 +4,7 @@ import GamePageType from '../../models/iGamePage';
 import { IssueList } from '../../components/IssueList/IssueList';
 import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
 import { Timer } from '../../components/Timer/Timer';
+import { Statistics } from '../../components/Statistics/Statistics';
 
 const members = [
   { id: 13423, name: 'Alex', position: 'driver', src: 'adsasd2rr23' },
@@ -27,6 +28,7 @@ export function GamePage(props: GamePageType): JSX.Element {
         <Button className="page-game__btn" variant="contained" color="primary">
           Run Round
         </Button>
+        <Statistics />
       </div>
       <div className="page-game__aside">
         <MemberCardList members={members} />
