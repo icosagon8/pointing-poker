@@ -2,22 +2,23 @@ import './IssueList.scss';
 import { Issue } from '../Issue/Issue';
 import { IssueCreate } from '../IssueCreate/IssueCreate';
 
-const issues = [
-  { title: 'Issue 1', prority: 'Low prority' },
-  { title: 'Issue 2', prority: 'High prority' },
-  { title: 'Issue 3', prority: 'Low prority' },
-  { title: 'Issue 4', prority: 'Low prority' },
-  { title: 'Issue 5', prority: 'Low prority' },
-];
+interface IssueListType {
+  issues: {
+    key: number;
+    title: string;
+    prority: string;
+  }[];
+}
 
-export function IssueList(): JSX.Element {
+export function IssueList(props: IssueListType): JSX.Element {
+  const { issues } = props;
   return (
     <div className="issue-list">
       <h2 className="issue-list__title">Issues:</h2>
       <ul className="issue-list__items">
-        {issues.map(({ title, prority }) => {
+        {issues.map(({ key, title, prority }) => {
           return (
-            <li className="issue-list__item">
+            <li className="issue-list__item" key={key}>
               <Issue title={title} prority={prority} />
             </li>
           );

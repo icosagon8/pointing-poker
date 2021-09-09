@@ -11,6 +11,10 @@
     font-weight: 700;
   }
 
+  &__items {
+    padding: 0;
+  }
+
   &__item {
     margin-bottom: 10px;
     display: flex;

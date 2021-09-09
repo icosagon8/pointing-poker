@@ -1,13 +1,16 @@
 import './CardList.scss';
 import { GameCard } from '../GameCard/GameCard';
 
-const gameCards = [
-  { id: 35635463, title: 'sp', value: '2' },
-  { id: 990934, title: 'sp', value: '5' },
-  { id: 1234090, title: 'sp', value: '1' },
-];
+interface CardListType {
+  gameCards: {
+    id: number;
+    title: string;
+    value: string;
+  }[];
+}
 
-export function CardList(): JSX.Element {
+export function CardList(props: CardListType): JSX.Element {
+  const { gameCards } = props;
   return (
     <div className="card-list">
       <div className="card-list__items">
