@@ -7,7 +7,11 @@ export const MemberCard = (props: MemberCardType): JSX.Element => {
   const { src, name, position } = props;
   return (
     <div className="member-card">
-      <img src={src} alt="avatar" className="member-card__image" />
+      {src ? (
+        <img src={src} alt="avatar" className="member-card__avatar" />
+      ) : (
+        <div className="member-card__avatar member-card__avatar--initials" />
+      )}
       <div>
         <h3 className="member-card__title">{name}</h3>
         {position && <h4 className="member-card__position">{position}</h4>}
