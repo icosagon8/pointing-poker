@@ -5,18 +5,32 @@
     flex: 3;
     border-right: 1px solid lightgray;
   }
+
+  &__btn {
+    border-color: #496A81;
+    font-size: 24px;
+    line-height: 30px;
+    text-transform: capitalize;
+    font-family: Ruda;
+    font-weight: 700;
+  }
+
+  &__btn-outlined {
+    color: #2B3A67;
+    text-shadow: 0 3px 3px rgba(0,0,0,0.25);
+  }
+
+  &__btn-primary {
+    background-color: #2B3A67;
+
+    &:hover {
+      background-color: #47516d;
+    }
+  }
 }
 
 .page-title {
   font-size: 1.2rem;
   font-weight: 700;
   margin: 40px 0;
-}
-
-.btn {
-  border-color: #496A81;
-  color: #2B3A67;
-  text-shadow: 0 3px 3px rgba(0,0,0,0.25);
-  text-transform: capitalize;
-  font-weight: 700;
 }
