@@ -44,7 +44,7 @@ export function Chat(): JSX.Element {
         {messages.map((chatMessage, index) => (
           <ListItem ref={index === messages.length - 1 ? scrollRef : null}>
             <Grid container wrap="nowrap">
-              <Grid className="chat__mess" item xs="auto">
+              <Grid className="chat__message-wrapper" item xs="auto">
                 <ListItemText className="chat__message" primary={chatMessage} />
               </Grid>
               <Grid item xs="auto">
