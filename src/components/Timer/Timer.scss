@@ -1,0 +1,19 @@
+.timer {
+  width: 115px;
+  height: 48px;
+
+  &__title {
+    font-size: 10px;
+    font-weight: 100;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: -4px;
+  }
+
+  &__counter {
+    font-size: 42px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+  }
+}

@@ -1,6 +1,7 @@
 import './GameCard.scss';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import IconButton from '@material-ui/core/IconButton';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { useRef, useState } from 'react';
 import GameCardType from '../../models/iGameCard';
 
@@ -8,6 +9,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
   const { title, value } = props;
   const [cardNumber, setCardNumber] = useState<string>(value);
   const [edit, setEdit] = useState<boolean>(false);
+  const [selected, setSelected] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,14 +20,33 @@ export const GameCard = (props: GameCardType): JSX.Element => {
     ref.current?.focus();
   };
 
-  const keyPressHandler = (e: React.KeyboardEvent) => {
+  const keyPressHandlerInput = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       setEdit(false);
     }
   };
 
+  const keyPressHandlerCard = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      setSelected((prev) => !prev);
+    }
+  };
+
   return (
-    <div className="game-card">
+    <div
+      className={selected ? 'game-card game-card--selected' : 'game-card'}
+      onClick={() => setSelected((prev) => !prev)}
+      onKeyPress={keyPressHandlerCard}
+      role="radio"
+      aria-checked={false}
+      tabIndex={0}
+    >
+      {selected ? (
+        <>
+          <span className="game-card__selected-bg" />
+          <CheckCircleIcon className="game-card__selected-icon" fontSize="large" />
+        </>
+      ) : null}
       <div className="game-card__input-box">
         <input
           className={edit ? 'game-card__input game-card__input--edit' : 'game-card__input'}
@@ -35,7 +56,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
           ref={ref}
           onFocus={() => setEdit(true)}
           onBlur={() => setEdit(false)}
-          onKeyPress={keyPressHandler}
+          onKeyPress={keyPressHandlerInput}
           tabIndex={-1}
         />
         {!edit && (
