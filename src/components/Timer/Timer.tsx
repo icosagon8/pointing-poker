@@ -22,9 +22,9 @@ export function Timer(props: TimeType): JSX.Element {
   };
 
   useEffect(() => {
-    let timer: number;
+    let timer: ReturnType<typeof setTimeout>;
     if (count > 0) {
-      timer = setTimeout(() => setCount((prev) => prev - 1), 1000) as unknown as number;
+      timer = setTimeout(() => setCount((prev) => prev - 1), 1000);
     }
     return () => {
       if (timer) {

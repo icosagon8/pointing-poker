@@ -10,6 +10,8 @@
 
   &__items {
     display: flex;
+    list-style: none;
+    padding: 0;
   }
 
   &__item {

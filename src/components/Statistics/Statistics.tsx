@@ -5,7 +5,7 @@ interface StatisticsType {
   gameCards: {
     id: number;
     title: string;
-    value: string | number;
+    value: string;
     percent: number;
   }[];
 }
@@ -15,16 +15,14 @@ export function Statistics(props: StatisticsType): JSX.Element {
   return (
     <div className="statistics">
       <h2 className="statistics__title">Statistics:</h2>
-      <div className="statistics__items">
-        {gameCards.map(({ id, title, value, percent }) => {
-          return (
-            <div className="statistics__item" key={id}>
-              <GameCard title={title} value={value} />
-              <div className="statistics__percent">{percent}%</div>
-            </div>
-          );
-        })}
-      </div>
+      <ul className="statistics__items">
+        {gameCards.map(({ id, title, value, percent }) => (
+          <li className="statistics__item" key={id}>
+            <GameCard title={title} value={value} />
+            <div className="statistics__percent">{percent}%</div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

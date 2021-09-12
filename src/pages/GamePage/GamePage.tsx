@@ -8,12 +8,6 @@ import { Timer } from '../../components/Timer/Timer';
 import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
 
-const members = [
-  { id: 13423, name: 'Alex', position: 'driver', src: 'adsasd2rr23' },
-  { id: 43513325423, name: 'Kim Foon', src: 'adsasd2rr23' },
-  { id: 213423, name: 'Li', position: 'driver', src: 'adsasd2rr23' },
-];
-
 export function GamePage(props: GamePageType): JSX.Element {
   const { titlePage } = props;
   return (
@@ -25,7 +19,7 @@ export function GamePage(props: GamePageType): JSX.Element {
           </Typography>
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
-              <MemberCard />
+              <MemberCard name="John" position="position" src="weokfnwoiefoi" />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
               <Timer time={70} start />
@@ -61,7 +55,7 @@ export function GamePage(props: GamePageType): JSX.Element {
           </Grid>
         </Grid>
         <Grid item xs={3} className="page-game__aside">
-          <MemberCardList members={members} />
+          <MemberCardList />
         </Grid>
       </Grid>
     </Container>

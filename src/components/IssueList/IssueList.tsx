@@ -4,9 +4,9 @@ import { IssueCreate } from '../IssueCreate/IssueCreate';
 
 interface IssueListType {
   issues: {
-    key: number;
+    id: number;
     title: string;
-    prority: string;
+    priority: string;
   }[];
 }
 
@@ -16,13 +16,11 @@ export function IssueList(props: IssueListType): JSX.Element {
     <div className="issue-list">
       <h2 className="issue-list__title">Issues:</h2>
       <ul className="issue-list__items">
-        {issues.map(({ key, title, prority }) => {
-          return (
-            <li className="issue-list__item" key={key}>
-              <Issue title={title} prority={prority} />
-            </li>
-          );
-        })}
+        {issues.map(({ id, title, priority }) => (
+          <li className="issue-list__item" key={id}>
+            <Issue title={title} priority={priority} />
+          </li>
+        ))}
         <li className="issue-list__item">
           <IssueCreate />
         </li>

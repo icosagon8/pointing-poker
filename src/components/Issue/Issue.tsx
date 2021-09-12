@@ -5,8 +5,8 @@ import { useState } from 'react';
 import IssueCard from '../../models/iIssueCard';
 
 export function Issue(props: IssueCard): JSX.Element {
-  const { title, prority } = props;
-  const [current, setCurrent] = useState<boolean>(false);
+  const { title, priority } = props;
+  const [current] = useState<boolean>(false);
 
   return (
     <Card className={current ? 'issue-card issue-card__current' : 'issue-card'}>
@@ -17,7 +17,7 @@ export function Issue(props: IssueCard): JSX.Element {
           <CloseIcon />
         </IconButton>
       </div>
-      <span className="issue-card__prority">{prority}</span>
+      <span className="issue-card__priority">{priority}</span>
     </Card>
   );
 }

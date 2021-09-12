@@ -1,7 +1,7 @@
 .card-list {
-  &__items {
-    display: flex;
-  }
+  display: flex;
+  list-style: none;
+  padding: 0;
 
   &__item {
     margin-right: 14px;
