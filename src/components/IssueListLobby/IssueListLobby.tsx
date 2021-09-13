@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import IssueCard from '../../models/iIssueCard';
-import { Issue } from '../Issue/Issue';
 import { IssueCreate } from '../IssueCreate/IssueCreate';
 import { IssueMaster } from '../IssueMaster/IssueMaster';
 import { Title } from '../Title/Title';
