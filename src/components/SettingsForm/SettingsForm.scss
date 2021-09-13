@@ -28,4 +28,11 @@
   &__label {
     cursor: pointer;
   }
+
+  &__block-add-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 30px;
+  }
 }

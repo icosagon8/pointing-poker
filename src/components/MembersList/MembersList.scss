@@ -1,4 +1,5 @@
 .member-list {
+  margin-left: 17px;
   margin-top: 40px;
   text-align: center;
   font-family: 'Ruda';
@@ -9,6 +10,8 @@
   }
 
   &__wrapper {
+    margin-left: auto;
+    margin-right: auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 10px;

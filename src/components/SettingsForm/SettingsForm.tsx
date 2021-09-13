@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { AddGameCard } from '../AddGameCard/AddGameCard';
+import { GameCard } from '../gameCard/GameCard';
 import { IOSSwitch } from '../IOSSwitch/IOSSwitch';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
@@ -54,8 +56,11 @@ export const SettingsForm = (): JSX.Element => {
           <Title title="Round time:" />
           <Timer time={200} start={false} />
         </div>
-        <div className="settings-form__block">
+        <div className="settings-form__block-add-card">
           <Title title="Add card values:" />
+          <div>
+            <AddGameCard />
+          </div>
         </div>
       </form>
     </div>
