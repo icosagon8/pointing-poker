@@ -5,7 +5,6 @@
     font-size: 45px;
     text-align: center;
     margin-top: 10px;
-    margin-bottom: 30px;
   }
 
   &__btn {
@@ -15,10 +14,12 @@
     font-size: 24px;
     font-weight: 700;
     text-transform: none;
+    color: white;
   }
 
   &__yes {
-    border: 1px solid #2b3a67;
+    background-color: #2b3a67;
+    border: none;
   }
 
   &__no {
@@ -33,7 +34,6 @@
     font-family: 'Roboto';
     font-weight: 700;
     font-size: 24px;
-    margin-bottom: 80px;
 
     &__block {
       display: flex;
@@ -52,6 +52,10 @@
       border: 1px solid #2b3a67;
       box-sizing: border-box;
       box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    &__priority {
+      margin-bottom: 80px;
     }
   }
 
