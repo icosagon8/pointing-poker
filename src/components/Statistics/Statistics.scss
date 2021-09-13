@@ -29,4 +29,17 @@
     font-family: Ruda;
     font-weight: 700;
   }
+
+  .game-card {
+    width: 79px;
+    height: 127px;
+
+    &__title {
+      font-size: 34px;
+    }
+
+    &__input {
+      font-size: 14px;
+    }
+  }
 }

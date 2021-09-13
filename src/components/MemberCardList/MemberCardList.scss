@@ -1,4 +1,6 @@
 .member-list {
+  margin-left: 5px;
+  
   &__title-box {
     display: flex;
     justify-content: space-around;
@@ -23,6 +25,15 @@
 
     &:last-child {
       margin-bottom: 0;
+    }
+  }
+
+  .member-card {
+    width: 195px;
+    height: 45px;
+
+    &__title {
+      font-size: 18px;
     }
   }
 }
