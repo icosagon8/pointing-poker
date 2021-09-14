@@ -4,17 +4,18 @@ import SendIcon from '@material-ui/icons/Send';
 import './Chat.scss';
 import { SocketContext } from '../../socketContext';
 import { MemberCard } from '../MemberCard/MemberCard';
+import { Message } from '../../models/Message';
 
 export function Chat(): JSX.Element {
   const [message, setMessage] = useState<string>('');
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [user] = useState({ name: 'John Doe', position: 'Frontend developer' });
   const socket = useContext(SocketContext);
   const scrollRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
-    socket.on('message', (chatMessage: string) => {
-      setMessages((chatMessages) => [...chatMessages, chatMessage]);
+    socket.on('message', ({ text, id }: Message) => {
+      setMessages((chatMessages) => [...chatMessages, { text, id }]);
     });
 
     return () => {
@@ -33,19 +34,22 @@ export function Chat(): JSX.Element {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    socket.emit('message', message);
     e.preventDefault();
-    setMessage('');
+
+    if (message) {
+      socket.emit('message', message);
+      setMessage('');
+    }
   };
 
   return (
     <Grid className="chat" container direction="column" wrap="nowrap">
       <List className="chat__message-list">
         {messages.map((chatMessage, index) => (
-          <ListItem ref={index === messages.length - 1 ? scrollRef : null}>
+          <ListItem ref={index === messages.length - 1 ? scrollRef : null} key={chatMessage.id}>
             <Grid container wrap="nowrap">
               <Grid className="chat__message-wrapper" item xs="auto">
-                <ListItemText className="chat__message" primary={chatMessage} />
+                <ListItemText className="chat__message" primary={chatMessage.text} />
               </Grid>
               <Grid item xs="auto">
                 <MemberCard name={user.name} position={user.position} />

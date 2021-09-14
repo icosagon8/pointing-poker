@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
+import { nanoid } from 'nanoid';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -20,8 +21,9 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket: Socket) => {
-  socket.on('message', (message) => {
-    io.emit('message', message);
+  socket.on('message', (text) => {
+    const id = nanoid();
+    io.emit('message', { text, id });
   });
 });
 
