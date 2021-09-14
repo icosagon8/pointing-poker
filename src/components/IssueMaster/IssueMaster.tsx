@@ -18,7 +18,7 @@ export const IssueMaster = (props: IssueCard): JSX.Element => {
           <EditIcon />
         </IconButton>
         <IconButton>
-          <DeleteOutlineIcon style={{ color: 'red' }} />
+          <DeleteOutlineIcon className="issue-master__delete-btn" />
         </IconButton>
       </div>
     </div>

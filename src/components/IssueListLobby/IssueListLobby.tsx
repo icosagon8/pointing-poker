@@ -6,7 +6,6 @@ import { Title } from '../Title/Title';
 import './IssueListLobby.scss';
 
 export const IssueListLobby = (): JSX.Element => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [issuesState, setIssuesState] = useState<IssueCard[]>([]);
 
   const handleSetIssueState = (issues: IssueCard[]) => {
