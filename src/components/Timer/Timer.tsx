@@ -43,11 +43,15 @@ export function Timer(props: TimeType): JSX.Element {
   }, [count]);
 
   const handleChangeMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMin(e.target.value);
+    if (e.target.value.length < 3 && e.target.value.match(/^\d+$/)) {
+      setMin(e.target.value);
+    }
   };
 
   const handleChangeSec = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSec(e.target.value);
+    if (e.target.value.length < 3 && e.target.value.match(/^\d+$/)) {
+      setSec(e.target.value);
+    }
   };
 
   const handleClickOnCounter = () => {
