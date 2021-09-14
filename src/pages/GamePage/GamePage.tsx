@@ -45,7 +45,7 @@ export function GamePage(props: GamePageType): JSX.Element {
               <MemberCard name="John" position="position" src="weokfnwoiefoi" />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
-              <Timer time={70} start />
+              <Timer start={false} />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
               <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
