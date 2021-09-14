@@ -1,0 +1,35 @@
+.issue-card {
+  width: 250px;
+  height: 48px;
+  position: relative;
+  padding: 0 10px;
+
+  &__current {
+    background-color: #cbf3ea;
+  }
+
+  &__current-text {
+    position: absolute;
+    top: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  &__main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__priority {
+    position: absolute;
+    bottom: 5px;
+    font-size: 10px;
+    font-weight: 100;
+  }
+}
