@@ -1,0 +1,6 @@
+{
+  "ignore": ["node_modules"],
+  "watch": ["server"],
+  "exec": "ts-node ./server/app.ts",
+  "ext": "ts, js"
+}
