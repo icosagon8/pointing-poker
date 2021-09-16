@@ -1,0 +1,66 @@
+.issue-dialog {
+  &__title {
+    font-family: 'Roboto';
+    font-weight: 700;
+    font-size: 45px;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  &__btn {
+    width: 189px;
+    height: 47px;
+    font-family: 'Ruda';
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: none;
+    color: white;
+  }
+
+  &__yes {
+    background-color: #2b3a67;
+    border: none;
+  }
+
+  &__no {
+    color: #2b3a67;
+    border: 1px solid #2b3a67;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    font-family: 'Roboto';
+    font-weight: 700;
+    font-size: 24px;
+
+    &__block {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    &__label {
+      cursor: pointer;
+    }
+
+    &__input {
+      width: 320px;
+      height: 47px;
+      border: 1px solid #2b3a67;
+      box-sizing: border-box;
+      box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    &__priority {
+      margin-bottom: 80px;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+}

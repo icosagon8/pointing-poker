@@ -1,0 +1,14 @@
+.issue-create {
+  width: 250px;
+  height: 48px;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  font-family: 'Ruda';
+  font-weight: 700;
+
+  &__title {
+    margin: 0;
+  }
+}

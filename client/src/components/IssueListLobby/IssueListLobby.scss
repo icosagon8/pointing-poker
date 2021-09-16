@@ -1,0 +1,10 @@
+.issue-list-lobby {
+  margin-top: 40px;
+  margin-left: 15px;
+
+  &__block {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+}

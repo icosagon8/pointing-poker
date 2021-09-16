@@ -1,5 +1,5 @@
 export default interface MemberCardType {
-  src: string;
+  src?: string;
   name: string;
   position?: string;
 }
