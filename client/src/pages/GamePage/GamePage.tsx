@@ -1,6 +1,5 @@
 import './GamePage.scss';
 import { Container, Typography, Grid, Button } from '@material-ui/core';
-import GamePageType from '../../models/iGamePage';
 import { IssueList } from '../../components/IssueList/IssueList';
 import { MemberCard } from '../../components/MemberCard/MemberCard';
 import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
@@ -31,14 +30,13 @@ const issues = [
   { id: 409243000, title: 'Issue 5', priority: 'Low prority' },
 ];
 
-export function GamePage(props: GamePageType): JSX.Element {
-  const { titlePage } = props;
+export function GamePage(): JSX.Element {
   return (
     <Container className="page-game">
       <Grid container>
         <Grid item xs={8}>
           <Typography className="page-game__title page-title" align="center" component="h2" variant="h2">
-            {titlePage}
+            Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)
           </Typography>
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
