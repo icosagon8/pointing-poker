@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AddGameCard } from '../AddGameCard/AddGameCard';
-import { GameCard } from '../gameCard/GameCard';
+import { GameCard } from '../GameCard/GameCard';
 import { IOSSwitch } from '../IOSSwitch/IOSSwitch';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
