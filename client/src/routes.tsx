@@ -1,4 +1,4 @@
-import { RouteComponentProps } from 'react-router-dom';
+import { Home } from './pages/Home/Home';
 import { LobbyPage } from './pages/LobbyPage/LobbyPage';
 import { GamePage } from './pages/GamePage/GamePage';
 
@@ -9,6 +9,11 @@ interface RouteModel {
 }
 
 export const ROUTES: RouteModel[] = [
+  {
+    path: '/',
+    exact: true,
+    component: Home,
+  },
   {
     path: '/lobby',
     exact: true,
