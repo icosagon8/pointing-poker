@@ -1,4 +1,6 @@
 import './IssueList.scss';
+import { useState } from 'react';
+import IssueCard from '../../models/iIssueCard';
 import { Issue } from '../Issue/Issue';
 import { IssueCreate } from '../IssueCreate/IssueCreate';
 
@@ -11,6 +13,12 @@ interface IssueListType {
 }
 
 export function IssueList(props: IssueListType): JSX.Element {
+  const [issuesState, setIssuesState] = useState<IssueCard[]>([]);
+
+  const handleSetIssueState = (issues: IssueCard[]) => {
+    setIssuesState(issues);
+  };
+
   const { issues } = props;
   return (
     <div className="issue-list">
@@ -22,7 +30,7 @@ export function IssueList(props: IssueListType): JSX.Element {
           </li>
         ))}
         <li className="issue-list__item">
-          <IssueCreate />
+          <IssueCreate issues={issuesState} setIssueState={handleSetIssueState} />
         </li>
       </ul>
     </div>
