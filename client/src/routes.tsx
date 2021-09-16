@@ -5,7 +5,7 @@ import { GamePage } from './pages/GamePage/GamePage';
 interface RouteModel {
   path: string;
   exact: boolean;
-  component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
+  component: React.FunctionComponent;
 }
 
 export const ROUTES: RouteModel[] = [
