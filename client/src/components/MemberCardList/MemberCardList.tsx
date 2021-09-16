@@ -23,7 +23,7 @@ export function MemberCardList(props: MemberCardListType): JSX.Element {
         {members.map(({ id, name, position, src }) => (
           <li className="member-list__item" key={id}>
             <ScoreCard />
-            <MemberCard name={name} position={position} src={src} />
+            <MemberCard isReduced={false} name={name} position={position} src={src} />
           </li>
         ))}
       </ul>

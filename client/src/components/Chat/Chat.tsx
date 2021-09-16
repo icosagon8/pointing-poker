@@ -52,7 +52,7 @@ export function Chat(): JSX.Element {
                 <ListItemText className="chat__message" primary={chatMessage.text} />
               </Grid>
               <Grid item xs="auto">
-                <MemberCard name={user.name} position={user.position} />
+                <MemberCard isReduced name={user.name} position={user.position} />
               </Grid>
             </Grid>
           </ListItem>

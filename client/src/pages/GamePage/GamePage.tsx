@@ -42,7 +42,7 @@ export function GamePage(props: GamePageType): JSX.Element {
           </Typography>
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
-              <MemberCard name="John" position="position" src="weokfnwoiefoi" />
+              <MemberCard isReduced={false} name="John" position="position" src="weokfnwoiefoi" />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
               <Timer start={false} />
