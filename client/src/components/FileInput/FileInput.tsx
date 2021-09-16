@@ -1,6 +1,6 @@
 import { Button, Typography } from '@material-ui/core';
 import { useRef, useState } from 'react';
-import { Control, Controller, FieldValues } from 'react-hook-form';
+import { Control, Controller, ControllerRenderProps, FieldValues } from 'react-hook-form';
 import './FileInput.scss';
 
 interface Props {
@@ -11,6 +11,25 @@ interface Props {
 export function FileInput({ setSrc, control }: Props): JSX.Element {
   const [fileName, setFileName] = useState<string>('Choose file');
   const uploadInputRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, field: ControllerRenderProps<FieldValues>): void => {
+    const { files } = e.target;
+
+    if (files) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        const imageBase64 = reader.result;
+        field.onChange(imageBase64);
+        setSrc(imageBase64 as string);
+      };
+
+      setFileName(file.name);
+      e.target.value = '';
+    }
+  };
 
   return (
     <div className="file-input">
@@ -41,24 +60,7 @@ export function FileInput({ setSrc, control }: Props): JSX.Element {
               id="avatar"
               accept="image/*"
               ref={uploadInputRef}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-                const { files } = e.target;
-
-                if (files) {
-                  const file = files[0];
-                  const reader = new FileReader();
-                  reader.readAsDataURL(file);
-
-                  reader.onload = () => {
-                    const imageBase64 = reader.result;
-                    field.onChange(imageBase64);
-                    setSrc(imageBase64 as string);
-                  };
-
-                  setFileName(file.name);
-                  e.target.value = '';
-                }
-              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, field)}
             />
           )}
         />

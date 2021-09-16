@@ -1,9 +1,9 @@
 import './LobbyForm.scss';
-import { Button, FormControlLabel, Switch } from '@material-ui/core';
+import { Avatar, Button, FormControlLabel, Switch } from '@material-ui/core';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FileInput } from '../FileInput/FileInput';
-import { Avatar } from '../Avatar/Avatar';
+import { getInitials } from '../../helpers/utils';
 
 interface Props {
   handleClose: () => void;
@@ -141,7 +141,9 @@ export function LobbyForm(props: Props): JSX.Element {
           </div>
         </div>
         <FileInput setSrc={setSrc} control={control} />
-        <Avatar src={src} name={watchName} surname={watchLastname} />
+        <Avatar className="lobby-form__avatar" src={src}>
+          {getInitials(watchName, watchLastname)}
+        </Avatar>
       </div>
       <div className="lobby-form__btn-wrapper">
         <Button className="btn btn--small" variant="contained" type="submit">
