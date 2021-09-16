@@ -43,5 +43,19 @@ module.exports = {
       },
     ],
     'react/react-in-jsx-scope': 'off',
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        required: {
+          some: ['nesting', 'id'],
+        },
+      },
+    ],
+    'react/jsx-props-no-spreading': [
+      'error',
+      {
+        exceptions: ['input', 'select', 'Switch'],
+      },
+    ],
   },
 };
