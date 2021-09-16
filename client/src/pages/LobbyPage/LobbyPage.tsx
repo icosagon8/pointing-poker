@@ -12,20 +12,6 @@ export const LobbyPage = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.chat.isOpen);
 
   return (
-    // <div className="lobby-page">
-    //   <div className="lobby-page__info">
-    //     <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
-    //     <StartGame />
-    //     <MembersList data={[]} />
-    //     <IssueListLobby />
-    //     <GameSettings />
-    //   </div>
-    //   {isOpen && (
-    //     <div className="lobby-page__chat">
-    //       <Chat />
-    //     </div>
-    //   )}
-    // </div>
     <Grid container>
       <Grid item xs={12} md={8} className="lobby-page__info">
         <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
