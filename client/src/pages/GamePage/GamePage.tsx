@@ -1,4 +1,5 @@
 import './GamePage.scss';
+import { useState } from 'react';
 import { Container, Grid, Button } from '@material-ui/core';
 import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
@@ -31,7 +32,13 @@ const issues = [
   { id: 409243000, title: 'Issue 5', priority: 'Low prority' },
 ];
 
+// scram-master player observer
+
 export function GamePage(): JSX.Element {
+  const [role] = useState<string>('scram-master');
+  const [play, setPlay] = useState<boolean>(false);
+  const [location] = useState<string>('game-page');
+
   return (
     <Container className="page-game">
       <Grid container>
@@ -42,28 +49,42 @@ export function GamePage(): JSX.Element {
               <MemberCard name="John" position="position" src="weokfnwoiefoi" />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
-              <Timer start={false} />
+              <Timer start={play} location={location} />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
-              <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
-                Stop Game
-              </Button>
+              {role === 'scram-master' && (role === 'scram-master' && play) ? (
+                <Button className="page-game__btn page-game__btn-outlined" variant="outlined" onClick={() => setPlay(false)}>
+                  Stop Game
+                </Button>
+              ) : (
+                <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
+                  Exit
+                </Button>
+              )}
             </Grid>
           </Grid>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={4}>
-              <IssueList issues={issues} />
+              <IssueList issues={issues} role={role} />
             </Grid>
-            <Grid item container xs={4} justifyContent="center">
-              <Button className="page-game__btn page-game__btn-primary" variant="contained" color="primary">
-                Run Round
-              </Button>
-            </Grid>
-            <Grid item container xs={4} justifyContent="center">
-              <Button className="page-game__btn page-game__btn-primary" variant="contained" color="primary">
-                Next ISSUE
-              </Button>
-            </Grid>
+            {role === 'scram-master' && !play ? (
+              <>
+                <Grid item container xs={4} justifyContent="center">
+                  <Button
+                    className="page-game__btn page-game__btn-primary"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setPlay(true)}>
+                    Run Round
+                  </Button>
+                </Grid>
+                <Grid item container xs={4} justifyContent="center">
+                  <Button className="page-game__btn page-game__btn-primary" variant="contained" color="primary">
+                    Next ISSUE
+                  </Button>
+                </Grid>
+              </>
+            ) : null}
           </Grid>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={4}>

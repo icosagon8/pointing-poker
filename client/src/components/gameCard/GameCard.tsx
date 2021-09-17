@@ -2,11 +2,12 @@ import './GameCard.scss';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { useRef, useState } from 'react';
 import GameCardType from '../../models/iGameCard';
 
 export const GameCard = (props: GameCardType): JSX.Element => {
-  const { title, value } = props;
+  const { title, value, location } = props;
   const [cardNumber, setCardNumber] = useState<string>(value);
   const [edit, setEdit] = useState<boolean>(false);
   const [selected, setSelected] = useState<boolean>(false);
@@ -34,14 +35,14 @@ export const GameCard = (props: GameCardType): JSX.Element => {
 
   return (
     <div
-      className={selected ? 'game-card game-card--selected' : 'game-card'}
+      className={location === 'game-page-field' && selected ? 'game-card game-card--selected' : 'game-card'}
       onClick={() => setSelected((prev) => !prev)}
       onKeyPress={keyPressHandlerCard}
       role="radio"
       aria-checked={false}
       tabIndex={0}
     >
-      {selected ? (
+      {location === 'game-page-field' && selected ? (
         <>
           <span className="game-card__selected-bg" />
           <CheckCircleIcon className="game-card__selected-icon" fontSize="large" />
@@ -59,14 +60,21 @@ export const GameCard = (props: GameCardType): JSX.Element => {
           onKeyPress={keyPressHandlerInput}
           tabIndex={-1}
         />
-        {!edit && (
-          <IconButton className="game-card__edit-btn" onClick={handleFocus}>
+        {location === 'lobby-page' ? (
+          <IconButton className="game-card__btn" onClick={handleFocus}>
             <EditOutlinedIcon />
           </IconButton>
-        )}
+        ) : null}
       </div>
       <span className="game-card__title">{title}</span>
-      <div className="game-card__number">{cardNumber}</div>
+      <div className="game-card__input-box">
+        {location === 'lobby-page' ? (
+          <IconButton className="game-card__btn">
+            <DeleteOutlineIcon className="game-card__delete-btn" />
+          </IconButton>
+        ) : null}
+        <div className="game-card__number">{cardNumber}</div>
+      </div>
     </div>
   );
 };

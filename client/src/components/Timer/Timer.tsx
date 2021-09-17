@@ -1,18 +1,17 @@
 import './Timer.scss';
 import { Card } from '@material-ui/core';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 interface TimeType {
   start: boolean;
+  location: string;
 }
 
 export function Timer(props: TimeType): JSX.Element {
-  const { start } = props;
-  const [min, setMin] = useState<string>('00');
+  const { start, location } = props;
+  const [min, setMin] = useState<string>('02');
   const [sec, setSec] = useState<string>('00');
   const [count, setCount] = useState<number>(0);
-  const [edit, setEdit] = useState<boolean>(false);
-  const ref = useRef<HTMLInputElement>(null);
 
   const getZero = (num: number) => {
     return String(num).length === 1 ? `0${num}` : `${num}`;
@@ -28,11 +27,11 @@ export function Timer(props: TimeType): JSX.Element {
     const minString = Number(min);
     const secString = Number(sec);
     setCount(minString * 60 + secString);
-  }, [min, sec]);
+  }, [start, min, sec]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
-    if (count > 0) {
+    if (count > 0 && start) {
       timer = setTimeout(() => setCount((prev) => prev - 1), 1000);
     }
     return () => {
@@ -40,7 +39,7 @@ export function Timer(props: TimeType): JSX.Element {
         clearTimeout(timer);
       }
     };
-  }, [count]);
+  }, [count, start]);
 
   const handleChangeMin = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length < 3 && e.target.value.match(/^\d+$/)) {
@@ -54,34 +53,19 @@ export function Timer(props: TimeType): JSX.Element {
     }
   };
 
-  const handleClickOnCounter = () => {
-    setEdit(true);
-    ref.current?.focus();
-  };
-
-  const handlePressKeyOnCounter = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      setEdit(true);
-      ref.current?.focus();
-    }
-  };
-
   return (
     <Card className="timer">
       <div className="timer__titles">
         <div className="timer__titles-minutes">minutes</div>
         <div className="timer__titles-seconds">seconds</div>
       </div>
-      {edit ? (
+      {location === 'lobby-page' ? (
         <div className="timer__edit">
           <input
             className="timer__edit-input"
             type="text"
             value={min}
             onChange={handleChangeMin}
-            onFocus={() => setEdit(true)}
-            onBlur={() => setEdit(false)}
-            ref={ref}
             max={2}
           />
           <span className="timer__edit-dots">:</span>
@@ -90,18 +74,10 @@ export function Timer(props: TimeType): JSX.Element {
             type="text"
             value={sec}
             onChange={handleChangeSec}
-            onFocus={() => setEdit(true)}
-            onBlur={() => setEdit(false)}
           />
         </div>
       ) : (
-        <div
-          className="timer__counter"
-          role="button"
-          tabIndex={0}
-          onClick={handleClickOnCounter}
-          onKeyPress={handlePressKeyOnCounter}
-        >
+        <div className="timer__counter">
           {start ? convertToFormat(count) : `${min}:${sec}`}
         </div>
       )}
