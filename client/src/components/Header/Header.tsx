@@ -9,13 +9,7 @@ export function Header(): JSX.Element {
   const isOpen = useAppSelector((state) => state.chat.isOpen);
   const dispatch = useAppDispatch();
 
-  const clickHandler = () => {
-    if (isOpen) {
-      dispatch(off());
-    } else {
-      dispatch(on());
-    }
-  };
+  const clickHandler = () => dispatch(isOpen ? off() : on());
 
   return (
     <AppBar className="header" position="static">

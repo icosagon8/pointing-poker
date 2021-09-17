@@ -4,31 +4,17 @@ import { IconButton } from '@material-ui/core';
 import MemberCardType from '../../models/iMemberCard';
 
 export const MemberCard = (props: MemberCardType): JSX.Element => {
-  const { src, name, position, isReduced } = props;
+  const { src, name, position } = props;
   return (
-    <div className={isReduced ? 'member-card member-card-reduced' : 'member-card'}>
+    <div className="member-card">
       {src ? (
-        <img
-          src={src}
-          alt="avatar"
-          className={isReduced ? 'member-card__avatar member-card-reduced__avatar' : 'member-card__avatar'}
-        />
+        <img src={src} alt="avatar" className="member-card__avatar" />
       ) : (
-        <div
-          className={
-            isReduced
-              ? 'member-card__avatar member-card__avatar--initials member-card-reduced__avatar'
-              : 'member-card__avatar member-card__avatar--initials'
-          }
-        />
+        <div className="member-card__avatar member-card__avatar--initials" />
       )}
       <div>
-        <h3 className={isReduced ? 'member-card__title member-card-reduced__title' : 'member-card__title'}>{name}</h3>
-        {position && (
-          <h4 className={isReduced ? 'member-card__position member-card-reduced__position' : 'member-card__position'}>
-            {position}
-          </h4>
-        )}
+        <h3 className="member-card__title">{name}</h3>
+        {position && <h4 className="member-card__position">{position}</h4>}
       </div>
       <IconButton>
         <NotInterestedIcon />

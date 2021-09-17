@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-// eslint-disable-next-line import/no-cycle
-import { RootState } from '../store';
 
 interface ChatState {
   isOpen: boolean;
@@ -24,7 +22,5 @@ const chatSlice = createSlice({
 });
 
 export const { on, off } = chatSlice.actions;
-
-export const selectState = (state: RootState) => state.chat.isOpen;
 
 export default chatSlice.reducer;

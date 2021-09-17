@@ -9,11 +9,7 @@ export const StartGame = (): JSX.Element => {
   return (
     <div className="start-game">
       <h4 className="start-game__scram-master">Scram master:</h4>
-      <MemberCard
-        isReduced={false}
-        src="https://www.meme-arsenal.com/memes/732cac98dc1d07127952687091bf7005.jpg"
-        name="Sung-Jin-Woo"
-      />
+      <MemberCard name="Sung-Jin-Woo" />
       <h3 className="start-game__to-lobby">Link to lobby:</h3>
       <div className="start-game__link-block">
         <input
