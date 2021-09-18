@@ -8,7 +8,7 @@ export function Footer(): JSX.Element {
     <footer className="footer">
       <Container className="footer__inner">
         <div className="footer__developers">
-          <h5 className="footer__developers-title">application developed:</h5>
+          <p className="footer__developers-title">application developed:</p>
           <div className="footer__developers-wrapper">
             <img className="footer__developers-gh" src={githubLogo} alt="github" />
             <ul className="footer__developers-list">
