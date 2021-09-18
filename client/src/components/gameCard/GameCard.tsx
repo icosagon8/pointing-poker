@@ -7,10 +7,9 @@ import { useRef, useState } from 'react';
 import GameCardType from '../../models/iGameCard';
 
 export const GameCard = (props: GameCardType): JSX.Element => {
-  const { title, value, location } = props;
+  const { id, title, value, location, setCurrentId, className } = props;
   const [cardNumber, setCardNumber] = useState<string>(value);
   const [edit, setEdit] = useState<boolean>(false);
-  const [selected, setSelected] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,21 +27,26 @@ export const GameCard = (props: GameCardType): JSX.Element => {
   };
 
   const keyPressHandlerCard = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      setSelected((prev) => !prev);
+    if (e.key === 'Enter' && location === 'game-page-field') {
+      setCurrentId(id);
+    }
+  };
+
+  const handleClick = () => {
+    if (location === 'game-page-field') {
+      setCurrentId(id);
     }
   };
 
   return (
     <div
-      className={location === 'game-page-field' && selected ? 'game-card game-card--selected' : 'game-card'}
-      onClick={() => setSelected((prev) => !prev)}
+      className={`game-card ${className}`}
+      onClick={handleClick}
       onKeyPress={keyPressHandlerCard}
-      role="radio"
-      aria-checked={false}
+      role="button"
       tabIndex={0}
     >
-      {location === 'game-page-field' && selected ? (
+      {location === 'game-page-field' && className ? (
         <>
           <span className="game-card__selected-bg" />
           <CheckCircleIcon className="game-card__selected-icon" fontSize="large" />

@@ -6,22 +6,18 @@ import { IssueCreate } from '../IssueCreate/IssueCreate';
 
 interface IssueListType {
   role: string;
-  issues: {
-    id: number;
-    title: string;
-    priority: string;
-  }[];
+  issues: IssueCard[];
 }
 
 export function IssueList(props: IssueListType): JSX.Element {
+  const { issues, role } = props;
   const [issuesState, setIssuesState] = useState<IssueCard[]>([]);
-  const [currentId, setCurrentId] = useState<number | undefined>();
+  const [currentId, setCurrentId] = useState<number | undefined>(issues[0].id);
 
-  const handleSetIssueState = (issues: IssueCard[]) => {
+  const handleSetIssueState = () => {
     setIssuesState(issues);
   };
 
-  const { issues, role } = props;
   return (
     <div className="issue-list">
       <h2 className="issue-list__title">Issues:</h2>

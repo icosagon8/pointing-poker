@@ -11,14 +11,22 @@ interface CardListType {
 }
 
 export function CardList(props: CardListType): JSX.Element {
-  const [location] = useState<string>('game-page-field');
-
   const { gameCards } = props;
+  const [location] = useState<string>('game-page-field');
+  const [currentId, setCurrentId] = useState<number | undefined>();
+
   return (
     <ul className="card-list">
       {gameCards.map(({ id, title, value }) => (
         <li className="card-list__item" key={id}>
-          <GameCard title={title} value={value} location={location} />
+          <GameCard
+            id={id}
+            title={title}
+            value={value}
+            location={location}
+            setCurrentId={setCurrentId}
+            className={currentId === id ? 'active' : null}
+          />
         </li>
       ))}
     </ul>
