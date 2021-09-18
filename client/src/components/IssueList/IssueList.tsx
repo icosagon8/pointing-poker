@@ -15,6 +15,7 @@ interface IssueListType {
 
 export function IssueList(props: IssueListType): JSX.Element {
   const [issuesState, setIssuesState] = useState<IssueCard[]>([]);
+  const [currentId, setCurrentId] = useState<number | undefined>();
 
   const handleSetIssueState = (issues: IssueCard[]) => {
     setIssuesState(issues);
@@ -27,14 +28,21 @@ export function IssueList(props: IssueListType): JSX.Element {
       <ul className="issue-list__items">
         {issues.map(({ id, title, priority }) => (
           <li className="issue-list__item" key={id}>
-            <Issue title={title} priority={priority} role={role}/>
+            <Issue
+              title={title}
+              priority={priority}
+              role={role}
+              id={id}
+              setCurrentId={setCurrentId}
+              className={currentId === id ? 'active' : null}
+            />
           </li>
         ))}
         {role === 'scram-master' ? (
-            <li className="issue-list__item">
-              <IssueCreate issues={issuesState} setIssueState={handleSetIssueState} />
-            </li>
-          ) : null}
+          <li className="issue-list__item">
+            <IssueCreate issues={issuesState} setIssueState={handleSetIssueState} />
+          </li>
+        ) : null}
       </ul>
     </div>
   );

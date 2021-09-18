@@ -61,25 +61,12 @@ export function Timer(props: TimeType): JSX.Element {
       </div>
       {location === 'lobby-page' ? (
         <div className="timer__edit">
-          <input
-            className="timer__edit-input"
-            type="text"
-            value={min}
-            onChange={handleChangeMin}
-            max={2}
-          />
+          <input className="timer__edit-input" type="text" value={min} onChange={handleChangeMin} max={2} />
           <span className="timer__edit-dots">:</span>
-          <input
-            className="timer__edit-input"
-            type="text"
-            value={sec}
-            onChange={handleChangeSec}
-          />
+          <input className="timer__edit-input" type="text" value={sec} onChange={handleChangeSec} />
         </div>
       ) : (
-        <div className="timer__counter">
-          {start ? convertToFormat(count) : `${min}:${sec}`}
-        </div>
+        <div className="timer__counter">{start ? convertToFormat(count) : `${min}:${sec}`}</div>
       )}
     </Card>
   );

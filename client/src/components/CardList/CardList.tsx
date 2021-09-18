@@ -11,7 +11,7 @@ interface CardListType {
 }
 
 export function CardList(props: CardListType): JSX.Element {
-  const [location, setLocation] = useState<string>('game-page-field');
+  const [location] = useState<string>('game-page-field');
 
   const { gameCards } = props;
   return (

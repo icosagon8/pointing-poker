@@ -12,7 +12,7 @@ interface StatisticsType {
 }
 
 export function Statistics(props: StatisticsType): JSX.Element {
-  const [location, setLocation] = useState<string>('game-page');
+  const [location] = useState<string>('game-page');
 
   const { gameCardsStat } = props;
   return (

@@ -4,8 +4,10 @@
   position: relative;
   padding: 0 10px;
   cursor: pointer;
+  background-color: #fff;
+  transition: all .3s;
 
-  &__current {
+  &.active {
     background-color: #cbf3ea;
   }
 
@@ -15,6 +17,12 @@
     font-size: 9px;
     font-weight: 700;
     text-transform: uppercase;
+    opacity: 0;
+    transition: all .3s;
+  }
+
+  &__current-text.active {
+    opacity: 1;
   }
 
   &__main {
