@@ -1,9 +1,11 @@
 import './StartHome.scss';
 import { Button } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BaseModal } from '../BaseModal/BaseModal';
 import { LobbyForm } from '../LobbyForm/LobbyForm';
+import { MainContext } from '../../mainContext';
+import { parsePath } from '../../helpers/utils';
 
 interface FormInputs {
   url: string;
@@ -11,6 +13,8 @@ interface FormInputs {
 
 export function StartHome(): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
+  const [isScram, setIsScram] = useState<boolean>(false);
+  const { setRoom } = useContext(MainContext);
 
   const {
     register,
@@ -20,17 +24,28 @@ export function StartHome(): JSX.Element {
     criteriaMode: 'all',
   });
 
-  const handleOpen = () => {
+  useEffect(() => {
+    setRoom('');
+  }, [setRoom]);
+
+  const handleOpenStartBtn = () => {
+    setOpen(true);
+    setIsScram(true);
+  };
+
+  const handleOpenConnectBtn = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setIsScram(false);
+    setRoom('');
   };
 
   const onSubmit = (data: FormInputs) => {
-    handleOpen();
-    console.log(data);
+    handleOpenConnectBtn();
+    setRoom(parsePath(data.url));
   };
 
   return (
@@ -38,7 +53,7 @@ export function StartHome(): JSX.Element {
       <h2 className="start-home__title">Start your planning:</h2>
       <div className="start-home__session-wrapper">
         <span className="start-home__label">Create session:</span>
-        <Button className="btn" variant="contained" onClick={handleOpen}>
+        <Button className="btn" variant="contained" onClick={handleOpenStartBtn}>
           Start new game
         </Button>
       </div>
@@ -58,7 +73,7 @@ export function StartHome(): JSX.Element {
               required: 'This input is required.',
               pattern: {
                 value:
-                  /https?:\/\/(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()@:%_+.~#?&//=]*)/i,
+                  /https?:\/\/(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}[.:][a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()@:%_+.~#?&//=]*)/i,
                 message: 'This input must match the pattern.',
               },
             })}
@@ -71,7 +86,7 @@ export function StartHome(): JSX.Element {
         {errors.url?.type === 'pattern' && <p className="start-home__error">{errors.url.types.pattern}</p>}
       </form>
       <BaseModal open={open} handleClose={handleClose}>
-        <LobbyForm handleClose={handleClose} />
+        <LobbyForm handleClose={handleClose} isScram={isScram} />
       </BaseModal>
     </section>
   );

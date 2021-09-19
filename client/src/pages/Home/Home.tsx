@@ -1,9 +1,20 @@
 import './Home.scss';
+import { useContext, useEffect } from 'react';
 import { Container, Grid } from '@material-ui/core';
+import { io } from 'socket.io-client';
 import image from '../../assets/images/cards.png';
 import { StartHome } from '../../components/StartHome/StartHome';
+import { SocketContext } from '../../socketContext';
 
 export function Home(): JSX.Element {
+  const { setSocket } = useContext(SocketContext);
+
+  useEffect(() => {
+    const ENDPOINT = 'http://localhost:8080';
+    const newSocket = io(ENDPOINT, { transports: ['websocket', 'polling'] });
+    setSocket(newSocket);
+  }, [setSocket]);
+
   return (
     <main className="page page-home">
       <Container>
