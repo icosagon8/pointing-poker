@@ -7,12 +7,13 @@ import { IssueCreate } from '../IssueCreate/IssueCreate';
 interface IssueListType {
   role: string;
   issues: IssueCard[];
+  currentId: number | undefined;
+  setCurrentId: (currentId: number | undefined) => void;
 }
 
 export function IssueList(props: IssueListType): JSX.Element {
-  const { issues, role } = props;
+  const { issues, role, currentId, setCurrentId } = props;
   const [issuesState, setIssuesState] = useState<IssueCard[]>([]);
-  const [currentId, setCurrentId] = useState<number | undefined>(issues[0].id);
 
   const handleSetIssueState = () => {
     setIssuesState(issues);

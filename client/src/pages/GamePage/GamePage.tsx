@@ -1,5 +1,5 @@
 import './GamePage.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Grid, Button } from '@material-ui/core';
 import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
@@ -38,6 +38,23 @@ export function GamePage(): JSX.Element {
   const [role] = useState<string>('scram-master');
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
+  const [indexIssue, setIndexIssue] = useState<number>(0);
+  const [currentId, setCurrentId] = useState<number | undefined>(issues[indexIssue].id);
+
+  useEffect(() => {
+    setIndexIssue(issues.findIndex((elem) => elem.id === currentId));
+  }, [currentId]);
+
+  useEffect(() => {
+    setCurrentId(issues[indexIssue].id);
+  }, [indexIssue]);
+
+  const handleClickNextIssue = () => {
+    const maxIndex = issues.length - 1;
+    if (indexIssue < maxIndex) {
+      setIndexIssue((prev) => prev + 1);
+    }
+  };
 
   return (
     <Container className="page-game">
@@ -69,7 +86,7 @@ export function GamePage(): JSX.Element {
           </Grid>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={4}>
-              <IssueList issues={issues} role={role} />
+              <IssueList issues={issues} role={role} currentId={currentId} setCurrentId={setCurrentId} />
             </Grid>
             {role === 'scram-master' && !play ? (
               <>
@@ -84,7 +101,12 @@ export function GamePage(): JSX.Element {
                   </Button>
                 </Grid>
                 <Grid item container xs={4} justifyContent="center">
-                  <Button className="page-game__btn page-game__btn-primary" variant="contained" color="primary">
+                  <Button
+                    className="page-game__btn page-game__btn-primary"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleClickNextIssue}
+                  >
                     Next ISSUE
                   </Button>
                 </Grid>
