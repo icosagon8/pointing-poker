@@ -4,3 +4,7 @@ export function getInitials(name: string, lastname: string): string | null {
   if (lastname) return `${lastname[0]}${lastname[lastname.length - 1]}`;
   return null;
 }
+
+export function parsePath(url: string): string {
+  return new URL(url).pathname.slice(1);
+}
