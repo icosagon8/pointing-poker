@@ -31,7 +31,7 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
   };
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    setIssueState([...issues, { title: data.title, priority: data.priority } as IssueCard]);
+    setIssueState([...issues, { id: 123123, title: data.title, priority: data.priority } as IssueCard]);
     handleClose();
   };
 

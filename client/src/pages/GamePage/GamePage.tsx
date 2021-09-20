@@ -1,6 +1,7 @@
 import './GamePage.scss';
 import { useState, useEffect } from 'react';
 import { Container, Grid, Button } from '@material-ui/core';
+import IssueCard from '../../models/iIssueCard';
 import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
 import { MemberCard } from '../../components/MemberCard/MemberCard';
@@ -24,36 +25,40 @@ const gameCardsStat = [
   { id: 990934, title: 'sp', value: '5', percent: 7.2 },
   { id: 1234090, title: 'sp', value: '1', percent: 2.3 },
 ];
-const issues = [
-  { id: 1029341, title: 'Issue 1', priority: 'Low prority' },
-  { id: 3452346, title: 'Issue 2', priority: 'High prority' },
-  { id: 9000563, title: 'Issue 3', priority: 'Low prority' },
-  { id: 999933, title: 'Issue 4', priority: 'Low prority' },
-  { id: 409243000, title: 'Issue 5', priority: 'Low prority' },
-];
 
 // scram-master player observer
 
 export function GamePage(): JSX.Element {
+  const [issuesState, setIssuesState] = useState<IssueCard[]>([
+    { id: 1029341, title: 'Issue 1', priority: 'Low prority' },
+    { id: 3452346, title: 'Issue 2', priority: 'High prority' },
+    { id: 9000563, title: 'Issue 3', priority: 'Low prority' },
+    { id: 999933, title: 'Issue 4', priority: 'Low prority' },
+    { id: 409243000, title: 'Issue 5', priority: 'Low prority' },
+  ]);
   const [role] = useState<string>('scram-master');
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
   const [indexIssue, setIndexIssue] = useState<number>(0);
-  const [currentId, setCurrentId] = useState<number | undefined>(issues[indexIssue].id);
+  const [currentId, setCurrentId] = useState<number | undefined>(issuesState[indexIssue].id);
 
   useEffect(() => {
-    setIndexIssue(issues.findIndex((elem) => elem.id === currentId));
-  }, [currentId]);
+    setIndexIssue(issuesState.findIndex((elem: IssueCard) => elem.id === currentId));
+  }, [issuesState, currentId]);
 
   useEffect(() => {
-    setCurrentId(issues[indexIssue].id);
-  }, [indexIssue]);
+    setCurrentId(issuesState[indexIssue].id);
+  }, [issuesState, indexIssue]);
 
   const handleClickNextIssue = () => {
-    const maxIndex = issues.length - 1;
+    const maxIndex = issuesState.length - 1;
     if (indexIssue < maxIndex) {
       setIndexIssue((prev) => prev + 1);
     }
+  };
+
+  const handleSetIssueState = (issues: IssueCard[]) => {
+    setIssuesState(issues);
   };
 
   return (
@@ -86,7 +91,13 @@ export function GamePage(): JSX.Element {
           </Grid>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={4}>
-              <IssueList issues={issues} role={role} currentId={currentId} setCurrentId={setCurrentId} />
+              <IssueList
+                issues={issuesState}
+                setIssueState={handleSetIssueState}
+                role={role}
+                currentId={currentId}
+                setCurrentId={setCurrentId}
+              />
             </Grid>
             {role === 'scram-master' && !play ? (
               <>

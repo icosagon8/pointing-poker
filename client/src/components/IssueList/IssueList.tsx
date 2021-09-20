@@ -1,5 +1,4 @@
 import './IssueList.scss';
-import { useState } from 'react';
 import IssueCard from '../../models/iIssueCard';
 import { Issue } from '../Issue/Issue';
 import { IssueCreate } from '../IssueCreate/IssueCreate';
@@ -7,17 +6,13 @@ import { IssueCreate } from '../IssueCreate/IssueCreate';
 interface IssueListType {
   role: string;
   issues: IssueCard[];
+  setIssueState: (issues: IssueCard[]) => void;
   currentId: number | undefined;
   setCurrentId: (currentId: number | undefined) => void;
 }
 
 export function IssueList(props: IssueListType): JSX.Element {
-  const { issues, role, currentId, setCurrentId } = props;
-  const [issuesState, setIssuesState] = useState<IssueCard[]>([]);
-
-  const handleSetIssueState = () => {
-    setIssuesState(issues);
-  };
+  const { issues, setIssueState, role, currentId, setCurrentId } = props;
 
   return (
     <div className="issue-list">
@@ -37,7 +32,7 @@ export function IssueList(props: IssueListType): JSX.Element {
         ))}
         {role === 'scram-master' ? (
           <li className="issue-list__item">
-            <IssueCreate issues={issuesState} setIssueState={handleSetIssueState} />
+            <IssueCreate issues={issues} setIssueState={setIssueState} />
           </li>
         ) : null}
       </ul>
