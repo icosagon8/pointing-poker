@@ -26,8 +26,6 @@ const gameCardsStat = [
   { id: 1234090, title: 'sp', value: '1', percent: 2.3 },
 ];
 
-// scram-master player observer
-
 export function GamePage(): JSX.Element {
   const [issuesState, setIssuesState] = useState<IssueCard[]>([
     { id: 1029341, title: 'Issue 1', priority: 'Low prority' },
