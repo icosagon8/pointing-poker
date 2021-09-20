@@ -20,11 +20,12 @@ export function Chat(): JSX.Element {
     return () => {
       socket?.disconnect();
     };
+
   }, [socket]);
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollIntoView(true);
+      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
     }
   }, [messages]);
 
