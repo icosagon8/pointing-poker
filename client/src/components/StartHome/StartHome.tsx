@@ -6,6 +6,7 @@ import { BaseModal } from '../BaseModal/BaseModal';
 import { LobbyForm } from '../LobbyForm/LobbyForm';
 import { MainContext } from '../../mainContext';
 import { parsePath } from '../../helpers/utils';
+import { SocketContext } from '../../socketContext';
 
 interface FormInputs {
   url: string;
@@ -15,10 +16,12 @@ export function StartHome(): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const [isScram, setIsScram] = useState<boolean>(false);
   const { setRoom } = useContext(MainContext);
+  const { socket } = useContext(SocketContext);
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     criteriaMode: 'all',
@@ -28,13 +31,28 @@ export function StartHome(): JSX.Element {
     setRoom('');
   }, [setRoom]);
 
+  useEffect(() => {
+    socket?.on('room', (room) => {
+      if (room) {
+        setOpen(true);
+      } else {
+        setError('url', {
+          types: {
+            exist: 'There is no such room',
+          },
+        });
+        setRoom('');
+      }
+    });
+  }, [socket, setError, setRoom]);
+
   const handleOpenStartBtn = () => {
     setOpen(true);
     setIsScram(true);
   };
 
-  const handleOpenConnectBtn = () => {
-    setOpen(true);
+  const handleOpenConnectBtn = (room: string) => {
+    socket?.emit('joinRoom', room);
   };
 
   const handleClose = () => {
@@ -44,8 +62,9 @@ export function StartHome(): JSX.Element {
   };
 
   const onSubmit = (data: FormInputs) => {
-    handleOpenConnectBtn();
-    setRoom(parsePath(data.url));
+    const room = parsePath(data.url);
+    handleOpenConnectBtn(room);
+    setRoom(room);
   };
 
   return (
@@ -84,6 +103,7 @@ export function StartHome(): JSX.Element {
         </div>
         {errors.url?.type === 'required' && <p className="start-home__error">{errors.url.types.required}</p>}
         {errors.url?.type === 'pattern' && <p className="start-home__error">{errors.url.types.pattern}</p>}
+        {errors.url?.types.exist && <p className="start-home__error">{errors.url.types.exist}</p>}
       </form>
       <BaseModal open={open} handleClose={handleClose}>
         <LobbyForm handleClose={handleClose} isScram={isScram} />
