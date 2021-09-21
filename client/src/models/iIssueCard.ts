@@ -3,6 +3,6 @@ export default interface IssueCard {
   priority: string;
   role?: string;
   id: string;
-  setCurrentId?: (currentId: string) => void;
+  setCurrentId?: React.Dispatch<React.SetStateAction<string>>
   className?: string | null;
 }

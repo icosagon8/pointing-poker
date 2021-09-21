@@ -8,7 +8,7 @@ interface IssueListType {
   issues: IssueCard[];
   setIssueState: (issues: IssueCard[]) => void;
   currentId: string;
-  setCurrentId: (currentId: string) => void;
+  setCurrentId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function IssueList(props: IssueListType): JSX.Element {

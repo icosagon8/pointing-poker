@@ -1,5 +1,4 @@
 import './Statistics.scss';
-import { useState } from 'react';
 import { GameCard } from '../GameCard/GameCard';
 
 interface StatisticsType {
@@ -12,8 +11,6 @@ interface StatisticsType {
 }
 
 export function Statistics(props: StatisticsType): JSX.Element {
-  const [location] = useState<string>('game-page');
-
   const { gameCardsStat } = props;
   return (
     <div className="statistics">
@@ -21,7 +18,7 @@ export function Statistics(props: StatisticsType): JSX.Element {
       <ul className="statistics__items">
         {gameCardsStat.map(({ id, title, value, percent }) => (
           <li className="statistics__item" key={id}>
-            <GameCard title={title} value={value} location={location} id={id} />
+            <GameCard title={title} value={value} id={id} />
             <div className="statistics__percent">{percent}%</div>
           </li>
         ))}

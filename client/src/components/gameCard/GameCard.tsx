@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 import GameCardType from '../../models/iGameCard';
 
 export const GameCard = (props: GameCardType): JSX.Element => {
-  const { id, title, value, location, setCurrentId, className } = props;
+  const { id, title, value, cardSelection, lobbyPage, setCurrentId, className } = props;
   const [cardNumber, setCardNumber] = useState<string>(value);
   const [edit, setEdit] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
@@ -27,13 +27,13 @@ export const GameCard = (props: GameCardType): JSX.Element => {
   };
 
   const keyPressHandlerCard = (e: React.KeyboardEvent) => {
-    if (setCurrentId && e.key === 'Enter' && location === 'game-page-field') {
+    if (setCurrentId && e.key === 'Enter' && cardSelection) {
       setCurrentId(id);
     }
   };
 
   const handleClick = () => {
-    if (setCurrentId && location === 'game-page-field') {
+    if (setCurrentId && cardSelection) {
       setCurrentId(id);
     }
   };
@@ -46,7 +46,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
       role="button"
       tabIndex={0}
     >
-      {location === 'game-page-field' && className ? (
+      {cardSelection && className ? (
         <>
           <span className="game-card__selected-bg" />
           <CheckCircleIcon className="game-card__selected-icon" fontSize="large" />
@@ -64,7 +64,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
           onKeyPress={keyPressHandlerInput}
           tabIndex={-1}
         />
-        {location === 'lobby-page' ? (
+        {lobbyPage ? (
           <IconButton className="game-card__btn" onClick={handleFocus}>
             <EditOutlinedIcon />
           </IconButton>
@@ -72,7 +72,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
       </div>
       <span className="game-card__title">{title}</span>
       <div className="game-card__input-box">
-        {location === 'lobby-page' ? (
+        {lobbyPage ? (
           <IconButton className="game-card__btn">
             <DeleteOutlineIcon className="game-card__delete-btn" />
           </IconButton>

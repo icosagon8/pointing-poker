@@ -12,7 +12,6 @@ interface CardListType {
 
 export function CardList(props: CardListType): JSX.Element {
   const { gameCards } = props;
-  const [location] = useState<string>('game-page-field');
   const [currentId, setCurrentId] = useState<string>('');
 
   return (
@@ -23,7 +22,7 @@ export function CardList(props: CardListType): JSX.Element {
             id={id}
             title={title}
             value={value}
-            location={location}
+            cardSelection
             setCurrentId={setCurrentId}
             className={currentId === id ? 'active' : null}
           />

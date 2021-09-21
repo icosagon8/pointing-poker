@@ -72,7 +72,7 @@ export function GamePage(): JSX.Element {
               <Timer start={play} location={location} />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
-              {role === 'scram-master' && role === 'scram-master' && play ? (
+              {role === 'scram-master' && play ? (
                 <Button
                   className="page-game__btn page-game__btn-outlined"
                   variant="outlined"
