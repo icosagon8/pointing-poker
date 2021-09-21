@@ -12,7 +12,7 @@ export const MembersList = (props: ImemberList): JSX.Element => {
     <div className="member-list">
       <h2 className="member-list__title">Members:</h2>
       <div className="member-list__wrapper">
-        {data.length > 0 && data.map((item) => <MemberCard isReduced={false} src={item.src} name={item.name} />)}
+        {data.length > 0 && data.map((item) => <MemberCard src={item.src} name={item.name} />)}
       </div>
     </div>
   );

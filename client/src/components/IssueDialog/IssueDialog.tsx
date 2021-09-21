@@ -24,7 +24,11 @@ interface IFormInput {
 
 export const IssueDialog = (props: IissueDialog): JSX.Element => {
   const { onClose, open, issues, setIssueState } = props;
-  const { register, handleSubmit } = useForm<IFormInput>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInput>({ criteriaMode: 'all' });
 
   const handleClose = () => {
     onClose();
@@ -36,33 +40,66 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} className="issue-dialog">
+    <Dialog open={open} onClose={handleClose} className="issue-dialog ">
       <div>
         <h3 className="issue-dialog__title">Create Issue</h3>
       </div>
       <DialogContent>
         <form className="issue-dialog__form" onSubmit={handleSubmit(onSubmit)}>
           <div className="issue-dialog__form__block">
-            <label htmlFor="title" className="issue-dialog__form__label">
-              Title:
-            </label>
-            <input id="title" className="issue-dialog__form__input" {...register('title')} />
+            <div className="issue-dialog__form__input-wrapper">
+              <label htmlFor="title" className="issue-dialog__form__label">
+                Title:
+              </label>
+              <input
+                id="title"
+                className="issue-dialog__form__input"
+                {...register('title', {
+                  required: 'Enter issue title',
+                  maxLength: {
+                    value: 30,
+                    message: 'Max length is 30',
+                  },
+                })}
+              />
+            </div>
+            {errors.title?.type === 'maxLength' && (
+              <p className="issue-dialog__form__error-text">{errors.title.types?.maxLength}</p>
+            )}
           </div>
           <div className="issue-dialog__form__block">
-            <label htmlFor="link" className="issue-dialog__form__label">
-              Link:
-            </label>
-            <input id="link" className="issue-dialog__form__input" {...register('link')} />
+            <div className="issue-dialog__form__input-wrapper">
+              <label htmlFor="link" className="issue-dialog__form__label">
+                Link:
+              </label>
+              <input
+                id="link"
+                className="issue-dialog__form__input"
+                {...register('link', {
+                  required: 'Enter link',
+                  pattern: {
+                    value:
+                      /https?:\/\/(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()@:%_+.~#?&//=]*)/i,
+                    message: 'This input must match the pattern.',
+                  },
+                })}
+              />
+            </div>
+            {errors.link?.type === 'pattern' && (
+              <p className="issue-dialog__form__error-text">{errors.link?.types?.pattern}</p>
+            )}
           </div>
           <div className="issue-dialog__form__block issue-dialog__form__priority">
-            <label htmlFor="priority" className="issue-dialog__form__label">
-              Priotity:
-            </label>
-            <select id="priority" className="issue-dialog__form__input" {...register('priority')}>
-              <option>Low</option>
-              <option>Middle</option>
-              <option>Hight</option>
-            </select>
+            <div className="issue-dialog__form__input-wrapper">
+              <label htmlFor="priority" className="issue-dialog__form__label">
+                Priotity:
+              </label>
+              <select id="priority" className="issue-dialog__form__input" {...register('priority')}>
+                <option>Low</option>
+                <option>Middle</option>
+                <option>Hight</option>
+              </select>
+            </div>
           </div>
           <DialogActions className="issue-dialog__buttons">
             <button type="submit" className="issue-dialog__btn issue-dialog__yes">
