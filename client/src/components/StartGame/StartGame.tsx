@@ -29,7 +29,13 @@ export const StartGame = (): JSX.Element => {
         </Button>
       </div>
       <div className="start-game__btn-block">
-        <Button variant="contained" color="primary" className="start-game__btn start-game__copy">
+        <Button
+          form="modalForm"
+          variant="contained"
+          type="submit"
+          color="primary"
+          className="start-game__btn start-game__copy"
+        >
           Start game
         </Button>
         <Button variant="outlined" color="primary" className="start-game__btn start-game__cancel">

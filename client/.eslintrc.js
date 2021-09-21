@@ -54,7 +54,7 @@ module.exports = {
     'react/jsx-props-no-spreading': [
       'error',
       {
-        exceptions: ['input', 'select', 'Switch'],
+        exceptions: ['input', 'select', 'Switch', 'IOSSwitch'],
       },
     ],
   },

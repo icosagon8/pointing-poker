@@ -66,6 +66,9 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
             {errors.title?.type === 'maxLength' && (
               <p className="issue-dialog__form__error-text">{errors.title.types?.maxLength}</p>
             )}
+            {errors.title?.type === 'required' && (
+              <p className="issue-dialog__form__error-text">{errors.title.types?.required}</p>
+            )}
           </div>
           <div className="issue-dialog__form__block">
             <div className="issue-dialog__form__input-wrapper">
@@ -87,6 +90,9 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
             </div>
             {errors.link?.type === 'pattern' && (
               <p className="issue-dialog__form__error-text">{errors.link?.types?.pattern}</p>
+            )}
+            {errors.link?.type === 'required' && (
+              <p className="issue-dialog__form__error-text">{errors.link?.types?.required}</p>
             )}
           </div>
           <div className="issue-dialog__form__block issue-dialog__form__priority">

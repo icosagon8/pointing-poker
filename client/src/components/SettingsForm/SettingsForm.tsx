@@ -1,55 +1,149 @@
+import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { AddGameCard } from '../AddGameCard/AddGameCard';
 import { IOSSwitch } from '../IOSSwitch/IOSSwitch';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
 import './SettingsForm.scss';
 
-export const SettingsForm = (): JSX.Element => {
-  const [state, setState] = useState({
-    masterAsPlayer: true,
-    changingCard: true,
-    timerIsNeeded: true,
-    scoreType: '',
-    scoreTypeShort: '',
-  });
+interface FormInput {
+  masterAsPlayer: boolean;
+  changingCard: boolean;
+  timerIsNeeded: boolean;
+  scoreType: string;
+  scoreTypeShort: string;
+}
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+export const SettingsForm = (): JSX.Element => {
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInput>({ criteriaMode: 'all' });
+
+  const onSubmit: SubmitHandler<FormInput> = (data) => {
+    // setState([
+    //   ...state,
+    //   { masterAsPlayer: data.masterAsPlayer, changingCard: data.changingCard, timerInNeeded: data.timerIsNeeded,  },
+    // ]);
+    console.log(data);
   };
 
   return (
-    <div>
-      <form className="settings-form">
+    <>
+      <form id="modalForm" className="settings-form" onSubmit={handleSubmit(onSubmit)}>
+        <>
+          <Controller
+            name="masterAsPlayer"
+            control={control}
+            defaultValue
+            render={({ field }) => (
+              <FormControlLabel
+                className="settings-form__block-switch"
+                label={<Typography className="settings-form__label">Scram master as player:</Typography>}
+                labelPlacement="start"
+                control={<Switch {...field} checked={field.value} />}
+              />
+            )}
+          />
+        </>
+        <>
+          <Controller
+            name="changingCard"
+            control={control}
+            defaultValue
+            render={({ field }) => (
+              <FormControlLabel
+                className="settings-form__block-switch"
+                label={<Typography className="settings-form__label">Changing card in rount end:</Typography>}
+                labelPlacement="start"
+                control={<Switch {...field} checked={field.value} />}
+              />
+            )}
+          />
+        </>
+        <>
+          <Controller
+            name="timerIsNeeded"
+            control={control}
+            defaultValue
+            render={({ field }) => (
+              <FormControlLabel
+                className="settings-form__block-switch"
+                label={<Typography className="settings-form__label">Changing card in rount end:</Typography>}
+                labelPlacement="start"
+                control={<Switch {...field} checked={field.value} />}
+              />
+            )}
+          />
+        </>
         <div className="settings-form__block">
-          <label htmlFor="isPlayer" className="settings-form__label">
-            Scram master as player:
-          </label>
-          <IOSSwitch id="isPlayer" checked={state.masterAsPlayer} onChange={handleChange} name="checkedB" />
+          <div className="settings-form__input-block">
+            <label htmlFor="scoreType" className="settings-form__label">
+              Score type:
+            </label>
+            <input
+              id="scoreType"
+              className="settings-form__input"
+              {...register('scoreType', {
+                required: 'Enter score type',
+                maxLength: {
+                  value: 30,
+                  message: 'Max length is 30',
+                },
+                pattern: {
+                  value: /^[\w]*$/m,
+                  message: 'This input must match the pattern',
+                },
+              })}
+            />
+          </div>
+          <>
+            {errors.scoreType?.type === 'maxLength' && (
+              <p className="settings-form__error-text">{errors.scoreType.types?.maxLength}</p>
+            )}
+            {errors.scoreType?.type === 'required' && (
+              <p className="settings-form__error-text">{errors.scoreType.types?.required}</p>
+            )}
+            {errors.scoreType?.type === 'pattern' && (
+              <p className="settings-form__error-text">{errors.scoreType.types?.pattern}</p>
+            )}
+          </>
         </div>
         <div className="settings-form__block">
-          <label htmlFor="isChanging" className="settings-form__label">
-            Changing card in round end:
-          </label>
-          <IOSSwitch id="isChanging" checked={state.changingCard} onChange={handleChange} name="checkedB" />
-        </div>
-        <div className="settings-form__block">
-          <label htmlFor="timerIsNeeded" className="settings-form__label">
-            Is timer needed:
-          </label>
-          <IOSSwitch id="timerIsNeeded" checked={state.timerIsNeeded} onChange={handleChange} name="checkedB" />
-        </div>
-        <div className="settings-form__block">
-          <label htmlFor="scoreType" className="settings-form__label">
-            Score type:
-          </label>
-          <input id="scoreType" className="settings-form__input" value={state.scoreType} />
-        </div>
-        <div className="settings-form__block">
-          <label htmlFor="shortType" className="settings-form__label">
-            Score type(Short):
-          </label>
-          <input id="shortType" className="settings-form__input" value={state.scoreTypeShort} />
+          <div className="settings-form__input-block">
+            <label htmlFor="scoreTypeShort" className="settings-form__label">
+              Score type(Short):
+            </label>
+            <input
+              id="scoreTypeShort"
+              className="settings-form__input"
+              {...register('scoreTypeShort', {
+                required: 'Enter short score type',
+                maxLength: {
+                  value: 2,
+                  message: 'Max length is 2',
+                },
+                pattern: {
+                  value: /^[\w]*$/m,
+                  message: 'This input must match the pattern',
+                },
+              })}
+            />
+          </div>
+          <>
+            {errors.scoreTypeShort?.type === 'maxLength' && (
+              <p className="settings-form__error-text">{errors.scoreTypeShort.types?.maxLength}</p>
+            )}
+            {errors.scoreTypeShort?.type === 'required' && (
+              <p className="settings-form__error-text">{errors.scoreTypeShort.types?.required}</p>
+            )}
+            {errors.scoreTypeShort?.type === 'pattern' && (
+              <p className="settings-form__error-text">{errors.scoreTypeShort.types?.pattern}</p>
+            )}
+          </>
         </div>
         <div className="settings-form__block">
           <Title title="Round time:" />
@@ -62,6 +156,6 @@ export const SettingsForm = (): JSX.Element => {
           </div>
         </div>
       </form>
-    </div>
+    </>
   );
 };
