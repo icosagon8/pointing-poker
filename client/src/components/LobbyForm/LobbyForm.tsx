@@ -8,7 +8,8 @@ import { FileInput } from '../FileInput/FileInput';
 import { getInitials } from '../../helpers/utils';
 import { MainContext } from '../../mainContext';
 import { SocketContext } from '../../socketContext';
-import { UsersContext } from '../../usersContext';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { addUsers } from '../../store/slices/userSlice';
 
 interface Props {
   isScram: boolean;
@@ -24,16 +25,17 @@ interface FormInputs {
 }
 
 export function LobbyForm(props: Props): JSX.Element {
+  const usersArr = useAppSelector((state) => state.users.users);
+  const dispatch = useAppDispatch();
   const { handleClose, isScram } = props;
   const [src, setSrc] = useState<string>('');
   const { setUser, room, setRoom } = useContext(MainContext);
   const history = useHistory();
   const { socket } = useContext(SocketContext);
-  const { setUsers } = useContext(UsersContext);
 
   useEffect(() => {
     socket?.on('users', (users) => {
-      setUsers(users);
+      dispatch(addUsers(users));
     });
   });
 
