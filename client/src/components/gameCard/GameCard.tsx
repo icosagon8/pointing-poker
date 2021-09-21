@@ -27,13 +27,13 @@ export const GameCard = (props: GameCardType): JSX.Element => {
   };
 
   const keyPressHandlerCard = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && location === 'game-page-field') {
+    if (setCurrentId && e.key === 'Enter' && location === 'game-page-field') {
       setCurrentId(id);
     }
   };
 
   const handleClick = () => {
-    if (location === 'game-page-field') {
+    if (setCurrentId && location === 'game-page-field') {
       setCurrentId(id);
     }
   };

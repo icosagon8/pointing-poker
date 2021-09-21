@@ -7,7 +7,7 @@ export function Issue(props: IssueCard): JSX.Element {
   const { title, priority, role, id, setCurrentId, className } = props;
 
   const handleClick = () => {
-    if (role === 'scram-master') {
+    if (setCurrentId && role === 'scram-master') {
       setCurrentId(id);
     }
   };
