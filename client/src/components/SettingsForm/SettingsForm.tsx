@@ -53,7 +53,7 @@ export const SettingsForm = (): JSX.Element => {
         </div>
         <div className="settings-form__block">
           <Title title="Round time:" />
-          <Timer start={false} />
+          <Timer start={false} location="lobby-page" />
         </div>
         <div className="settings-form__block-add-card">
           <Title title="Add card values:" />
