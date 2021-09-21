@@ -6,3 +6,4 @@ export default interface IssueCard {
   setCurrentId?: React.Dispatch<React.SetStateAction<string>>
   className?: string | null;
 }
+

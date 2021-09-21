@@ -38,3 +38,21 @@
     font-weight: 400;
   }
 }
+
+.member-card-reduced {
+  width: 200px;
+  height: 50px;
+
+  &__avatar {
+    width: 33px;
+    height: 33px;
+  }
+
+  &__title {
+    font-size: 18px;
+  }
+
+  &__position {
+    font-size: 8px;
+  }
+}

@@ -39,6 +39,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
     path {
       fill: #60dabf;
     }
@@ -67,7 +68,7 @@
   }
 
   &__input--edit {
-    border-color:rgba(238, 238, 238, 1);
+    border-color: rgba(238, 238, 238, 1);
     box-shadow: inset 1px 3px 5px 1px rgba(238, 238, 238, 1);
     pointer-events: auto;
   }

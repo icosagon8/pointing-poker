@@ -1,0 +1,50 @@
+.page-home {
+  font-family: 'Roboto';
+
+  &__wrapper {
+    padding-top: 110px;
+    padding-bottom: 110px;
+  }
+
+  &__title-wrapper {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+  }
+
+  &__title {
+    width: 410px;
+    margin: 0;
+    position: relative;
+    font-size: 70px;
+    line-height: 82px;
+
+    &::before {
+      content: '';
+      width: 87.5%;
+      border: 5px solid #ffffff;
+      position: absolute;
+      top: 70px;
+      left: 30px;
+      transform: rotate(345deg);
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+      background-color: #ffffff;
+    }
+  }
+
+  &__title-word {
+    display: block;
+
+    &--right {
+      text-align: right;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .page-home__title::before {
+    display: none;
+  }
+}
