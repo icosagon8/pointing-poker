@@ -7,8 +7,8 @@ interface IssueListType {
   role: string;
   issues: IssueCard[];
   setIssueState: (issues: IssueCard[]) => void;
-  currentId: number | undefined;
-  setCurrentId: (currentId: number | undefined) => void;
+  currentId: string;
+  setCurrentId: (currentId: string) => void;
 }
 
 export function IssueList(props: IssueListType): JSX.Element {

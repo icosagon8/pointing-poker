@@ -11,34 +11,34 @@ import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
 
 const members = [
-  { id: 13423, name: 'Alex', position: 'driver', src: 'adsasd2rr23' },
-  { id: 43513325423, name: 'Kim Foon', src: 'adsasd2rr23' },
-  { id: 213423, name: 'Li', position: 'driver', src: 'adsasd2rr23' },
+  { id: '13423', name: 'Alex', position: 'driver', src: 'adsasd2rr23' },
+  { id: '43513325423', name: 'Kim Foon', src: 'adsasd2rr23' },
+  { id: '213423', name: 'Li', position: 'driver', src: 'adsasd2rr23' },
 ];
 const gameCards = [
-  { id: 35635463, title: 'sp', value: '2' },
-  { id: 990934, title: 'sp', value: '5' },
-  { id: 1234090, title: 'sp', value: '1' },
+  { id: '35635463', title: 'sp', value: '2' },
+  { id: '990934', title: 'sp', value: '5' },
+  { id: '1234090', title: 'sp', value: '1' },
 ];
 const gameCardsStat = [
-  { id: 35635463, title: 'sp', value: '2', percent: 90.5 },
-  { id: 990934, title: 'sp', value: '5', percent: 7.2 },
-  { id: 1234090, title: 'sp', value: '1', percent: 2.3 },
+  { id: '35635463', title: 'sp', value: '2', percent: 90.5 },
+  { id: '990934', title: 'sp', value: '5', percent: 7.2 },
+  { id: '1234090', title: 'sp', value: '1', percent: 2.3 },
 ];
 
 export function GamePage(): JSX.Element {
   const [issuesState, setIssuesState] = useState<IssueCard[]>([
-    { id: 1029341, title: 'Issue 1', priority: 'Low prority' },
-    { id: 3452346, title: 'Issue 2', priority: 'High prority' },
-    { id: 9000563, title: 'Issue 3', priority: 'Low prority' },
-    { id: 999933, title: 'Issue 4', priority: 'Low prority' },
-    { id: 409243000, title: 'Issue 5', priority: 'Low prority' },
+    { id: '1029341', title: 'Issue 1', priority: 'Low prority' },
+    { id: '3452346', title: 'Issue 2', priority: 'High prority' },
+    { id: '9000563', title: 'Issue 3', priority: 'Low prority' },
+    { id: '999933', title: 'Issue 4', priority: 'Low prority' },
+    { id: '409243000', title: 'Issue 5', priority: 'Low prority' },
   ]);
   const [role] = useState<string>('scram-master');
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
   const [indexIssue, setIndexIssue] = useState<number>(0);
-  const [currentId, setCurrentId] = useState<number | undefined>(issuesState[indexIssue].id);
+  const [currentId, setCurrentId] = useState<string>(issuesState[indexIssue].id);
 
   useEffect(() => {
     setIndexIssue(issuesState.findIndex((elem: IssueCard) => elem.id === currentId));
