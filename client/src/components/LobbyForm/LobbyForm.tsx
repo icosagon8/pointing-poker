@@ -37,7 +37,7 @@ export function LobbyForm(props: Props): JSX.Element {
     socket?.on('users', (users) => {
       dispatch(addUsers(users));
     });
-  });
+  }, [dispatch, socket]);
 
   const {
     register,

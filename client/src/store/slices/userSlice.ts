@@ -9,6 +9,7 @@ interface UserState {
   avatar: string;
   room: string;
 }
+
 interface UserInitialState {
   users: UserState[];
 }
@@ -17,7 +18,7 @@ const initialState: UserInitialState = {
   users: [],
 };
 
-const userSlice = createSlice({
+const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
@@ -27,6 +28,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { addUsers } = userSlice.actions;
+export const { addUsers } = usersSlice.actions;
 
-export default userSlice.reducer;
+export default usersSlice.reducer;
