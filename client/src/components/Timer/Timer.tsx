@@ -1,13 +1,16 @@
 import './Timer.scss';
 import { Card } from '@material-ui/core';
 import { useState, useEffect, useRef } from 'react';
+import { UseFormRegister } from 'react-hook-form';
+import { SettingsFormInput } from '../../models/SettingsFormInput';
 
 interface TimeType {
   start: boolean;
+  register?: UseFormRegister<SettingsFormInput>;
 }
 
 export function Timer(props: TimeType): JSX.Element {
-  const { start } = props;
+  const { start, register } = props;
   const [min, setMin] = useState<string>('00');
   const [sec, setSec] = useState<string>('00');
   const [count, setCount] = useState<number>(0);
@@ -77,21 +80,22 @@ export function Timer(props: TimeType): JSX.Element {
           <input
             className="timer__edit-input"
             type="text"
-            value={min}
-            onChange={handleChangeMin}
+            // value={min}
+            // onChange={handleChangeMin}
             onFocus={() => setEdit(true)}
-            onBlur={() => setEdit(false)}
-            ref={ref}
+            // ref={ref}
             max={2}
+            {...(register !== undefined && { ...register('timerHours') })}
           />
           <span className="timer__edit-dots">:</span>
           <input
             className="timer__edit-input"
             type="text"
-            value={sec}
-            onChange={handleChangeSec}
+            // value={sec}
+            // onChange={handleChangeSec}
             onFocus={() => setEdit(true)}
-            onBlur={() => setEdit(false)}
+            // onBlur={() => setEdit(false)}
+            {...(register !== undefined && { ...register('timerMinutes') })}
           />
         </div>
       ) : (
@@ -108,3 +112,7 @@ export function Timer(props: TimeType): JSX.Element {
     </Card>
   );
 }
+
+Timer.defaultProps = {
+  register: undefined,
+};

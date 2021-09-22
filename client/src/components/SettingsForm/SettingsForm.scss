@@ -23,6 +23,11 @@
     gap: 20px;
   }
 
+  &__block-timer {
+    display: flex;
+    justify-content: space-between;
+  }
+
   &__input {
     font-weight: 700;
     width: 326px;

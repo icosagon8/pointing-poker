@@ -1,19 +1,10 @@
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
-import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { SettingsFormInput } from '../../models/SettingsFormInput';
 import { AddGameCard } from '../AddGameCard/AddGameCard';
-import { IOSSwitch } from '../IOSSwitch/IOSSwitch';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
 import './SettingsForm.scss';
-
-interface FormInput {
-  masterAsPlayer: boolean;
-  changingCard: boolean;
-  timerIsNeeded: boolean;
-  scoreType: string;
-  scoreTypeShort: string;
-}
 
 export const SettingsForm = (): JSX.Element => {
   const {
@@ -21,13 +12,9 @@ export const SettingsForm = (): JSX.Element => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInput>({ criteriaMode: 'all' });
+  } = useForm<SettingsFormInput>({ criteriaMode: 'all' });
 
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
-    // setState([
-    //   ...state,
-    //   { masterAsPlayer: data.masterAsPlayer, changingCard: data.changingCard, timerInNeeded: data.timerIsNeeded,  },
-    // ]);
+  const onSubmit: SubmitHandler<SettingsFormInput> = (data) => {
     console.log(data);
   };
 
@@ -145,9 +132,9 @@ export const SettingsForm = (): JSX.Element => {
             )}
           </>
         </div>
-        <div className="settings-form__block">
+        <div className="settings-form__block-timer">
           <Title title="Round time:" />
-          <Timer start={false} />
+          <Timer register={register} start={false} />
         </div>
         <div className="settings-form__block-add-card">
           <Title title="Add card values:" />
