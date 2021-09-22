@@ -5,8 +5,9 @@ import { MemberCard } from '../MemberCard/MemberCard';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
-  const [linkValue, setLinkValue] = useState<string>('http://pockerplanning.c...');
   const scram = useAppSelector((state) => state.users.users.find((user) => user.role === 'scram-master'));
+  const room = useAppSelector((state) => state.room.room);
+  const link = `http://localhost:3000/${room}`;
 
   return (
     <div className="start-game">
@@ -14,18 +15,12 @@ export const StartGame = (): JSX.Element => {
       <MemberCard name={`${scram?.firstname} ${scram?.lastname}`} position={scram?.position} src={scram?.avatar} />
       <h3 className="start-game__to-lobby">Link to lobby:</h3>
       <div className="start-game__link-block">
-        <input
-          className="start-game__input"
-          value={linkValue}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            setLinkValue(event.target.value);
-          }}
-        />
+        <p className="start-game__link">{link}</p>
         <Button
           variant="contained"
           color="primary"
           className="start-game__btn start-game__copy"
-          onClick={() => navigator.clipboard.writeText(linkValue)}
+          onClick={() => navigator.clipboard.writeText(link)}
         >
           Copy
         </Button>
