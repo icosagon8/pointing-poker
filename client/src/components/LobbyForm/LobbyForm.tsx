@@ -26,7 +26,6 @@ interface FormInputs {
 }
 
 export function LobbyForm(props: Props): JSX.Element {
-  const user = useAppSelector((state) => state.user.user);
   const room = useAppSelector((state) => state.room.room);
   const dispatch = useAppDispatch();
   const { handleClose, isScram } = props;

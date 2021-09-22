@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { BaseModal } from '../BaseModal/BaseModal';
 import { LobbyForm } from '../LobbyForm/LobbyForm';
-import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { useAppDispatch } from '../../store/hooks/hooks';
 import { addRoom } from '../../store/slices/roomSlice';
 import { parsePath } from '../../helpers/utils';
 
@@ -13,7 +13,6 @@ interface FormInputs {
 }
 
 export function StartHome(): JSX.Element {
-  const room = useAppSelector((state) => state.room.room);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState<boolean>(false);
   const [isScram, setIsScram] = useState<boolean>(false);
