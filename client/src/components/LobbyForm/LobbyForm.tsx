@@ -9,7 +9,7 @@ import { getInitials } from '../../helpers/utils';
 import { MainContext } from '../../mainContext';
 import { SocketContext } from '../../socketContext';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
-import { addUsers } from '../../store/slices/userSlice';
+import { addUsers } from '../../store/slices/usersSlice';
 
 interface Props {
   isScram: boolean;
