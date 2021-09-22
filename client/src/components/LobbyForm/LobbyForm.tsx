@@ -9,6 +9,8 @@ import { getInitials } from '../../helpers/utils';
 import { MainContext } from '../../mainContext';
 import { SocketContext } from '../../socketContext';
 import { UsersContext } from '../../usersContext';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { addUser } from '../../store/slices/userSlice';
 
 interface Props {
   isScram: boolean;
@@ -24,9 +26,11 @@ interface FormInputs {
 }
 
 export function LobbyForm(props: Props): JSX.Element {
+  const user = useAppSelector((state) => state.user.user);
+  const dispatch = useAppDispatch();
   const { handleClose, isScram } = props;
   const [src, setSrc] = useState<string>('');
-  const { setUser, room, setRoom } = useContext(MainContext);
+  const { room, setRoom } = useContext(MainContext);
   const history = useHistory();
   const { socket } = useContext(SocketContext);
   const { setUsers } = useContext(UsersContext);
@@ -64,7 +68,7 @@ export function LobbyForm(props: Props): JSX.Element {
   };
 
   const onSubmit = (data: FormInputs) => {
-    setUser(data);
+    dispatch(addUser(data));
     const id = getId(room);
 
     socket?.emit('login', { ...data, room: id }, () => {
