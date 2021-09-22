@@ -1,10 +1,11 @@
 import './StartHome.scss';
 import { Button } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BaseModal } from '../BaseModal/BaseModal';
 import { LobbyForm } from '../LobbyForm/LobbyForm';
-import { MainContext } from '../../mainContext';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { addRoom } from '../../store/slices/roomSlice';
 import { parsePath } from '../../helpers/utils';
 
 interface FormInputs {
@@ -12,9 +13,10 @@ interface FormInputs {
 }
 
 export function StartHome(): JSX.Element {
+  const room = useAppSelector((state) => state.room.room);
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState<boolean>(false);
   const [isScram, setIsScram] = useState<boolean>(false);
-  const { setRoom } = useContext(MainContext);
 
   const {
     register,
@@ -25,8 +27,8 @@ export function StartHome(): JSX.Element {
   });
 
   useEffect(() => {
-    setRoom('');
-  }, [setRoom]);
+    dispatch(addRoom(''));
+  }, [dispatch]);
 
   const handleOpenStartBtn = () => {
     setOpen(true);
@@ -40,12 +42,12 @@ export function StartHome(): JSX.Element {
   const handleClose = () => {
     setOpen(false);
     setIsScram(false);
-    setRoom('');
+    dispatch(addRoom(''));
   };
 
   const onSubmit = (data: FormInputs) => {
     handleOpenConnectBtn();
-    setRoom(parsePath(data.url));
+    dispatch(addRoom(parsePath(data.url)));
   };
 
   return (

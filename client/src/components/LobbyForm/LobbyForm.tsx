@@ -6,11 +6,11 @@ import { useHistory } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { FileInput } from '../FileInput/FileInput';
 import { getInitials } from '../../helpers/utils';
-import { MainContext } from '../../mainContext';
 import { SocketContext } from '../../socketContext';
 import { UsersContext } from '../../usersContext';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { addUser } from '../../store/slices/userSlice';
+import { addRoom } from '../../store/slices/roomSlice';
 
 interface Props {
   isScram: boolean;
@@ -27,10 +27,10 @@ interface FormInputs {
 
 export function LobbyForm(props: Props): JSX.Element {
   const user = useAppSelector((state) => state.user.user);
+  const room = useAppSelector((state) => state.room.room);
   const dispatch = useAppDispatch();
   const { handleClose, isScram } = props;
   const [src, setSrc] = useState<string>('');
-  const { room, setRoom } = useContext(MainContext);
   const history = useHistory();
   const { socket } = useContext(SocketContext);
   const { setUsers } = useContext(UsersContext);
@@ -59,7 +59,7 @@ export function LobbyForm(props: Props): JSX.Element {
 
     if (!chatRoom) {
       id = nanoid();
-      setRoom(id);
+      dispatch(addRoom(id));
     } else {
       id = chatRoom;
     }

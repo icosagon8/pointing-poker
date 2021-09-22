@@ -7,7 +7,6 @@ interface UserState {
   position: string;
   role: string;
   avatar: string;
-  room: string;
 }
 
 interface UserInitialState {
