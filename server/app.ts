@@ -3,7 +3,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
-import { addUser, deleteUser, getUser, getUsers } from './users';
+import { addUser, deleteUser, getUser, getUsers, checkRoom } from './users';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -41,6 +41,10 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('disconnect', () => {
     deleteUser(socket.id);
+  });
+
+  socket.on('joinRoom', (room) => {
+    io.to(socket.id).emit('room', checkRoom(room));
   });
 });
 
