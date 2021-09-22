@@ -10,11 +10,11 @@ interface UserState {
   room: string;
 }
 
-interface UserInitialState {
+interface UsersInitialState {
   users: UserState[];
 }
 
-const initialState: UserInitialState = {
+const initialState: UsersInitialState = {
   users: [],
 };
 
