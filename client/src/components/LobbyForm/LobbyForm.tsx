@@ -6,9 +6,10 @@ import { useHistory } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { FileInput } from '../FileInput/FileInput';
 import { getInitials } from '../../helpers/utils';
-import { MainContext } from '../../mainContext';
 import { SocketContext } from '../../socketContext';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { addUser } from '../../store/slices/userSlice';
+import { addRoom } from '../../store/slices/roomSlice';
 import { addUsers } from '../../store/slices/usersSlice';
 
 interface Props {
@@ -25,11 +26,11 @@ interface FormInputs {
 }
 
 export function LobbyForm(props: Props): JSX.Element {
+  const room = useAppSelector((state) => state.room.room);
   const usersArr = useAppSelector((state) => state.users.users);
   const dispatch = useAppDispatch();
   const { handleClose, isScram } = props;
   const [src, setSrc] = useState<string>('');
-  const { setUser, room, setRoom } = useContext(MainContext);
   const history = useHistory();
   const { socket } = useContext(SocketContext);
 
@@ -57,7 +58,7 @@ export function LobbyForm(props: Props): JSX.Element {
 
     if (!chatRoom) {
       id = nanoid();
-      setRoom(id);
+      dispatch(addRoom(id));
     } else {
       id = chatRoom;
     }
@@ -66,7 +67,7 @@ export function LobbyForm(props: Props): JSX.Element {
   };
 
   const onSubmit = (data: FormInputs) => {
-    setUser(data);
+    dispatch(addUser(data));
     const id = getId(room);
 
     socket?.emit('login', { ...data, room: id }, () => {

@@ -20,7 +20,6 @@ export function Chat(): JSX.Element {
     return () => {
       socket?.disconnect();
     };
-
   }, [socket]);
 
   useEffect(() => {

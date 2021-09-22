@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import { useContext, useEffect, useState } from 'react';
 import { BaseModal } from '../BaseModal/BaseModal';
 import { LobbyForm } from '../LobbyForm/LobbyForm';
-import { MainContext } from '../../mainContext';
+import { useAppDispatch } from '../../store/hooks/hooks';
+import { addRoom } from '../../store/slices/roomSlice';
 import { parsePath } from '../../helpers/utils';
 import { SocketContext } from '../../socketContext';
 
@@ -13,9 +14,9 @@ interface FormInputs {
 }
 
 export function StartHome(): JSX.Element {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState<boolean>(false);
   const [isScram, setIsScram] = useState<boolean>(false);
-  const { setRoom } = useContext(MainContext);
   const { socket } = useContext(SocketContext);
 
   const {
@@ -28,8 +29,8 @@ export function StartHome(): JSX.Element {
   });
 
   useEffect(() => {
-    setRoom('');
-  }, [setRoom]);
+    dispatch(addRoom(''));
+  }, [dispatch]);
 
   useEffect(() => {
     socket?.on('room', (room) => {
@@ -41,10 +42,10 @@ export function StartHome(): JSX.Element {
             exist: 'There is no such room',
           },
         });
-        setRoom('');
+        dispatch(addRoom(''));
       }
     });
-  }, [socket, setError, setRoom]);
+  }, [socket, setError, dispatch]);
 
   const handleOpenStartBtn = () => {
     setOpen(true);
@@ -58,13 +59,13 @@ export function StartHome(): JSX.Element {
   const handleClose = () => {
     setOpen(false);
     setIsScram(false);
-    setRoom('');
+    dispatch(addRoom(''));
   };
 
   const onSubmit = (data: FormInputs) => {
     const room = parsePath(data.url);
     handleOpenConnectBtn(room);
-    setRoom(room);
+    dispatch(addRoom(room));
   };
 
   return (
