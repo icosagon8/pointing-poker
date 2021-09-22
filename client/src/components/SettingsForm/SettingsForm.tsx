@@ -44,7 +44,7 @@ export const SettingsForm = (): JSX.Element => {
             render={({ field }) => (
               <FormControlLabel
                 className="settings-form__block-switch"
-                label={<Typography className="settings-form__label">Changing card in rount end:</Typography>}
+                label={<Typography className="settings-form__label">Changing card in round end:</Typography>}
                 labelPlacement="start"
                 control={<Switch {...field} checked={field.value} />}
               />
@@ -59,7 +59,7 @@ export const SettingsForm = (): JSX.Element => {
             render={({ field }) => (
               <FormControlLabel
                 className="settings-form__block-switch"
-                label={<Typography className="settings-form__label">Changing card in rount end:</Typography>}
+                label={<Typography className="settings-form__label">Is timer needed:</Typography>}
                 labelPlacement="start"
                 control={<Switch {...field} checked={field.value} />}
               />

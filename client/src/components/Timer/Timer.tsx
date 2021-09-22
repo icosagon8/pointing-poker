@@ -80,22 +80,16 @@ export function Timer(props: TimeType): JSX.Element {
           <input
             className="timer__edit-input"
             type="text"
-            // value={min}
-            // onChange={handleChangeMin}
             onFocus={() => setEdit(true)}
-            // ref={ref}
             max={2}
-            {...(register !== undefined && { ...register('timerHours') })}
+            {...(register && { ...register('timerHours') })}
           />
           <span className="timer__edit-dots">:</span>
           <input
             className="timer__edit-input"
             type="text"
-            // value={sec}
-            // onChange={handleChangeSec}
             onFocus={() => setEdit(true)}
-            // onBlur={() => setEdit(false)}
-            {...(register !== undefined && { ...register('timerMinutes') })}
+            {...(register && { ...register('timerMinutes') })}
           />
         </div>
       ) : (
