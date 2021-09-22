@@ -1,16 +1,24 @@
 import { Button } from '@material-ui/core';
 import { MemberCard } from '../MemberCard/MemberCard';
+import { UserModel } from '../../models/userModel';
 import { useAppSelector } from '../../store/hooks/hooks';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
   const room = useAppSelector((state) => state.room.room);
   const link = `http://localhost:3000/${room}`;
+  const users = useAppSelector((state) => state.users.users);
+  const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
 
   return (
     <div className="start-game">
       <h4 className="start-game__scram-master">Scram master:</h4>
-      <MemberCard name="Sung-Jin-Woo" />
+      <MemberCard
+        name={scramMaster?.firstname}
+        lastname={scramMaster?.lastname}
+        src={scramMaster?.avatar}
+        position={scramMaster?.position}
+      />
       <h3 className="start-game__to-lobby">Link to lobby:</h3>
       <div className="start-game__link-block">
         <p className="start-game__link">{link}</p>
