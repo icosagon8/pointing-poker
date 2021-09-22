@@ -1,5 +1,6 @@
 .timer {
-  width: 115px;
+  font-family: 'Ruda';
+  width: 120px;
   height: 53px;
 
   &__titles {
@@ -12,7 +13,7 @@
   }
 
   &__edit {
-    width: 96px;
+    width: 110px;
     height: 38px;
     display: flex;
     font-size: 42px;
@@ -34,9 +35,9 @@
   }
 
   &__counter {
+    padding: 0 7px;
+    font-weight: 700;
     font-size: 42px;
     line-height: 1;
-    display: flex;
-    justify-content: center;
   }
 }

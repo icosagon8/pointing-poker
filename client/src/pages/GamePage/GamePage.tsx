@@ -1,5 +1,8 @@
 import './GamePage.scss';
-import { Container, Typography, Grid, Button } from '@material-ui/core';
+import { useState, useEffect } from 'react';
+import { Container, Grid, Button } from '@material-ui/core';
+import IssueCard from '../../models/iIssueCard';
+import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
 import { MemberCard } from '../../components/MemberCard/MemberCard';
 import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
@@ -8,63 +11,116 @@ import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
 
 const members = [
-  { id: 13423, name: 'Alex', position: 'driver', src: 'adsasd2rr23' },
-  { id: 43513325423, name: 'Kim Foon', src: 'adsasd2rr23' },
-  { id: 213423, name: 'Li', position: 'driver', src: 'adsasd2rr23' },
+  { id: '13423', name: 'Alex', position: 'driver', src: 'adsasd2rr23' },
+  { id: '43513325423', name: 'Kim Foon', src: 'adsasd2rr23' },
+  { id: '213423', name: 'Li', position: 'driver', src: 'adsasd2rr23' },
 ];
 const gameCards = [
-  { id: 35635463, title: 'sp', value: '2' },
-  { id: 990934, title: 'sp', value: '5' },
-  { id: 1234090, title: 'sp', value: '1' },
+  { id: '35635463', title: 'sp', value: '2' },
+  { id: '990934', title: 'sp', value: '5' },
+  { id: '1234090', title: 'sp', value: '1' },
 ];
 const gameCardsStat = [
-  { id: 35635463, title: 'sp', value: '2', percent: 90.5 },
-  { id: 990934, title: 'sp', value: '5', percent: 7.2 },
-  { id: 1234090, title: 'sp', value: '1', percent: 2.3 },
-];
-const issues = [
-  { id: 1029341, title: 'Issue 1', priority: 'Low prority' },
-  { id: 3452346, title: 'Issue 2', priority: 'High prority' },
-  { id: 9000563, title: 'Issue 3', priority: 'Low prority' },
-  { id: 999933, title: 'Issue 4', priority: 'Low prority' },
-  { id: 409243000, title: 'Issue 5', priority: 'Low prority' },
+  { id: '35635463', title: 'sp', value: '2', percent: 90.5 },
+  { id: '990934', title: 'sp', value: '5', percent: 7.2 },
+  { id: '1234090', title: 'sp', value: '1', percent: 2.3 },
 ];
 
 export function GamePage(): JSX.Element {
+  const [issuesState, setIssuesState] = useState<IssueCard[]>([
+    { id: '1029341', title: 'Issue 1', priority: 'Low prority' },
+    { id: '3452346', title: 'Issue 2', priority: 'High prority' },
+    { id: '9000563', title: 'Issue 3', priority: 'Low prority' },
+    { id: '999933', title: 'Issue 4', priority: 'Low prority' },
+    { id: '409243000', title: 'Issue 5', priority: 'Low prority' },
+  ]);
+  const [role] = useState<string>('scram-master');
+  const [play, setPlay] = useState<boolean>(false);
+  const [location] = useState<string>('game-page');
+  const [indexIssue, setIndexIssue] = useState<number>(0);
+  const [currentId, setCurrentId] = useState<string>(issuesState[indexIssue].id);
+
+  useEffect(() => {
+    setIndexIssue(issuesState.findIndex((elem: IssueCard) => elem.id === currentId));
+  }, [issuesState, currentId]);
+
+  useEffect(() => {
+    setCurrentId(issuesState[indexIssue].id);
+  }, [issuesState, indexIssue]);
+
+  const handleClickNextIssue = () => {
+    const maxIndex = issuesState.length - 1;
+    if (indexIssue < maxIndex) {
+      setIndexIssue((prev) => prev + 1);
+    }
+  };
+
+  const handleSetIssueState = (issues: IssueCard[]) => {
+    setIssuesState(issues);
+  };
+
   return (
     <Container className="page-game">
       <Grid container>
         <Grid item xs={8}>
-          <Typography className="page-game__title page-title" align="center" component="h2" variant="h2">
-            Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)
-          </Typography>
+          <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
               <MemberCard isReduced={false} name="John" position="position" src="weokfnwoiefoi" />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
-              <Timer start={false} />
+              <Timer start={play} location={location} />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
-              <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
-                Stop Game
-              </Button>
+              {role === 'scram-master' && play ? (
+                <Button
+                  className="page-game__btn page-game__btn-outlined"
+                  variant="outlined"
+                  onClick={() => setPlay(false)}
+                >
+                  Stop Game
+                </Button>
+              ) : (
+                <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
+                  Exit
+                </Button>
+              )}
             </Grid>
           </Grid>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={4}>
-              <IssueList issues={issues} />
+              <IssueList
+                issues={issuesState}
+                setIssueState={handleSetIssueState}
+                role={role}
+                currentId={currentId}
+                setCurrentId={setCurrentId}
+              />
             </Grid>
-            <Grid item container xs={4} justifyContent="center">
-              <Button className="page-game__btn page-game__btn-primary" variant="contained" color="primary">
-                Run Round
-              </Button>
-            </Grid>
-            <Grid item container xs={4} justifyContent="center">
-              <Button className="page-game__btn page-game__btn-primary" variant="contained" color="primary">
-                Next ISSUE
-              </Button>
-            </Grid>
+            {role === 'scram-master' && !play ? (
+              <>
+                <Grid item container xs={4} justifyContent="center">
+                  <Button
+                    className="page-game__btn page-game__btn-primary"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setPlay(true)}
+                  >
+                    Run Round
+                  </Button>
+                </Grid>
+                <Grid item container xs={4} justifyContent="center">
+                  <Button
+                    className="page-game__btn page-game__btn-primary"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleClickNextIssue}
+                  >
+                    Next ISSUE
+                  </Button>
+                </Grid>
+              </>
+            ) : null}
           </Grid>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={4}>

@@ -1,4 +1,5 @@
 .game-card {
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -9,17 +10,16 @@
   border-radius: 10px;
   border: 1px solid #eee;
   box-shadow: 0 2px 2px 0 #eee;
-  cursor: pointer;
   position: relative;
   outline: none;
-  transition: all .2s;
+  transition: all .3s;
 
   &:focus-visible {
     border: 1px solid rgba(0, 0, 0, 0.37);
     box-shadow: 3px 4px 4px 0 rgba(0, 0, 0, 0.37);
   }
 
-  &--selected {
+  &.active {
     background-color: #cbf3ea;
   }
 
@@ -73,7 +73,7 @@
     pointer-events: auto;
   }
 
-  &__edit-btn {
+  &__btn {
     padding: 0;
   }
 
@@ -85,8 +85,10 @@
 
   &__number {
     width: 100%;
-    text-align: left;
     font-size: 16px;
     transform: rotate(180deg);
+  }
+  &__delete-btn {
+    color: red;
   }
 }

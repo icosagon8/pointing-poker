@@ -1,12 +1,13 @@
 import './StartHome.scss';
 import { Button } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BaseModal } from '../BaseModal/BaseModal';
 import { LobbyForm } from '../LobbyForm/LobbyForm';
 import { useAppDispatch } from '../../store/hooks/hooks';
 import { addRoom } from '../../store/slices/roomSlice';
 import { parsePath } from '../../helpers/utils';
+import { SocketContext } from '../../socketContext';
 
 interface FormInputs {
   url: string;
@@ -16,10 +17,12 @@ export function StartHome(): JSX.Element {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState<boolean>(false);
   const [isScram, setIsScram] = useState<boolean>(false);
+  const { socket } = useContext(SocketContext);
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     criteriaMode: 'all',
@@ -29,13 +32,28 @@ export function StartHome(): JSX.Element {
     dispatch(addRoom(''));
   }, [dispatch]);
 
+  useEffect(() => {
+    socket?.on('room', (room) => {
+      if (room) {
+        setOpen(true);
+      } else {
+        setError('url', {
+          types: {
+            exist: 'There is no such room',
+          },
+        });
+        dispatch(addRoom(''));
+      }
+    });
+  }, [socket, setError, dispatch]);
+
   const handleOpenStartBtn = () => {
     setOpen(true);
     setIsScram(true);
   };
 
-  const handleOpenConnectBtn = () => {
-    setOpen(true);
+  const handleOpenConnectBtn = (room: string) => {
+    socket?.emit('joinRoom', room);
   };
 
   const handleClose = () => {
@@ -45,8 +63,9 @@ export function StartHome(): JSX.Element {
   };
 
   const onSubmit = (data: FormInputs) => {
-    handleOpenConnectBtn();
-    dispatch(addRoom(parsePath(data.url)));
+    const room = parsePath(data.url);
+    handleOpenConnectBtn(room);
+    dispatch(addRoom(room));
   };
 
   return (
@@ -85,6 +104,7 @@ export function StartHome(): JSX.Element {
         </div>
         {errors.url?.type === 'required' && <p className="start-home__error">{errors.url.types.required}</p>}
         {errors.url?.type === 'pattern' && <p className="start-home__error">{errors.url.types.pattern}</p>}
+        {errors.url?.types.exist && <p className="start-home__error">{errors.url.types.exist}</p>}
       </form>
       <BaseModal open={open} handleClose={handleClose}>
         <LobbyForm handleClose={handleClose} isScram={isScram} />
