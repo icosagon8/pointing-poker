@@ -18,7 +18,17 @@
     font-size: 24px;
   }
 
-  &__input {
+  &__link-block {
+    display: flex;
+    align-items: center;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    overflow: hidden;
+    white-space: nowrap;
     font-size: 24px;
     font-family: 'Roboto';
     font-weight: 300;
@@ -28,11 +38,6 @@
     outline: none;
     box-shadow: 1px 2px 3px 2px gray;
     border-radius: 0 0 0 10px;
-  }
-
-  &__link-block {
-    display: flex;
-    align-items: center;
   }
 
   &__btn {
