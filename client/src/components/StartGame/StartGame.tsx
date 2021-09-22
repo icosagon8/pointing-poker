@@ -1,12 +1,11 @@
 import { Button } from '@material-ui/core';
-import { useState } from 'react';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { useAppSelector } from '../../store/hooks/hooks';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
   const room = useAppSelector((state) => state.room.room);
-  const [link] = useState<string>(`http://localhost:3000/lobby_${room}`);
+  const link = `http://localhost:3000/${room}`;
 
   return (
     <div className="start-game">
