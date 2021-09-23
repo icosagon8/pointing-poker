@@ -66,7 +66,7 @@ export function GamePage(): JSX.Element {
           <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
-              <MemberCard isReduced={false} name="John" position="position" src="weokfnwoiefoi" />
+              <MemberCard name="John" position="position" src="weokfnwoiefoi" />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
               <Timer start={play} location={location} />

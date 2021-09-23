@@ -9,11 +9,23 @@
   display: flex;
   flex-direction: column;
 
-  &__block {
+  &__block-switch {
     display: flex;
     width: 100%;
     justify-content: space-between;
-    align-items: center;
+    margin-left: 0;
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  &__block-timer {
+    display: flex;
+    justify-content: space-between;
   }
 
   &__input {
@@ -25,8 +37,19 @@
     border-radius: 0px 0px 0px 10px;
   }
 
+  &__input-block {
+    display: flex;
+    justify-content: space-between;
+  }
+
   &__label {
     cursor: pointer;
+    font-family: 'Ruda';
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
   }
 
   &__block-add-card {
@@ -34,5 +57,12 @@
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 30px;
+  }
+
+  &__error-text {
+    color: red;
+    margin: 0;
+    font-size: 14px;
+    text-align: center;
   }
 }
