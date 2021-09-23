@@ -25,6 +25,10 @@ io.on('connection', (socket: Socket) => {
     callback();
   });
 
+  socket.on('startGame', (room) => {
+    io.in(room).emit('redirectToNewGame');
+  });
+
   socket.on('message', (text) => {
     const messageId = nanoid();
     const user = getUser(socket.id);
