@@ -10,7 +10,7 @@ import { useAppSelector } from '../../store/hooks/hooks';
 
 export const LobbyPage = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.chat.isOpen);
-
+  const user = useAppSelector((state) => state.user.user);
   return (
     <Container>
       <Grid container>
@@ -18,8 +18,8 @@ export const LobbyPage = (): JSX.Element => {
           <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
           <StartGame />
           <MembersList />
-          <IssueListLobby />
-          <GameSettings />
+          {user?.role === 'scram-master' && <IssueListLobby />}
+          {user?.role === 'scram-master' && <GameSettings />}
         </Grid>
         {isOpen && (
           <Grid item xs={12} md={4}>
