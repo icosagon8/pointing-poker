@@ -1,4 +1,5 @@
 export interface SettingsFormInput {
+  roomId: string;
   masterAsPlayer: boolean;
   changingCard: boolean;
   timerIsNeeded: boolean;

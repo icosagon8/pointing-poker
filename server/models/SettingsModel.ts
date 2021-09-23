@@ -1,4 +1,5 @@
 export interface SettingsModel {
+  roomId: string;
   masterAsPlayer: boolean;
   changingCard: boolean;
   timerIsNeeded: boolean;
