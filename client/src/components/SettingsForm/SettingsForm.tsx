@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
@@ -5,8 +6,11 @@ import { AddGameCard } from '../AddGameCard/AddGameCard';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
 import './SettingsForm.scss';
+import { Message } from '../../models/Message';
+import { SocketContext } from '../../socketContext';
 
 export const SettingsForm = (): JSX.Element => {
+  const { socket } = useContext(SocketContext);
   const {
     register,
     control,
@@ -21,6 +25,7 @@ export const SettingsForm = (): JSX.Element => {
     if (data.timerMinutes.length === 1) {
       data.timerMinutes = `0${data.timerMinutes}`;
     }
+    socket?.emit('settings', data);
     console.log(data);
   };
 
