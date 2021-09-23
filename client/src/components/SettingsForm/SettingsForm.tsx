@@ -21,7 +21,6 @@ export const SettingsForm = (): JSX.Element => {
     if (data.timerMinutes.length === 1) {
       data.timerMinutes = `0${data.timerMinutes}`;
     }
-    console.log(data);
   };
 
   return (

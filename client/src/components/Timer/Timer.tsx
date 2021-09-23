@@ -1,6 +1,6 @@
 import './Timer.scss';
 import { Card } from '@material-ui/core';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
 
@@ -12,8 +12,8 @@ interface TimeType {
 
 export function Timer(props: TimeType): JSX.Element {
   const { start, location, register } = props;
-  const [min, setMin] = useState<string>('02');
-  const [sec, setSec] = useState<string>('00');
+  const [min] = useState<string>('02');
+  const [sec] = useState<string>('00');
   const [count, setCount] = useState<number>(0);
 
   const getZero = (num: number) => {
@@ -43,18 +43,6 @@ export function Timer(props: TimeType): JSX.Element {
       }
     };
   }, [count, start]);
-
-  const handleChangeMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length < 3 && e.target.value.match(/^\d+$/)) {
-      setMin(e.target.value);
-    }
-  };
-
-  const handleChangeSec = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length < 3 && e.target.value.match(/^\d+$/)) {
-      setSec(e.target.value);
-    }
-  };
 
   return (
     <Card className="timer">
