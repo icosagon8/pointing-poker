@@ -4,7 +4,7 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom } from './users';
-import { setSettings, getSettings } from './settings';
+import { sendSettings } from './settings';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -41,19 +41,8 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('settings', (settings) => {
-    setSettings(settings);
-    const sett = getSettings();
-    console.log('Sending to client');
-    console.log(sett);
-    io.emit('settings', {
-      masterAsPlayer: sett.masterAsPlayer,
-      changingCard: sett.changingCard,
-      timerIsNeeded: sett.timerIsNeeded,
-      scoreType: sett.scoreType,
-      scoreTypeShort: sett.scoreTypeShort,
-      timerHours: sett.timerHours,
-      timerMinutes: sett.timerMinutes,
-    });
+    sendSettings(settings);
+    io.emit('settings', settings);
   });
 
   socket.on('disconnect', () => {

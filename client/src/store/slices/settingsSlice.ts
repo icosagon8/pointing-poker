@@ -2,31 +2,23 @@ import { createSlice } from '@reduxjs/toolkit';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
 
 interface SettingsInitialState {
-  settings: SettingsFormInput;
+  settings: SettingsFormInput | null;
 }
 
 const initialState: SettingsInitialState = {
-  settings: {
-    masterAsPlayer: false,
-    changingCard: false,
-    timerIsNeeded: false,
-    scoreType: '',
-    scoreTypeShort: '',
-    timerHours: '',
-    timerMinutes: '',
-  },
+  settings: null,
 };
 
 const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    getSettings: (state, action) => {
+    saveSettings: (state, action) => {
       state.settings = { ...action.payload };
     },
   },
 });
 
-export const { getSettings } = settingsSlice.actions;
+export const { saveSettings } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

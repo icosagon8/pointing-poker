@@ -1,5 +1,5 @@
 import './GamePage.scss';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Grid, Button } from '@material-ui/core';
 import IssueCard from '../../models/iIssueCard';
 import { Title } from '../../components/Title/Title';
@@ -9,9 +9,6 @@ import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
 import { Timer } from '../../components/Timer/Timer';
 import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
-import { SocketContext } from '../../socketContext';
-import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
-import { getSettings } from '../../store/slices/settingsSlice';
 
 const members = [
   { id: '13423', name: 'Alex', position: 'driver', src: 'adsasd2rr23' },
@@ -42,9 +39,6 @@ export function GamePage(): JSX.Element {
   const [location] = useState<string>('game-page');
   const [indexIssue, setIndexIssue] = useState<number>(0);
   const [currentId, setCurrentId] = useState<string>(issuesState[indexIssue].id);
-  const { socket } = useContext(SocketContext);
-  const settings = useAppSelector((state) => state.settings.settings);
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setIndexIssue(issuesState.findIndex((elem: IssueCard) => elem.id === currentId));
@@ -53,12 +47,6 @@ export function GamePage(): JSX.Element {
   useEffect(() => {
     setCurrentId(issuesState[indexIssue].id);
   }, [issuesState, indexIssue]);
-
-  useEffect(() => {
-    socket?.on('settings', (item) => {
-      dispatch(getSettings(item));
-    });
-  }, [socket, dispatch]);
 
   const handleClickNextIssue = () => {
     const maxIndex = issuesState.length - 1;
