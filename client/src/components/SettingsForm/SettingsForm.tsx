@@ -15,6 +15,12 @@ export const SettingsForm = (): JSX.Element => {
   } = useForm<SettingsFormInput>({ criteriaMode: 'all' });
 
   const onSubmit: SubmitHandler<SettingsFormInput> = (data) => {
+    if (data.timerHours.length === 1) {
+      data.timerHours = `0${data.timerHours}`;
+    }
+    if (data.timerMinutes.length === 1) {
+      data.timerMinutes = `0${data.timerMinutes}`;
+    }
     console.log(data);
   };
 
@@ -132,9 +138,31 @@ export const SettingsForm = (): JSX.Element => {
             )}
           </>
         </div>
-        <div className="settings-form__block-timer">
-          <Title title="Round time:" />
-          <Timer register={register} start={false} />
+        <div className="settings-form__block">
+          <div className="settings-form__input-block">
+            <Title title="Round time:" />
+            <Timer register={register} start={false} location="lobby-page" />
+          </div>
+          <>
+            {errors.timerHours?.type === 'maxLength' && (
+              <p className="settings-form__error-text">{errors.timerHours.types?.maxLength}</p>
+            )}
+            {errors.timerHours?.type === 'required' && (
+              <p className="settings-form__error-text">{errors.timerHours.types?.required}</p>
+            )}
+            {errors.timerHours?.type === 'pattern' && (
+              <p className="settings-form__error-text">{errors.timerHours.types?.pattern}</p>
+            )}
+            {errors.timerMinutes?.type === 'maxLength' && (
+              <p className="settings-form__error-text">{errors.timerMinutes.types?.maxLength}</p>
+            )}
+            {errors.timerMinutes?.type === 'required' && (
+              <p className="settings-form__error-text">{errors.timerMinutes.types?.required}</p>
+            )}
+            {errors.timerMinutes?.type === 'pattern' && (
+              <p className="settings-form__error-text">{errors.timerMinutes.types?.pattern}</p>
+            )}
+          </>
         </div>
         <div className="settings-form__block-add-card">
           <Title title="Add card values:" />
