@@ -4,7 +4,7 @@ import { ScoreCard } from '../ScoreCard/ScoreCard';
 
 interface MemberCardListType {
   members: {
-    id: number;
+    id: string;
     name: string;
     position?: string;
     src: string;

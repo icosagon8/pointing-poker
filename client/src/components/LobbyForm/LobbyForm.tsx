@@ -1,11 +1,19 @@
 import './LobbyForm.scss';
 import { Avatar, Button, FormControlLabel, Switch } from '@material-ui/core';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
+import { nanoid } from 'nanoid';
 import { FileInput } from '../FileInput/FileInput';
 import { getInitials } from '../../helpers/utils';
+import { SocketContext } from '../../socketContext';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { addUser } from '../../store/slices/userSlice';
+import { addRoom } from '../../store/slices/roomSlice';
+import { addUsers } from '../../store/slices/usersSlice';
 
 interface Props {
+  isScram: boolean;
   handleClose: () => void;
 }
 
@@ -13,13 +21,24 @@ interface FormInputs {
   firstname: string;
   lastname: string;
   position: string;
-  isObserver: boolean;
+  role: string;
   avatar: string;
 }
 
 export function LobbyForm(props: Props): JSX.Element {
-  const { handleClose } = props;
+  const room = useAppSelector((state) => state.room.room);
+  const usersArr = useAppSelector((state) => state.users.users);
+  const dispatch = useAppDispatch();
+  const { handleClose, isScram } = props;
   const [src, setSrc] = useState<string>('');
+  const history = useHistory();
+  const { socket } = useContext(SocketContext);
+
+  useEffect(() => {
+    socket?.on('users', (users) => {
+      dispatch(addUsers(users));
+    });
+  }, [dispatch, socket]);
 
   const {
     register,
@@ -34,26 +53,58 @@ export function LobbyForm(props: Props): JSX.Element {
   const watchName: string = watch('firstname');
   const watchLastname: string = watch('lastname');
 
+  const getId = (chatRoom: string) => {
+    let id: string;
+
+    if (!chatRoom) {
+      id = nanoid();
+      dispatch(addRoom(id));
+    } else {
+      id = chatRoom;
+    }
+
+    return id;
+  };
+
   const onSubmit = (data: FormInputs) => {
-    console.log(data);
+    dispatch(addUser(data));
+    const id = getId(room);
+
+    socket?.emit('login', { ...data, room: id }, () => {
+      history.push('/lobby');
+    });
   };
 
   return (
     <form className="lobby-form" onSubmit={handleSubmit(onSubmit)}>
       <div className="lobby-form__title-wrapper">
         <h2 className="lobby-form__title">Connect to lobby</h2>
-        <Controller
-          name="isObserver"
-          control={control}
-          defaultValue
-          render={({ field }) => (
-            <FormControlLabel
-              control={<Switch color="default" {...field} checked={field.value} />}
-              label="Connect as Observer"
-              labelPlacement="start"
-            />
-          )}
-        />
+        {!isScram ? (
+          <Controller
+            name="role"
+            control={control}
+            defaultValue="observer"
+            render={({ field }) => (
+              <FormControlLabel
+                control={
+                  <Switch
+                    color="default"
+                    {...field}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const value = e.target.value === 'observer' ? 'player' : 'observer';
+                      field.onChange(value);
+                    }}
+                    checked={field.value === 'observer'}
+                  />
+                }
+                label="Connect as Observer"
+                labelPlacement="start"
+              />
+            )}
+          />
+        ) : (
+          <input type="hidden" value="scram-master" {...register('role')} />
+        )}
       </div>
       <div className="lobby-form__fields-wrapper">
         <div className="lobby-form__group">

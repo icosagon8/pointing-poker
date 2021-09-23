@@ -9,14 +9,17 @@ import { Message } from '../../models/Message';
 export function Chat(): JSX.Element {
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
-  const [user] = useState({ name: 'John Doe', position: 'Frontend developer' });
-  const socket = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const scrollRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
-    socket.on('message', ({ text, id }: Message) => {
-      setMessages((chatMessages) => [...chatMessages, { text, id }]);
+    socket?.on('message', (chatMessage: Message) => {
+      setMessages((chatMessages) => [...chatMessages, chatMessage]);
     });
+
+    return () => {
+      socket?.disconnect();
+    };
   }, [socket]);
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export function Chat(): JSX.Element {
     e.preventDefault();
 
     if (message) {
-      socket.emit('message', message);
+      socket?.emit('message', message);
       setMessage('');
     }
   };
@@ -42,13 +45,17 @@ export function Chat(): JSX.Element {
     <Grid className="chat" container direction="column" wrap="nowrap">
       <List className="chat__message-list">
         {messages.map((chatMessage, index) => (
-          <ListItem ref={index === messages.length - 1 ? scrollRef : null} key={chatMessage.id}>
+          <ListItem ref={index === messages.length - 1 ? scrollRef : null} key={chatMessage.messageId}>
             <Grid container wrap="nowrap">
               <Grid className="chat__message-wrapper" item xs="auto">
                 <ListItemText className="chat__message" primary={chatMessage.text} />
               </Grid>
               <Grid item xs="auto">
-                <MemberCard name={user.name} position={user.position} />
+                <MemberCard
+                  name={`${chatMessage.firstname} ${chatMessage.lastname}`}
+                  position={chatMessage.position}
+                  src={chatMessage.avatar}
+                />
               </Grid>
             </Grid>
           </ListItem>

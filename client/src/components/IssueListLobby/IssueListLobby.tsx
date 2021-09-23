@@ -17,7 +17,7 @@ export const IssueListLobby = (): JSX.Element => {
       <Title title="Issues:" />
       <div className="issue-list-lobby__block">
         {issuesState.map((item: IssueCard) => {
-          return <IssueMaster title={item.title} priority={item.priority} />;
+          return <IssueMaster title={item.title} priority={item.priority} id={item.id} key={item.id} />;
         })}
         <IssueCreate issues={issuesState} setIssueState={handleSetIssueState} />
       </div>
