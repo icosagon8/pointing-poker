@@ -1,14 +1,17 @@
 import './Timer.scss';
 import { Card } from '@material-ui/core';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { UseFormRegister } from 'react-hook-form';
+import { SettingsFormInput } from '../../models/SettingsFormInput';
 
 interface TimeType {
   start: boolean;
-  location: string;
+  register?: UseFormRegister<SettingsFormInput>;
+  location?: string;
 }
 
 export function Timer(props: TimeType): JSX.Element {
-  const { start, location } = props;
+  const { start, location, register } = props;
   const [min, setMin] = useState<string>('02');
   const [sec, setSec] = useState<string>('00');
   const [count, setCount] = useState<number>(0);
@@ -61,9 +64,41 @@ export function Timer(props: TimeType): JSX.Element {
       </div>
       {location === 'lobby-page' ? (
         <div className="timer__edit">
-          <input className="timer__edit-input" type="text" value={min} onChange={handleChangeMin} max={2} />
+          <input
+            className="timer__edit-input"
+            type="text"
+            {...(register && {
+              ...register('timerHours', {
+                required: 'Enter the time',
+                maxLength: {
+                  value: 2,
+                  message: 'Max length is 2',
+                },
+                pattern: {
+                  value: /^[\d]*$/m,
+                  message: 'This input must match the pattern',
+                },
+              }),
+            })}
+          />
           <span className="timer__edit-dots">:</span>
-          <input className="timer__edit-input" type="text" value={sec} onChange={handleChangeSec} />
+          <input
+            className="timer__edit-input"
+            type="text"
+            {...(register && {
+              ...register('timerMinutes', {
+                required: 'Enter the time',
+                maxLength: {
+                  value: 2,
+                  message: 'Max length is 2',
+                },
+                pattern: {
+                  value: /^[\d]*$/m,
+                  message: 'This input must match the pattern',
+                },
+              }),
+            })}
+          />
         </div>
       ) : (
         <div className="timer__counter">{start ? convertToFormat(count) : `${min}:${sec}`}</div>
@@ -71,3 +106,8 @@ export function Timer(props: TimeType): JSX.Element {
     </Card>
   );
 }
+
+Timer.defaultProps = {
+  register: undefined,
+  location: '',
+};

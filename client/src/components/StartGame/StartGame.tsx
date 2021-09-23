@@ -2,6 +2,7 @@ import { Button } from '@material-ui/core';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { UserModel } from '../../models/userModel';
 import { useAppSelector } from '../../store/hooks/hooks';
+import { MemberCard } from '../MemberCard/MemberCard';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
@@ -32,7 +33,13 @@ export const StartGame = (): JSX.Element => {
         </Button>
       </div>
       <div className="start-game__btn-block">
-        <Button variant="contained" color="primary" className="start-game__btn start-game__copy">
+        <Button
+          form="modalForm"
+          variant="contained"
+          type="submit"
+          color="primary"
+          className="start-game__btn start-game__copy"
+        >
           Start game
         </Button>
         <Button variant="outlined" color="primary" className="start-game__btn start-game__cancel">
