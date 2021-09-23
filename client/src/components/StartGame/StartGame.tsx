@@ -2,7 +2,6 @@ import { Button } from '@material-ui/core';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { UserModel } from '../../models/userModel';
 import { useAppSelector } from '../../store/hooks/hooks';
-import { MemberCard } from '../MemberCard/MemberCard';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
