@@ -27,7 +27,7 @@ export const SettingsForm = (): JSX.Element => {
     if (data.timerMinutes.length === 1) {
       data.timerMinutes = `0${data.timerMinutes}`;
     }
-    socket?.emit('settings', data);
+    socket?.emit('saveSettings', data);
     history.push('/game');
   };
 

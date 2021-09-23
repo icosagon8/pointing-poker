@@ -17,7 +17,7 @@ export const LobbyPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    socket?.on('settings', (item) => {
+    socket?.on('sendSettings', (item) => {
       dispatch(saveSettings(item));
     });
   }, [socket, dispatch]);

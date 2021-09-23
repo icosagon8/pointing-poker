@@ -40,9 +40,9 @@ io.on('connection', (socket: Socket) => {
     });
   });
 
-  socket.on('settings', (settings) => {
+  socket.on('saveSettings', (settings) => {
     sendSettings(settings);
-    io.emit('settings', settings);
+    io.emit('sendSettings', settings);
   });
 
   socket.on('disconnect', () => {
