@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
@@ -11,6 +12,7 @@ import { SocketContext } from '../../socketContext';
 
 export const SettingsForm = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
+  const history = useHistory();
   const {
     register,
     control,
@@ -26,7 +28,7 @@ export const SettingsForm = (): JSX.Element => {
       data.timerMinutes = `0${data.timerMinutes}`;
     }
     socket?.emit('settings', data);
-    console.log(data);
+    history.push('/game');
   };
 
   return (

@@ -10,9 +10,11 @@ let settings: SettingsModel = {
   timerMinutes: '',
 };
 
-export const getSettings = (data: SettingsModel): SettingsModel => {
+export const setSettings = (data: SettingsModel): SettingsModel => {
   settings = { ...data };
-  console.log(settings);
+  return settings;
+};
 
+export const getSettings = (): SettingsModel => {
   return settings;
 };
