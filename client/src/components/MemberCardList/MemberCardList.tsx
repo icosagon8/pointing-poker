@@ -6,8 +6,9 @@ interface MemberCardListType {
   members: {
     id: string;
     name: string;
+    lastname?: string;
     position?: string;
-    src: string;
+    src?: string;
   }[];
 }
 
@@ -20,10 +21,10 @@ export function MemberCardList(props: MemberCardListType): JSX.Element {
         <h2 className="member-list__title">Players:</h2>
       </div>
       <ul className="member-list__items">
-        {members.map(({ id, name, position, src }) => (
+        {members.map(({ id, name, lastname, position, src }) => (
           <li className="member-list__item" key={id}>
             <ScoreCard />
-            <MemberCard name={name} position={position} src={src} />
+            <MemberCard name={name} lastname={lastname} position={position} src={src} />
           </li>
         ))}
       </ul>

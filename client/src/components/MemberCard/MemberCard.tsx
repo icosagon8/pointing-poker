@@ -1,19 +1,20 @@
 import './MemberCard.scss';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
-import { IconButton } from '@material-ui/core';
+import { Avatar, IconButton } from '@material-ui/core';
 import MemberCardType from '../../models/iMemberCard';
+import { getInitials } from '../../helpers/utils';
 
 export const MemberCard = (props: MemberCardType): JSX.Element => {
-  const { src, name, position } = props;
+  const { src, name, lastname, position } = props;
   return (
     <div className="member-card">
-      {src ? (
-        <img src={src} alt="avatar" className="member-card__avatar" />
-      ) : (
-        <div className="member-card__avatar member-card__avatar--initials" />
-      )}
+      <Avatar className="member-card__avatar" src={src} alt="avatar">
+        {getInitials(name, lastname)}
+      </Avatar>
       <div>
-        <h3 className="member-card__title">{name}</h3>
+        <h3 className="member-card__title">
+          {name} {lastname}
+        </h3>
         {position && <h4 className="member-card__position">{position}</h4>}
       </div>
       <IconButton>

@@ -13,14 +13,13 @@
   &__avatar {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
     margin-left: 15px;
-
-    &--initials {
-      background-color: #60dabf;
-      box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.25);
-      background-color: #60dabf;
-    }
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #60dabf;
+    box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    text-transform: uppercase;
   }
 
   &__title {
@@ -36,23 +35,5 @@
     margin: 0;
     font-size: 10px;
     font-weight: 400;
-  }
-}
-
-.member-card-reduced {
-  width: 200px;
-  height: 50px;
-
-  &__avatar {
-    width: 33px;
-    height: 33px;
-  }
-
-  &__title {
-    font-size: 18px;
-  }
-
-  &__position {
-    font-size: 8px;
   }
 }

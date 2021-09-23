@@ -9,11 +9,13 @@ import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
 import { Timer } from '../../components/Timer/Timer';
 import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
+import { useAppSelector } from '../../store/hooks/hooks';
+import { UserModel } from '../../models/userModel';
 
 const members = [
-  { id: '13423', name: 'Alex', position: 'driver', src: 'adsasd2rr23' },
-  { id: '43513325423', name: 'Kim Foon', src: 'adsasd2rr23' },
-  { id: '213423', name: 'Li', position: 'driver', src: 'adsasd2rr23' },
+  { id: '13423', name: 'Alex', lastname: 'Doe', position: 'driver', src: 'adsasd2rr23' },
+  { id: '43513325423', name: 'Kim Foon', lastname: 'Doe', src: 'adsasd2rr23' },
+  { id: '213423', name: 'Li', lastname: 'Doe', position: 'driver', src: 'adsasd2rr23' },
 ];
 const gameCards = [
   { id: '35635463', title: 'sp', value: '2' },
@@ -39,6 +41,8 @@ export function GamePage(): JSX.Element {
   const [location] = useState<string>('game-page');
   const [indexIssue, setIndexIssue] = useState<number>(0);
   const [currentId, setCurrentId] = useState<string>(issuesState[indexIssue].id);
+  const users = useAppSelector((state) => state.users.users);
+  const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
 
   useEffect(() => {
     setIndexIssue(issuesState.findIndex((elem: IssueCard) => elem.id === currentId));
@@ -66,7 +70,12 @@ export function GamePage(): JSX.Element {
           <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
-              <MemberCard name="John" position="position" src="weokfnwoiefoi" />
+              <MemberCard
+                name={scramMaster?.firstname}
+                lastname={scramMaster?.lastname}
+                src={scramMaster?.avatar}
+                position={scramMaster?.position}
+              />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
               <Timer start={play} location={location} />

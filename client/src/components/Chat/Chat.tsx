@@ -52,7 +52,8 @@ export function Chat(): JSX.Element {
               </Grid>
               <Grid item xs="auto">
                 <MemberCard
-                  name={`${chatMessage.firstname} ${chatMessage.lastname}`}
+                  name={chatMessage.firstname}
+                  lastname={chatMessage.lastname}
                   position={chatMessage.position}
                   src={chatMessage.avatar}
                 />
