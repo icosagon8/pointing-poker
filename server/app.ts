@@ -4,6 +4,7 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom } from './users';
+import { sendSettings } from './settings';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -37,6 +38,12 @@ io.on('connection', (socket: Socket) => {
       position: user.position,
       avatar: user.avatar,
     });
+  });
+
+  socket.on('saveSettings', (settings) => {
+    console.log(settings);
+    sendSettings(settings);
+    io.in(settings.roomId).emit('sendSettings', settings);
   });
 
   socket.on('disconnect', () => {

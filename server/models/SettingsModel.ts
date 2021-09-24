@@ -1,4 +1,4 @@
-export interface SettingsFormInput {
+export interface SettingsModel {
   roomId: string;
   masterAsPlayer: boolean;
   changingCard: boolean;
