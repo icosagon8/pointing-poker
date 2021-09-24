@@ -13,6 +13,7 @@ import { saveSettings } from '../../store/slices/settingsSlice';
 
 export const LobbyPage = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.chat.isOpen);
+  const user = useAppSelector((state) => state.user.user);
   const { socket } = useContext(SocketContext);
   const dispatch = useAppDispatch();
 
@@ -29,8 +30,12 @@ export const LobbyPage = (): JSX.Element => {
           <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
           <StartGame />
           <MembersList />
-          <IssueListLobby />
-          <GameSettings />
+          {user?.role === 'scram-master' && (
+            <>
+              <IssueListLobby />
+              <GameSettings />
+            </>
+          )}
         </Grid>
         {isOpen && (
           <Grid item xs={12} md={4}>
