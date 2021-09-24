@@ -1,6 +1,6 @@
 import { UserModel } from './models/UserModel';
 
-let users: UserModel[] = [];
+const users: UserModel[] = [];
 
 export const addUser = ({ id, firstname, lastname, position, role, avatar, room }: UserModel): UserModel => {
   const user = { id, firstname, lastname, position, role, avatar, room };
@@ -19,9 +19,10 @@ export const deleteUser = (id: string): UserModel | undefined => {
   return undefined;
 };
 
-export const deleteUsersInRoom = (room: string): UserModel[] => {
-  users = users.filter((user) => user.room !== room);
-  return users;
+export const deleteUsersInRoom = (room: string): void => {
+  for (let i = users.length - 1; i >= 0; i -= 1) {
+    if (users[i].room === room) users.splice(i, 1);
+  }
 };
 
 export const getUsers = (room: string): UserModel[] => users.filter((user) => user.room === room);

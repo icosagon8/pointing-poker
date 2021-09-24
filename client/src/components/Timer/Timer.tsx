@@ -11,9 +11,9 @@ interface TimeType {
 }
 
 export function Timer(props: TimeType): JSX.Element {
+  const MIN = '02';
+  const SEC = '00';
   const { start, location, register } = props;
-  const [min] = useState<string>('02');
-  const [sec] = useState<string>('00');
   const [count, setCount] = useState<number>(0);
 
   const getZero = (num: number) => {
@@ -27,10 +27,10 @@ export function Timer(props: TimeType): JSX.Element {
   };
 
   useEffect(() => {
-    const minString = Number(min);
-    const secString = Number(sec);
+    const minString = Number(MIN);
+    const secString = Number(SEC);
     setCount(minString * 60 + secString);
-  }, [start, min, sec]);
+  }, [start, MIN, SEC]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -89,7 +89,7 @@ export function Timer(props: TimeType): JSX.Element {
           />
         </div>
       ) : (
-        <div className="timer__counter">{start ? convertToFormat(count) : `${min}:${sec}`}</div>
+        <div className="timer__counter">{start ? convertToFormat(count) : `${MIN}:${SEC}`}</div>
       )}
     </Card>
   );
