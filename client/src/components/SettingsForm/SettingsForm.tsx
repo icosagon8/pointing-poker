@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
@@ -8,6 +8,8 @@ import { Title } from '../Title/Title';
 import './SettingsForm.scss';
 import { SocketContext } from '../../socketContext';
 import { useAppSelector } from '../../store/hooks/hooks';
+import { GameCardsList } from '../GameCardsList/GameCardsList';
+import GameCardType from '../../models/iGameCard';
 
 export const SettingsForm = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
@@ -20,6 +22,7 @@ export const SettingsForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<SettingsFormInput>({ criteriaMode: 'all' });
   const watchTimer: boolean = watch('timerIsNeeded');
+  const [gameCards, setGameCards] = useState<GameCardType[]>([]);
 
   const onSubmit: SubmitHandler<SettingsFormInput> = (data) => {
     if (data.timerHours.length === 1) {
@@ -176,8 +179,8 @@ export const SettingsForm = (): JSX.Element => {
         )}
         <div className="settings-form__block-add-card">
           <Title title="Add card values:" />
-          <div>
-            <AddGameCard />
+          <div className="settings-form__block-cards-list">
+            <GameCardsList cards={gameCards} setGameCards={setGameCards} />
           </div>
         </div>
       </form>
