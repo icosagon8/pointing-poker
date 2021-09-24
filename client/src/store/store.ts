@@ -3,6 +3,7 @@ import chatReducer from './slices/chatSlice';
 import userSlice from './slices/userSlice';
 import roomSlice from './slices/roomSlice';
 import usersSlice from './slices/usersSlice';
+import settingsSlice from './slices/settingsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     user: userSlice,
     room: roomSlice,
     users: usersSlice,
+    settings: settingsSlice,
   },
 });
 

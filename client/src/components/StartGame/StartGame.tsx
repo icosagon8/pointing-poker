@@ -19,6 +19,9 @@ export const StartGame = (): JSX.Element => {
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
 
   useEffect(() => {
+    socket?.on('redirectToNewGame', () => {
+      history.push('/game');
+    });
     socket?.on('redirectToHomePage', () => {
       if (chatOpen) {
         dispatch(off());
@@ -30,6 +33,8 @@ export const StartGame = (): JSX.Element => {
   const handleClick = () => {
     socket?.emit('cancelGame', room);
   };
+
+  }, [socket, history]);
 
   return (
     <div className="start-game">
