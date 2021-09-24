@@ -18,8 +18,12 @@ export const LobbyPage = (): JSX.Element => {
           <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
           <StartGame />
           <MembersList />
-          {user?.role === 'scram-master' && <IssueListLobby />}
-          {user?.role === 'scram-master' && <GameSettings />}
+          {user?.role === 'scram-master' && (
+            <>
+              <IssueListLobby />
+              <GameSettings />
+            </>
+          )}
         </Grid>
         {isOpen && (
           <Grid item xs={12} md={4}>

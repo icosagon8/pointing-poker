@@ -20,19 +20,21 @@ export const StartGame = (): JSX.Element => {
         src={scramMaster?.avatar}
         position={scramMaster?.position}
       />
-      {user?.role === 'scram-master' && <h3 className="start-game__to-lobby">Link to lobby:</h3>}
       {user?.role === 'scram-master' && (
-        <div className="start-game__link-block">
-          <p className="start-game__link">{link}</p>
-          <Button
-            variant="contained"
-            color="primary"
-            className="start-game__btn start-game__copy"
-            onClick={() => navigator.clipboard.writeText(link)}
-          >
-            Copy
-          </Button>
-        </div>
+        <>
+          <h3 className="start-game__to-lobby">Link to lobby:</h3>
+          <div className="start-game__link-block">
+            <p className="start-game__link">{link}</p>
+            <Button
+              variant="contained"
+              color="primary"
+              className="start-game__btn start-game__copy"
+              onClick={() => navigator.clipboard.writeText(link)}
+            >
+              Copy
+            </Button>
+          </div>
+        </>
       )}
       <div className="start-game__btn-block">
         {user?.role === 'scram-master' ? (
