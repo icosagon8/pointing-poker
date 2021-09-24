@@ -3,23 +3,29 @@ import { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { UserModel } from '../../models/userModel';
-import { useAppSelector } from '../../store/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { off } from '../../store/slices/chatSlice';
 import { SocketContext } from '../../socketContext';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
+  const dispatch = useAppDispatch();
   const { socket } = useContext(SocketContext);
   const history = useHistory();
   const room = useAppSelector((state) => state.room.room);
+  const chatOpen = useAppSelector((state) => state.chat.isOpen);
   const link = `http://localhost:3000/${room}`;
   const users = useAppSelector((state) => state.users.users);
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
 
   useEffect(() => {
     socket?.on('redirectToHomePage', () => {
+      if (chatOpen) {
+        dispatch(off());
+      }
       history.push('/');
     });
-  }, [socket, history]);
+  }, [socket, dispatch, history, chatOpen]);
 
   const handleClick = () => {
     socket?.emit('cancelGame', room);
