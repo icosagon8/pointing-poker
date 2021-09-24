@@ -1,4 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent } from '@material-ui/core';
+import { useContext, useEffect } from 'react';
+import { SocketContext } from '../../socketContext';
+import { useAppSelector } from '../../store/hooks/hooks';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import IssueCard from '../../models/iIssueCard';
 import './IssueDialog.scss';
@@ -20,9 +23,12 @@ interface IFormInput {
   title: string;
   link: string;
   priority: PriorityEnum;
+  roomId: string;
 }
 
 export const IssueDialog = (props: IissueDialog): JSX.Element => {
+  const { socket } = useContext(SocketContext);
+  const room = useAppSelector((state) => state.room.room);
   const { onClose, open, issues, setIssueState } = props;
   const {
     register,
@@ -30,11 +36,19 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
     formState: { errors },
   } = useForm<IFormInput>({ criteriaMode: 'all' });
 
+  useEffect(() => {
+    socket?.on('issues', (issues) => {
+      // dispatch(addUsers(users));
+    });
+  }, [socket]);
+
   const handleClose = () => {
     onClose();
   };
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    data.roomId = room;
+    socket?.emit('saveIssue', data);
     setIssueState([...issues, { id: '123123', title: data.title, priority: data.priority } as IssueCard]);
     handleClose();
   };
