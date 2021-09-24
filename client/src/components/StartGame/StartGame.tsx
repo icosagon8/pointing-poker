@@ -1,14 +1,25 @@
 import { Button } from '@material-ui/core';
+import { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { UserModel } from '../../models/userModel';
 import { useAppSelector } from '../../store/hooks/hooks';
+import { SocketContext } from '../../socketContext';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
+  const { socket } = useContext(SocketContext);
+  const history = useHistory();
   const room = useAppSelector((state) => state.room.room);
   const link = `http://localhost:3000/${room}`;
   const users = useAppSelector((state) => state.users.users);
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
+
+  useEffect(() => {
+    socket?.on('redirectToNewGame', () => {
+      history.push('/game');
+    });
+  }, [socket, history]);
 
   return (
     <div className="start-game">
