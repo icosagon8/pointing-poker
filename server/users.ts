@@ -19,6 +19,12 @@ export const deleteUser = (id: string): UserModel | undefined => {
   return undefined;
 };
 
+export const deleteUsersInRoom = (room: string): void => {
+  for (let i = users.length - 1; i >= 0; i -= 1) {
+    if (users[i].room === room) users.splice(i, 1);
+  }
+};
+
 export const getUsers = (room: string): UserModel[] => users.filter((user) => user.room === room);
 
 export const checkRoom = (room: string): boolean => users.some((user: UserModel) => user.room === room);

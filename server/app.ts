@@ -3,7 +3,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
-import { addUser, deleteUser, getUser, getUsers, checkRoom } from './users';
+import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
 import { sendSettings } from './settings';
 
 const PORT = process.env.PORT || 8080;
@@ -25,9 +25,14 @@ io.on('connection', (socket: Socket) => {
     io.in(room).emit('users', getUsers(room));
     callback();
   });
-
+    
   socket.on('startGame', (room) => {
     io.in(room).emit('redirectToNewGame');
+  });
+  
+  socket.on('cancelGame', (room) => {
+    io.in(room).emit('redirectToHomePage');
+    deleteUsersInRoom(room);
   });
 
   socket.on('message', (text) => {
