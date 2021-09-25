@@ -50,7 +50,6 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('saveSettings', (settings) => {
-    console.log(settings);
     sendSettings(settings);
     io.in(settings.roomId).emit('sendSettings', settings);
   });
