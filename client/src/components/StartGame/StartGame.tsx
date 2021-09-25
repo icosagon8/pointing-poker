@@ -35,8 +35,6 @@ export const StartGame = (): JSX.Element => {
     socket?.emit('cancelGame', room);
   };
 
-  }, [socket, history]);
-
   return (
     <div className="start-game">
       <h4 className="start-game__scram-master">Scram master:</h4>
@@ -75,7 +73,7 @@ export const StartGame = (): JSX.Element => {
               Start game
             </Button>
 
-            <Button variant="outlined" color="primary" className="start-game__btn start-game__cancel">
+            <Button variant="outlined" color="primary" className="start-game__btn start-game__cancel" onClick={handleClick}>
               Cancel game
             </Button>
           </>

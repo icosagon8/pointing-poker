@@ -1,16 +1,16 @@
 import { Button, Dialog, DialogActions, DialogContent } from '@material-ui/core';
 import { useContext, useEffect } from 'react';
-import { SocketContext } from '../../socketContext';
-import { useAppSelector } from '../../store/hooks/hooks';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useAppSelector, useAppDispatch } from '../../store/hooks/hooks';
+import { SocketContext } from '../../socketContext';
 import IssueCard from '../../models/iIssueCard';
+import { addIssues } from '../../store/slices/issuesSlice';
+import { addIssue } from '../../store/slices/issueSlice';
 import './IssueDialog.scss';
 
 interface IissueDialog {
   open: boolean;
   onClose: () => void;
-  issues: IssueCard[];
-  setIssueState: (issues: IssueCard[]) => void;
 }
 
 enum PriorityEnum {
@@ -21,15 +21,15 @@ enum PriorityEnum {
 
 interface IFormInput {
   title: string;
-  link: string;
   priority: PriorityEnum;
   roomId: string;
 }
 
 export const IssueDialog = (props: IissueDialog): JSX.Element => {
   const { socket } = useContext(SocketContext);
+  const dispatch = useAppDispatch();
   const room = useAppSelector((state) => state.room.room);
-  const { onClose, open, issues, setIssueState } = props;
+  const { onClose, open } = props;
   const {
     register,
     handleSubmit,
@@ -38,9 +38,9 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
 
   useEffect(() => {
     socket?.on('issues', (issues) => {
-      // dispatch(addUsers(users));
+      dispatch(addIssues(issues));
     });
-  }, [socket]);
+  }, [socket, dispatch]);
 
   const handleClose = () => {
     onClose();
@@ -48,8 +48,8 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     data.roomId = room;
+    dispatch(addIssue(data));
     socket?.emit('saveIssue', data);
-    setIssueState([...issues, { id: '123123', title: data.title, priority: data.priority } as IssueCard]);
     handleClose();
   };
 
@@ -84,7 +84,7 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
               <p className="issue-dialog__form__error-text">{errors.title.types?.required}</p>
             )}
           </div>
-          <div className="issue-dialog__form__block">
+          {/* <div className="issue-dialog__form__block">
             <div className="issue-dialog__form__input-wrapper">
               <label htmlFor="link" className="issue-dialog__form__label">
                 Link:
@@ -108,7 +108,7 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
             {errors.link?.type === 'required' && (
               <p className="issue-dialog__form__error-text">{errors.link?.types?.required}</p>
             )}
-          </div>
+          </div> */}
           <div className="issue-dialog__form__block issue-dialog__form__priority">
             <div className="issue-dialog__form__input-wrapper">
               <label htmlFor="priority" className="issue-dialog__form__label">

@@ -40,7 +40,7 @@ export function GamePage(): JSX.Element {
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
   const [indexIssue, setIndexIssue] = useState<number>(0);
-  const [currentId, setCurrentId] = useState<string>(issuesState[indexIssue].id);
+  const [currentId, setCurrentId] = useState<string | undefined>(issuesState[indexIssue].id);
   const users = useAppSelector((state) => state.users.users);
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
 

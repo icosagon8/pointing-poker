@@ -3,9 +3,16 @@ import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import IssueCard from '../../models/iIssueCard';
+import { useAppDispatch } from '../../store/hooks/hooks';
 
 export const IssueMaster = (props: IssueCard): JSX.Element => {
-  const { title, priority } = props;
+  const { title, priority, id } = props;
+  const dispatch = useAppDispatch();
+
+  const handleClickDelete = () => {
+    dispatch()
+    socket?.emit('disconnect', id);
+  }
 
   return (
     <div className="issue-master">
@@ -17,7 +24,7 @@ export const IssueMaster = (props: IssueCard): JSX.Element => {
         <IconButton>
           <EditIcon />
         </IconButton>
-        <IconButton>
+        <IconButton onClick={handleClickDelete}>
           <DeleteOutlineIcon className="issue-master__delete-btn" />
         </IconButton>
       </div>

@@ -5,14 +5,9 @@ import { useState } from 'react';
 import { IssueDialog } from '../IssueDialog/IssueDialog';
 import IssueCard from '../../models/iIssueCard';
 
-interface IissueCreate {
-  issues: IssueCard[];
-  setIssueState: (issues: IssueCard[]) => void;
-}
-
-export function IssueCreate(props: IissueCreate): JSX.Element {
+export function IssueCreate(): JSX.Element {
   const [open, setOpen] = useState(false);
-  const { issues, setIssueState } = props;
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -27,7 +22,7 @@ export function IssueCreate(props: IissueCreate): JSX.Element {
       <IconButton onClick={handleClickOpen}>
         <AddIcon />
       </IconButton>
-      <IssueDialog issues={issues} setIssueState={setIssueState} open={open} onClose={handleClose} />
+      <IssueDialog open={open} onClose={handleClose} />
     </Card>
   );
 }

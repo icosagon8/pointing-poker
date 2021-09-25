@@ -4,7 +4,7 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
-import { addIssue, getIssues } from './issues';
+import { addIssue, getIssues, deleteIssue } from './issues';
 import { sendSettings } from './settings';
 
 const PORT = process.env.PORT || 8080;
@@ -51,7 +51,6 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('saveSettings', (settings) => {
-    console.log(settings);
     sendSettings(settings);
     io.in(settings.roomId).emit('sendSettings', settings);
   });
@@ -61,8 +60,12 @@ io.on('connection', (socket: Socket) => {
     io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
   });
 
-  socket.on('disconnect', () => {
-    deleteUser(socket.id);
+  socket.on('deleteIssue', () => {
+    deleteIssue(socket.id);
+  });
+
+  socket.on('disconnect', (id) => {
+    deleteUser(id);
   });
 
   socket.on('joinRoom', (room) => {

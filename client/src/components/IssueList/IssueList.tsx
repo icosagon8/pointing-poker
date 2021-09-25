@@ -7,8 +7,8 @@ interface IssueListType {
   role: string;
   issues: IssueCard[];
   setIssueState: (issues: IssueCard[]) => void;
-  currentId: string;
-  setCurrentId: React.Dispatch<React.SetStateAction<string>>;
+  currentId: string | undefined;
+  setCurrentId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 export function IssueList(props: IssueListType): JSX.Element {
@@ -32,7 +32,7 @@ export function IssueList(props: IssueListType): JSX.Element {
         ))}
         {role === 'scram-master' ? (
           <li className="issue-list__item">
-            <IssueCreate issues={issues} setIssueState={setIssueState} />
+            <IssueCreate />
           </li>
         ) : null}
       </ul>
