@@ -1,0 +1,46 @@
+.chat {
+  padding: 20px;
+  flex-grow: 1;
+
+  &__field {
+    flex-grow: 1;
+  }
+
+  &__message-wrapper {
+    flex-grow: 1;
+  }
+
+  &__message-list {
+    height: 60vh;
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  &__message {
+    height: 100%;
+    padding: 10px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    border-radius: 20px 0 0 20px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .member-card {
+    width: 200px;
+    height: 50px;
+
+    &__avatar {
+      width: 33px;
+      height: 33px;
+    }
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__position {
+      font-size: 8px;
+    }
+  }
+}

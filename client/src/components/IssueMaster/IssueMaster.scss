@@ -1,0 +1,32 @@
+.issue-master {
+  width: 300px;
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0px 3px 0px lightgray;
+  border-radius: 5px;
+  align-items: center;
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto';
+    font-style: normal;
+    margin-left: 30px;
+  }
+
+  &__title {
+    font-weight: 300;
+    margin: 0;
+    font-size: 24px;
+  }
+
+  &__priority {
+    margin: 0;
+    font-weight: 300;
+  }
+
+  &__delete-btn {
+    color: red;
+  }
+}

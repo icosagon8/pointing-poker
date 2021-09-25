@@ -1,0 +1,68 @@
+.settings-form {
+  width: 550px;
+  margin-left: 17px;
+  font-family: 'Ruda';
+  font-size: 24px;
+  font-weight: 700;
+  user-select: none;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+
+  &__block-switch {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  &__block-timer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__input {
+    font-weight: 700;
+    width: 326px;
+    height: 36px;
+    border: 1px solid #2b3a67;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 0px 0px 0px 10px;
+  }
+
+  &__input-block {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__label {
+    cursor: pointer;
+    font-family: 'Ruda';
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__block-add-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 30px;
+  }
+
+  &__error-text {
+    color: red;
+    margin: 0;
+    font-size: 14px;
+    text-align: center;
+  }
+}
