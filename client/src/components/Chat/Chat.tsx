@@ -5,8 +5,17 @@ import './Chat.scss';
 import { SocketContext } from '../../socketContext';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { Message } from '../../models/Message';
+import { UserModel } from '../../models/userModel';
+import { useAppSelector } from '../../store/hooks/hooks';
 
-export function Chat(): JSX.Element {
+interface Props {
+  kickMember: (kicked: Message, userAgainst: UserModel) => void;
+  checkUser: (member: Message) => boolean;
+}
+
+export function Chat(props: Props): JSX.Element {
+  const { kickMember, checkUser } = props;
+  const user = useAppSelector((state) => state.user.user) as UserModel;
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const { socket } = useContext(SocketContext);
@@ -56,6 +65,10 @@ export function Chat(): JSX.Element {
                   lastname={chatMessage.lastname}
                   position={chatMessage.position}
                   src={chatMessage.avatar}
+                  kickButtonDisplay={checkUser(chatMessage)}
+                  onKick={() => {
+                    kickMember(chatMessage, user);
+                  }}
                 />
               </Grid>
             </Grid>

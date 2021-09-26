@@ -2,7 +2,6 @@ import { Button } from '@material-ui/core';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { UserModel } from '../../models/userModel';
 import { useAppSelector } from '../../store/hooks/hooks';
-import { MemberCard } from '../MemberCard/MemberCard';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
@@ -19,6 +18,7 @@ export const StartGame = (): JSX.Element => {
         lastname={scramMaster?.lastname}
         src={scramMaster?.avatar}
         position={scramMaster?.position}
+        kickButtonDisplay={false}
       />
       <h3 className="start-game__to-lobby">Link to lobby:</h3>
       <div className="start-game__link-block">

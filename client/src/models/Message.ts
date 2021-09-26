@@ -1,9 +1,11 @@
 export interface Message {
   text: string;
   messageId: string;
-  userId: string;
+  id: string;
   firstname: string;
   lastname: string;
   position: string;
   avatar: string;
+  role: string;
+  room: string;
 }
