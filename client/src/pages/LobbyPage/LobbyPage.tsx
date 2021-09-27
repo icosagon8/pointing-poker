@@ -23,7 +23,7 @@ export const LobbyPage = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
   const user = useAppSelector((state) => state.user.user);
   const users = useAppSelector((state) => state.users.users);
-  const members = users.filter((user) => user.role !== 'scram-master');
+  const members = users.filter((member) => member.role !== 'scram-master');
   const MAX_MEMBERS = 3;
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const LobbyPage = (): JSX.Element => {
       history.push('/');
     });
   }, [socket, history, dispatch]);
-    
+
   useEffect(() => {
     socket?.on('sendSettings', (item) => {
       dispatch(saveSettings(item));
