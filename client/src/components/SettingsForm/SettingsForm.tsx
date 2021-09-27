@@ -1,12 +1,17 @@
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useContext } from 'react';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
 import { AddGameCard } from '../AddGameCard/AddGameCard';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
+import { SocketContext } from '../../socketContext';
+import { useAppSelector } from '../../store/hooks/hooks';
 import './SettingsForm.scss';
 
 export const SettingsForm = (): JSX.Element => {
+  const { socket } = useContext(SocketContext);
+  const room = useAppSelector((state) => state.room.room);
   const {
     register,
     control,
@@ -21,7 +26,9 @@ export const SettingsForm = (): JSX.Element => {
     if (data.timerMinutes.length === 1) {
       data.timerMinutes = `0${data.timerMinutes}`;
     }
-    console.log(data);
+    data.roomId = room;
+    socket?.emit('saveSettings', data);
+    socket?.emit('startGame', room);
   };
 
   return (

@@ -61,4 +61,11 @@
     color: #2b3a67;
     border: 1px solid #2b3a67;
   }
+
+  &__btn-block-user {
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    justify-content: end;
+  }
 }

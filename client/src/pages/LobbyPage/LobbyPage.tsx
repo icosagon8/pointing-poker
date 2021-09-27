@@ -10,6 +10,7 @@ import { Title } from '../../components/Title/Title';
 import './LobbyPage.scss';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
+import { saveSettings } from '../../store/slices/settingsSlice';
 import { UserModel } from '../../models/userModel';
 import { deleteUser } from '../../store/slices/userSlice';
 import { Message } from '../../models/Message';
@@ -20,6 +21,7 @@ export const LobbyPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const { socket } = useContext(SocketContext);
+  const user = useAppSelector((state) => state.user.user);
   const users = useAppSelector((state) => state.users.users);
   const members = users.filter((user) => user.role !== 'scram-master');
   const MAX_MEMBERS = 3;
@@ -30,6 +32,12 @@ export const LobbyPage = (): JSX.Element => {
       history.push('/');
     });
   }, [socket, history, dispatch]);
+    
+  useEffect(() => {
+    socket?.on('sendSettings', (item) => {
+      dispatch(saveSettings(item));
+    });
+  }, [socket, dispatch]);
 
   const kickMember = (kicked: UserModel | Message, userAgainst: UserModel) => {
     socket?.emit('kickMember', kicked, userAgainst);
@@ -51,8 +59,12 @@ export const LobbyPage = (): JSX.Element => {
           <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
           <StartGame />
           <MembersList kickMember={kickMember} checkUser={checkUser} />
-          <IssueListLobby />
-          <GameSettings />
+          {user?.role === 'scram-master' && (
+            <>
+              <IssueListLobby />
+              <GameSettings />
+            </>
+          )}
         </Grid>
         {isOpen && (
           <Grid item xs={12} md={4}>

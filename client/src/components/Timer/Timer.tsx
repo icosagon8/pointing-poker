@@ -1,6 +1,6 @@
 import './Timer.scss';
 import { Card } from '@material-ui/core';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
 
@@ -11,9 +11,9 @@ interface TimeType {
 }
 
 export function Timer(props: TimeType): JSX.Element {
+  const MIN = '02';
+  const SEC = '00';
   const { start, location, register } = props;
-  const [min, setMin] = useState<string>('02');
-  const [sec, setSec] = useState<string>('00');
   const [count, setCount] = useState<number>(0);
 
   const getZero = (num: number) => {
@@ -27,10 +27,10 @@ export function Timer(props: TimeType): JSX.Element {
   };
 
   useEffect(() => {
-    const minString = Number(min);
-    const secString = Number(sec);
+    const minString = Number(MIN);
+    const secString = Number(SEC);
     setCount(minString * 60 + secString);
-  }, [start, min, sec]);
+  }, [start, MIN, SEC]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -43,18 +43,6 @@ export function Timer(props: TimeType): JSX.Element {
       }
     };
   }, [count, start]);
-
-  const handleChangeMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length < 3 && e.target.value.match(/^\d+$/)) {
-      setMin(e.target.value);
-    }
-  };
-
-  const handleChangeSec = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length < 3 && e.target.value.match(/^\d+$/)) {
-      setSec(e.target.value);
-    }
-  };
 
   return (
     <Card className="timer">
@@ -101,7 +89,7 @@ export function Timer(props: TimeType): JSX.Element {
           />
         </div>
       ) : (
-        <div className="timer__counter">{start ? convertToFormat(count) : `${min}:${sec}`}</div>
+        <div className="timer__counter">{start ? convertToFormat(count) : `${MIN}:${SEC}`}</div>
       )}
     </Card>
   );
