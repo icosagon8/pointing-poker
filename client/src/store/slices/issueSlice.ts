@@ -22,9 +22,9 @@ const issueSlice = createSlice({
     addIssue: (state, action) => {
       state.issue = action.payload;
     },
-    deleteIssue: (state, action) => {
-      state.issue = state.issue.filter((issue) => issue.id !== action.payload);
-    },
+    // deleteIssue: (state, action) => {
+    //   state.issue = state.issue.filter((issue) => issue.id !== action.payload);
+    // },
   },
 });
 

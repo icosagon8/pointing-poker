@@ -1,17 +1,27 @@
 import './IssueMaster.scss';
+import { useContext, useEffect } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import IssueCard from '../../models/iIssueCard';
-import { useAppDispatch } from '../../store/hooks/hooks';
+import { SocketContext } from '../../socketContext';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { addIssues } from '../../store/slices/issuesSlice';
 
 export const IssueMaster = (props: IssueCard): JSX.Element => {
   const { title, priority, id } = props;
+  const { socket } = useContext(SocketContext);
   const dispatch = useAppDispatch();
+  const room = useAppSelector((state) => state.room.room);
+
+  useEffect(() => {
+    socket?.on('issues', (issues) => {
+      dispatch(addIssues(issues));
+    });
+  }, [socket, dispatch]);
 
   const handleClickDelete = () => {
-    dispatch()
-    socket?.emit('disconnect', id);
+    socket?.emit('deleteIssue', id, room);
   }
 
   return (

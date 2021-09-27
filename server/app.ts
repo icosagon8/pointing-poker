@@ -60,12 +60,13 @@ io.on('connection', (socket: Socket) => {
     io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
   });
 
-  socket.on('deleteIssue', () => {
-    deleteIssue(socket.id);
+  socket.on('deleteIssue', (id, room) => {
+    deleteIssue(id);
+    io.in(room).emit('issues', getIssues(room));
   });
 
-  socket.on('disconnect', (id) => {
-    deleteUser(id);
+  socket.on('disconnect', () => {
+    deleteUser(socket.id);
   });
 
   socket.on('joinRoom', (room) => {

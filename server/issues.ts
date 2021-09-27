@@ -15,7 +15,9 @@ export const getIssue = (id: string): IssueModel => {
 
 export const deleteIssue = (id: string): IssueModel | undefined => {
   const index = issues.findIndex((issue) => issue.id === id);
-  if (index !== -1) return issues.splice(index, 1)[0];
+  if (index !== -1) {
+    return issues.splice(index, 1)[0];
+  }
   return undefined;
 };
 

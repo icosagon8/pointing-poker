@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent } from '@material-ui/core';
 import { useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { nanoid } from 'nanoid';
 import { useAppSelector, useAppDispatch } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
 import IssueCard from '../../models/iIssueCard';
@@ -20,6 +21,7 @@ enum PriorityEnum {
 }
 
 interface IFormInput {
+  id: string;
   title: string;
   priority: PriorityEnum;
   roomId: string;
@@ -48,6 +50,7 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     data.roomId = room;
+    data.id = nanoid();
     dispatch(addIssue(data));
     socket?.emit('saveIssue', data);
     handleClose();
