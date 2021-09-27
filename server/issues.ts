@@ -2,9 +2,16 @@ import { IssueModel } from './models/IssueModel';
 
 const issues: IssueModel[] = [];
 
-export const addIssue = ({ id, title, priority, roomId }: IssueModel): IssueModel => {
-  const issue = { id, title, priority, roomId };
+export const addIssue = (issue: IssueModel): IssueModel => {
   issues.push(issue);
+  return issue;
+};
+
+export const editIssue = ({ title, priority }: IssueModel, id: string): IssueModel => {
+  const index = issues.findIndex((issue) => issue.id === id);
+  const issue = issues[index];
+  issue.title = title;
+  issue.priority = priority;
   return issue;
 };
 

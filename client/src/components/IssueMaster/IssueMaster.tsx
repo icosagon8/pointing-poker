@@ -1,8 +1,9 @@
 import './IssueMaster.scss';
-import { useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import { IssueDialog } from '../IssueDialog/IssueDialog';
 import IssueCard from '../../models/iIssueCard';
 import { SocketContext } from '../../socketContext';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
@@ -10,6 +11,7 @@ import { addIssues } from '../../store/slices/issuesSlice';
 
 export const IssueMaster = (props: IssueCard): JSX.Element => {
   const { title, priority, id } = props;
+  const [open, setOpen] = useState(false);
   const { socket } = useContext(SocketContext);
   const dispatch = useAppDispatch();
   const room = useAppSelector((state) => state.room.room);
@@ -22,7 +24,15 @@ export const IssueMaster = (props: IssueCard): JSX.Element => {
 
   const handleClickDelete = () => {
     socket?.emit('deleteIssue', id, room);
-  }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div className="issue-master">
@@ -31,13 +41,14 @@ export const IssueMaster = (props: IssueCard): JSX.Element => {
         <h5 className="issue-master__priority">{priority}</h5>
       </div>
       <div>
-        <IconButton>
+        <IconButton onClick={handleClickOpen}>
           <EditIcon />
         </IconButton>
         <IconButton onClick={handleClickDelete}>
           <DeleteOutlineIcon className="issue-master__delete-btn" />
         </IconButton>
       </div>
+      <IssueDialog edit id={id} open={open} onClose={handleClose} />
     </div>
   );
 };

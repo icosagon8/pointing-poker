@@ -10,8 +10,10 @@ import { addIssue } from '../../store/slices/issueSlice';
 import './IssueDialog.scss';
 
 interface IissueDialog {
+  id?: string;
   open: boolean;
   onClose: () => void;
+  edit?: boolean;
 }
 
 enum PriorityEnum {
@@ -28,14 +30,17 @@ interface IFormInput {
 }
 
 export const IssueDialog = (props: IissueDialog): JSX.Element => {
+  const { onClose, open, edit, id } = props;
   const { socket } = useContext(SocketContext);
   const dispatch = useAppDispatch();
   const room = useAppSelector((state) => state.room.room);
-  const { onClose, open } = props;
+  const issuesEdit = useAppSelector((state) => state.issues.issues);
+  const issueEdit = issuesEdit[issuesEdit.findIndex((issue) => issue.id === id)];
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<IFormInput>({ criteriaMode: 'all' });
 
   useEffect(() => {
@@ -44,22 +49,32 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
     });
   }, [socket, dispatch]);
 
+  useEffect(() => {
+    if (edit) {
+      setValue('title', `${issueEdit.title}`);
+    }
+  }, [open, setValue]);
+
   const handleClose = () => {
     onClose();
   };
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     data.roomId = room;
-    data.id = nanoid();
+    if (edit) {
+      socket?.emit('editIssue', data, id);
+    } else {
+      data.id = nanoid();
+      socket?.emit('saveIssue', data);
+    }
     dispatch(addIssue(data));
-    socket?.emit('saveIssue', data);
     handleClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose} className="issue-dialog ">
       <div>
-        <h3 className="issue-dialog__title">Create Issue</h3>
+        <h3 className="issue-dialog__title">{edit ? 'Edit' : 'Create'} Issue</h3>
       </div>
       <DialogContent>
         <form className="issue-dialog__form" onSubmit={handleSubmit(onSubmit)}>
@@ -141,4 +156,9 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
       </DialogContent>
     </Dialog>
   );
+};
+
+IssueDialog.defaultProps = {
+  edit: false,
+  id: null,
 };

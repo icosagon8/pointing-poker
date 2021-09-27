@@ -4,7 +4,7 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
-import { addIssue, getIssues, deleteIssue } from './issues';
+import { addIssue, editIssue, getIssues, deleteIssue } from './issues';
 import { sendSettings } from './settings';
 
 const PORT = process.env.PORT || 8080;
@@ -57,6 +57,11 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('saveIssue', (issue) => {
     addIssue(issue);
+    io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
+  });
+
+  socket.on('editIssue', (issue, id) => {
+    editIssue(issue, id);
     io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
   });
 
