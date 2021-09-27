@@ -5,6 +5,7 @@ import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
 import { sendSettings } from './settings';
+import { addVote, deleteVotes, getResult, getVotes } from './votes';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -41,11 +42,7 @@ io.on('connection', (socket: Socket) => {
     io.in(user.room).emit('message', {
       text,
       messageId,
-      userId: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      position: user.position,
-      avatar: user.avatar,
+      ...user,
     });
   });
 
@@ -60,6 +57,36 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('joinRoom', (room) => {
     io.to(socket.id).emit('room', checkRoom(room));
+  });
+
+  socket.on('kickMember', (kickedUser, userAgainst) => {
+    const { room } = kickedUser;
+    addVote(true, room);
+    const users = getUsers(room);
+
+    users.forEach((user) => {
+      if (user.id !== kickedUser.id && user.id !== socket.id) {
+        io.to(user.id).emit('showModal', kickedUser, userAgainst);
+      }
+    });
+  });
+
+  socket.on('vote', (vote, kickedUser) => {
+    const { room, id } = kickedUser;
+    addVote(vote, room);
+    const votes = getVotes(room);
+    const users = getUsers(room);
+
+    if (votes.length + 1 === users.length) {
+      const result = getResult(votes);
+
+      if (result) {
+        deleteUser(id);
+        deleteVotes(room);
+        io.to(id).emit('logout');
+        io.in(room).emit('users', getUsers(room));
+      }
+    }
   });
 });
 

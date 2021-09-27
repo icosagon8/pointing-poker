@@ -43,6 +43,7 @@ export const StartGame = (): JSX.Element => {
         lastname={scramMaster?.lastname}
         src={scramMaster?.avatar}
         position={scramMaster?.position}
+        kickButtonDisplay={false}
       />
       {user?.role === 'scram-master' && (
         <>

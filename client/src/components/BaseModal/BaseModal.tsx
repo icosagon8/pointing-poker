@@ -3,7 +3,7 @@ import { Modal } from '@material-ui/core';
 
 interface Props {
   open: boolean;
-  handleClose: () => void;
+  handleClose: (event: React.MouseEvent | React.KeyboardEvent, reason?: string) => void;
   children: JSX.Element;
 }
 
