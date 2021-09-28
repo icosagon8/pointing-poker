@@ -4,6 +4,7 @@ import userSlice from './slices/userSlice';
 import roomSlice from './slices/roomSlice';
 import usersSlice from './slices/usersSlice';
 import settingsSlice from './slices/settingsSlice';
+import votingSlice from './slices/votingSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     room: roomSlice,
     users: usersSlice,
     settings: settingsSlice,
+    voting: votingSlice,
   },
 });
 
