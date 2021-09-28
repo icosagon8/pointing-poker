@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
-import { AddGameCard } from '../AddGameCard/AddGameCard';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
 import './SettingsForm.scss';
@@ -22,8 +21,8 @@ export const SettingsForm = (): JSX.Element => {
     formState: { errors },
   } = useForm<SettingsFormInput>({ criteriaMode: 'all' });
   const watchTimer: boolean = watch('timerIsNeeded');
+  const watchShortType: string = watch('scoreTypeShort');
   const [gameCards, setGameCards] = useState<GameCardType[]>([]);
-
   const onSubmit: SubmitHandler<SettingsFormInput> = (data) => {
     if (data.timerHours.length === 1) {
       data.timerHours = `0${data.timerHours}`;
@@ -180,7 +179,7 @@ export const SettingsForm = (): JSX.Element => {
         <div className="settings-form__block-add-card">
           <Title title="Add card values:" />
           <div className="settings-form__block-cards-list">
-            <GameCardsList cards={gameCards} setGameCards={setGameCards} />
+            <GameCardsList cards={gameCards} watchShortType={watchShortType} setGameCards={setGameCards} />
           </div>
         </div>
       </form>

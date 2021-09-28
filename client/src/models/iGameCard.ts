@@ -6,4 +6,6 @@ export default interface GameCardType {
   className?: string | null;
   cardSelection?: boolean;
   lobbyPage?: boolean;
+  setGameCards?: (arr: GameCardType[]) => void;
+  gameCards?: GameCardType[];
 }

@@ -7,13 +7,22 @@ import { useRef, useState } from 'react';
 import GameCardType from '../../models/iGameCard';
 
 export const GameCard = (props: GameCardType): JSX.Element => {
-  const { id, title, value, cardSelection, lobbyPage, setCurrentId, className } = props;
+  const { id, title, value, cardSelection, lobbyPage, setCurrentId, className, setGameCards, gameCards } = props;
   const [cardNumber, setCardNumber] = useState<string>(value);
   const [edit, setEdit] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value);
+    if (gameCards !== undefined && setGameCards !== undefined) {
+      const newCards = gameCards.map((item) => {
+        if (item.id === id) {
+          item.value = e.target.value;
+        }
+        return item;
+      });
+      setGameCards(newCards);
+    }
   };
 
   const handleFocus = () => {
