@@ -30,6 +30,7 @@ export const LobbyPage = (): JSX.Element => {
     socket?.on('logout', () => {
       dispatch(deleteUser());
       history.push('/');
+      socket?.disconnect();
     });
   }, [socket, history, dispatch]);
 

@@ -21,13 +21,15 @@ export function Chat(props: Props): JSX.Element {
   const { socket } = useContext(SocketContext);
   const scrollRef = useRef<HTMLLIElement>(null);
 
+  const handleMessages = (chatMessage: Message) => {
+    setMessages((chatMessages) => [...chatMessages, chatMessage]);
+  };
+
   useEffect(() => {
-    socket?.on('message', (chatMessage: Message) => {
-      setMessages((chatMessages) => [...chatMessages, chatMessage]);
-    });
+    socket?.on('message', handleMessages);
 
     return () => {
-      socket?.disconnect();
+      socket?.off('message', handleMessages);
     };
   }, [socket]);
 
