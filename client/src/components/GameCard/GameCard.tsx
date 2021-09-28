@@ -47,6 +47,13 @@ export const GameCard = (props: GameCardType): JSX.Element => {
     }
   };
 
+  const removeCardClickHandler = () => {
+    if (gameCards && setGameCards) {
+      const newArr = gameCards?.filter((item) => item.id !== id);
+      setGameCards(newArr);
+    }
+  };
+
   return (
     <div
       className={`game-card ${className}`}
@@ -82,7 +89,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
       <span className="game-card__title">{title}</span>
       <div className="game-card__input-box">
         {lobbyPage ? (
-          <IconButton className="game-card__btn">
+          <IconButton className="game-card__btn" onClick={removeCardClickHandler}>
             <DeleteOutlineIcon className="game-card__delete-btn" />
           </IconButton>
         ) : null}

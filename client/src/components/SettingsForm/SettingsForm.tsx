@@ -9,6 +9,7 @@ import { SocketContext } from '../../socketContext';
 import { useAppSelector } from '../../store/hooks/hooks';
 import { GameCardsList } from '../GameCardsList/GameCardsList';
 import GameCardType from '../../models/iGameCard';
+import { GameCardsValue } from '../../models/GameCardValue';
 
 export const SettingsForm = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
@@ -31,6 +32,13 @@ export const SettingsForm = (): JSX.Element => {
       data.timerMinutes = `0${data.timerMinutes}`;
     }
     data.roomId = room;
+    data.cardsValue = gameCards.map((item) => {
+      return {
+        id: item.id,
+        value: item.value,
+      } as GameCardsValue;
+    });
+
     socket?.emit('saveSettings', data);
   };
 
