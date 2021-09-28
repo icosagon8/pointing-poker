@@ -15,13 +15,14 @@ export const GameCardsList = (props: CardListState): JSX.Element => {
   const addCardClickHandler = () => {
     setGameCards([...cards, { id: nanoid(), title: watchShortType, value: '1' }]);
   };
+
   const onKeyPressHandler = () => {};
   return (
     <div className="cards-list">
       {cards.map((item) => {
-        console.log(item);
         return (
           <GameCard
+            key={item.id}
             id={item.id}
             title={watchShortType}
             setGameCards={setGameCards}
