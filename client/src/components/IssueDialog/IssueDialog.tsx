@@ -43,7 +43,7 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
   useEffect(() => {
     if (edit) {
       setValue('title', issueEdit.title);
-      setValue('title', issueEdit.priority);
+      setValue('priority', issueEdit.priority);
     }
   }, [open, setValue, issueEdit, edit]);
 
