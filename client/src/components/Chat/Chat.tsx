@@ -55,23 +55,40 @@ export function Chat(props: Props): JSX.Element {
       <List className="chat__message-list">
         {messages.map((chatMessage, index) => (
           <ListItem ref={index === messages.length - 1 ? scrollRef : null} key={chatMessage.messageId}>
-            <Grid container wrap="nowrap">
-              <Grid className="chat__message-wrapper" item xs="auto">
-                <ListItemText className="chat__message" primary={chatMessage.text} />
+            {chatMessage.type === 'system' ? (
+              <Grid className="chat__message chat__message--system" container wrap="nowrap">
+                <Grid item xs="auto">
+                  <MemberCard
+                    name={chatMessage.firstname}
+                    lastname={chatMessage.lastname}
+                    position={chatMessage.position}
+                    src={chatMessage.avatar}
+                    kickButtonDisplay={false}
+                  />
+                </Grid>
+                <Grid className="chat__text-wrapper" item xs="auto">
+                  <ListItemText className="chat__text" primary={chatMessage.text} />
+                </Grid>
               </Grid>
-              <Grid item xs="auto">
-                <MemberCard
-                  name={chatMessage.firstname}
-                  lastname={chatMessage.lastname}
-                  position={chatMessage.position}
-                  src={chatMessage.avatar}
-                  kickButtonDisplay={checkUser(chatMessage)}
-                  onKick={() => {
-                    kickMember(chatMessage, user);
-                  }}
-                />
+            ) : (
+              <Grid className="chat__message" container wrap="nowrap">
+                <Grid className="chat__text-wrapper" item xs="auto">
+                  <ListItemText className="chat__text" primary={chatMessage.text} />
+                </Grid>
+                <Grid item xs="auto">
+                  <MemberCard
+                    name={chatMessage.firstname}
+                    lastname={chatMessage.lastname}
+                    position={chatMessage.position}
+                    src={chatMessage.avatar}
+                    kickButtonDisplay={checkUser(chatMessage)}
+                    onKick={() => {
+                      kickMember(chatMessage, user);
+                    }}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
+            )}
           </ListItem>
         ))}
       </List>

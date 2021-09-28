@@ -8,4 +8,5 @@ export interface Message {
   avatar: string;
   role: string;
   room: string;
+  type: string;
 }
