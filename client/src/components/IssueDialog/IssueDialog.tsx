@@ -2,11 +2,8 @@ import { Button, Dialog, DialogActions, DialogContent } from '@material-ui/core'
 import { useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { nanoid } from 'nanoid';
-import { useAppSelector, useAppDispatch } from '../../store/hooks/hooks';
+import { useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
-import IssueCard from '../../models/iIssueCard';
-import { addIssues } from '../../store/slices/issuesSlice';
-import { addIssue } from '../../store/slices/issueSlice';
 import './IssueDialog.scss';
 
 interface IissueDialog {
@@ -27,12 +24,12 @@ interface IFormInput {
   title: string;
   priority: PriorityEnum;
   roomId: string;
+  current: boolean;
 }
 
 export const IssueDialog = (props: IissueDialog): JSX.Element => {
   const { onClose, open, edit, id } = props;
   const { socket } = useContext(SocketContext);
-  const dispatch = useAppDispatch();
   const room = useAppSelector((state) => state.room.room);
   const issuesEdit = useAppSelector((state) => state.issues.issues);
   const issueEdit = issuesEdit[issuesEdit.findIndex((issue) => issue.id === id)];
@@ -44,16 +41,11 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
   } = useForm<IFormInput>({ criteriaMode: 'all' });
 
   useEffect(() => {
-    socket?.on('issues', (issues) => {
-      dispatch(addIssues(issues));
-    });
-  }, [socket, dispatch]);
-
-  useEffect(() => {
     if (edit) {
-      setValue('title', `${issueEdit.title}`);
+      setValue('title', issueEdit.title);
+      setValue('title', issueEdit.priority);
     }
-  }, [open, setValue]);
+  }, [open, setValue, issueEdit, edit]);
 
   const handleClose = () => {
     onClose();
@@ -61,13 +53,15 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     data.roomId = room;
+    data.current = false;
     if (edit) {
       socket?.emit('editIssue', data, id);
     } else {
       data.id = nanoid();
-      socket?.emit('saveIssue', data);
+      socket?.emit('saveIssue', data, room);
     }
-    dispatch(addIssue(data));
+    setValue('title', '');
+    setValue('priority', PriorityEnum.low);
     handleClose();
   };
 

@@ -73,7 +73,12 @@ export const StartGame = (): JSX.Element => {
               Start game
             </Button>
 
-            <Button variant="outlined" color="primary" className="start-game__btn start-game__cancel" onClick={handleClick}>
+            <Button
+              variant="outlined"
+              color="primary"
+              className="start-game__btn start-game__cancel"
+              onClick={handleClick}
+            >
               Cancel game
             </Button>
           </>

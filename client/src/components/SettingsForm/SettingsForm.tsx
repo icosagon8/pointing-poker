@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';

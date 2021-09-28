@@ -5,7 +5,6 @@ import roomSlice from './slices/roomSlice';
 import usersSlice from './slices/usersSlice';
 import settingsSlice from './slices/settingsSlice';
 import issuesSlice from './slices/issuesSlice';
-import issueSlice from './slices/issueSlice';
 
 export const store = configureStore({
   reducer: {
@@ -15,7 +14,6 @@ export const store = configureStore({
     users: usersSlice,
     settings: settingsSlice,
     issues: issuesSlice,
-    issue: issueSlice,
   },
 });
 

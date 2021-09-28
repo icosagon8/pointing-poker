@@ -1,44 +1,46 @@
-.issue-card {
+.issue {
   width: 250px;
-  height: 48px;
-  position: relative;
+  height: 55px;
   padding: 0 10px;
-  cursor: pointer;
-  background-color: #fff;
-  transition: all .3s;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 
   &.active {
     background-color: #cbf3ea;
   }
 
-  &__current-text {
+  &__text {
+    font-family: 'Roboto';
+    font-style: normal;
+  }
+
+  &__text-current {
     position: absolute;
-    top: 3px;
+    top: 7px;
     font-size: 9px;
     font-weight: 700;
     text-transform: uppercase;
-    opacity: 0;
-    transition: all .3s;
   }
 
-  &__current-text.active {
-    opacity: 1;
-  }
-
-  &__main {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  &__title {
+  &__text-title {
+    font-weight: 300;
     margin: 0;
   }
 
-  &__priority {
+  &__text-priority {
     position: absolute;
-    bottom: 5px;
-    font-size: 10px;
-    font-weight: 100;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 300;
   }
+
+  &__delete-btn {
+    color: red;
+  }
+}
+
+.page-game .issue__edit-btn {
+  display: none;
 }

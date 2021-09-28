@@ -3,11 +3,10 @@ import { Card, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useState } from 'react';
 import { IssueDialog } from '../IssueDialog/IssueDialog';
-import IssueCard from '../../models/iIssueCard';
 
 export function IssueCreate(): JSX.Element {
   const [open, setOpen] = useState(false);
-  
+
   const handleClickOpen = () => {
     setOpen(true);
   };

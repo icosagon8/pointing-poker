@@ -4,7 +4,7 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
-import { addIssue, editIssue, getIssues, deleteIssue } from './issues';
+import { addIssue, editIssue, getIssues, deleteIssue, setCurrentIssue, nextIssue } from './issues';
 import { sendSettings } from './settings';
 
 const PORT = process.env.PORT || 8080;
@@ -55,8 +55,8 @@ io.on('connection', (socket: Socket) => {
     io.in(settings.roomId).emit('sendSettings', settings);
   });
 
-  socket.on('saveIssue', (issue) => {
-    addIssue(issue);
+  socket.on('saveIssue', (issue, room) => {
+    addIssue(issue, room);
     io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
   });
 
@@ -66,7 +66,17 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('deleteIssue', (id, room) => {
-    deleteIssue(id);
+    deleteIssue(id, room);
+    io.in(room).emit('issues', getIssues(room));
+  });
+
+  socket.on('setCurrentIssue', (id, room) => {
+    setCurrentIssue(id);
+    io.in(room).emit('issues', getIssues(room));
+  });
+
+  socket.on('nextIssue', (room) => {
+    nextIssue(room);
     io.in(room).emit('issues', getIssues(room));
   });
 
