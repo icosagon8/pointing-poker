@@ -12,10 +12,10 @@ export function Header(): JSX.Element {
   const dispatch = useAppDispatch();
   const clickHandler = () => dispatch(isOpen ? off() : on());
   const location = useLocation();
-  const [isChatButtonDisplay, setChatIsButtonDisplay] = useState<boolean>(false);
+  const [isChatButtonDisplay, setIsChatButtonDisplay] = useState<boolean>(false);
 
   useEffect(() => {
-    setChatIsButtonDisplay(location.pathname !== '/');
+    setIsChatButtonDisplay(location.pathname !== '/');
   }, [location]);
 
   return (
