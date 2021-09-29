@@ -43,6 +43,7 @@ io.on('connection', (socket: Socket) => {
       text,
       messageId,
       ...user,
+      type: 'regular',
     });
   });
 
@@ -60,15 +61,31 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('kickMember', (kickedUser, userAgainst) => {
-    const { room } = kickedUser;
-    addVote(true, room);
-    const users = getUsers(room);
+    const { room, id } = kickedUser;
 
-    users.forEach((user) => {
-      if (user.id !== kickedUser.id && user.id !== socket.id) {
-        io.to(user.id).emit('showModal', kickedUser, userAgainst);
-      }
-    });
+    if (userAgainst.role === 'scram-master') {
+      deleteUser(id);
+      io.to(id).emit('logout');
+      io.in(room).emit('users', getUsers(room));
+      const messageId = nanoid();
+
+      io.in(room).emit('message', {
+        text: 'Kicked by scram master',
+        messageId,
+        ...kickedUser,
+        type: 'system',
+      });
+    } else {
+      io.in(room).emit('startVoting');
+      addVote(true, room);
+      const users = getUsers(room);
+
+      users.forEach((user) => {
+        if (user.id !== kickedUser.id && user.id !== socket.id) {
+          io.to(user.id).emit('showModal', kickedUser, userAgainst);
+        }
+      });
+    }
   });
 
   socket.on('vote', (vote, kickedUser) => {
@@ -85,6 +102,15 @@ io.on('connection', (socket: Socket) => {
         deleteVotes(room);
         io.to(id).emit('logout');
         io.in(room).emit('users', getUsers(room));
+        io.in(room).emit('endVoting');
+        const messageId = nanoid();
+
+        io.in(room).emit('message', {
+          text: 'Kicked by voting',
+          messageId,
+          ...kickedUser,
+          type: 'system',
+        });
       }
     }
   });
