@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { nanoid } from 'nanoid';
 import { useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
+import { IssueModel } from '../../models/issueModel';
 import './IssueDialog.scss';
 
 interface IissueDialog {
@@ -14,9 +15,9 @@ interface IissueDialog {
 }
 
 enum PriorityEnum {
-  low = 'low',
-  middle = 'middle',
-  hight = 'hight',
+  low = 'Low',
+  middle = 'Middle',
+  hight = 'Hight',
 }
 
 interface IFormInput {
@@ -32,7 +33,7 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
   const { socket } = useContext(SocketContext);
   const room = useAppSelector((state) => state.room.room);
   const issuesEdit = useAppSelector((state) => state.issues.issues);
-  const issueEdit = issuesEdit[issuesEdit.findIndex((issue) => issue.id === id)];
+  const issueEdit = issuesEdit.find((issue) => issue.id === id) as IssueModel;
   const {
     register,
     handleSubmit,
@@ -45,23 +46,21 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
       setValue('title', issueEdit.title);
       setValue('priority', issueEdit.priority);
     }
-  }, [open, setValue, issueEdit, edit]);
+  }, [setValue, issueEdit, edit]);
 
   const handleClose = () => {
+    setValue('title', '');
+    setValue('priority', PriorityEnum.low);
     onClose();
   };
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    data.roomId = room;
-    data.current = false;
     if (edit) {
-      socket?.emit('editIssue', data, id);
+      socket?.emit('editIssue', { ...data, roomId: room, current: false }, id);
     } else {
       data.id = nanoid();
-      socket?.emit('saveIssue', data, room);
+      socket?.emit('saveIssue', { ...data, roomId: room, current: false });
     }
-    setValue('title', '');
-    setValue('priority', PriorityEnum.low);
     handleClose();
   };
 
@@ -96,31 +95,6 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
               <p className="issue-dialog__form__error-text">{errors.title.types?.required}</p>
             )}
           </div>
-          {/* <div className="issue-dialog__form__block">
-            <div className="issue-dialog__form__input-wrapper">
-              <label htmlFor="link" className="issue-dialog__form__label">
-                Link:
-              </label>
-              <input
-                id="link"
-                className="issue-dialog__form__input"
-                {...register('link', {
-                  required: 'Enter link',
-                  pattern: {
-                    value:
-                      /https?:\/\/(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()@:%_+.~#?&//=]*)/i,
-                    message: 'This input must match the pattern.',
-                  },
-                })}
-              />
-            </div>
-            {errors.link?.type === 'pattern' && (
-              <p className="issue-dialog__form__error-text">{errors.link?.types?.pattern}</p>
-            )}
-            {errors.link?.type === 'required' && (
-              <p className="issue-dialog__form__error-text">{errors.link?.types?.required}</p>
-            )}
-          </div> */}
           <div className="issue-dialog__form__block issue-dialog__form__priority">
             <div className="issue-dialog__form__input-wrapper">
               <label htmlFor="priority" className="issue-dialog__form__label">

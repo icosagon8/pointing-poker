@@ -2,19 +2,22 @@ import { IssueModel } from './models/IssueModel';
 
 const issues: IssueModel[] = [];
 
-export const addIssue = (issue: IssueModel, room: string): IssueModel => {
-  issues.push(issue);
+const setCurrentIssue = (room: string): void => {
   const issuesInRoom = issues.filter((item) => item.roomId === room);
-  const checkIssue = issuesInRoom.filter((item) => item.current === true);
-  if (checkIssue.length === 0) {
+  const checkIssue = issuesInRoom.some((item) => item.current);
+  if (issuesInRoom.length && !checkIssue) {
     issuesInRoom[0].current = true;
   }
+};
+
+export const addIssue = (issue: IssueModel): IssueModel => {
+  issues.push(issue);
+  setCurrentIssue(issue.roomId);
   return issue;
 };
 
 export const editIssue = ({ title, priority }: IssueModel, id: string): IssueModel => {
-  const index = issues.findIndex((issue) => issue.id === id);
-  const issue = issues[index];
+  const issue = issues.find((item) => item.id === id) as IssueModel;
   issue.title = title;
   issue.priority = priority;
   return issue;
@@ -29,17 +32,13 @@ export const deleteIssue = (id: string, room: string): IssueModel | undefined =>
   const index = issues.findIndex((issue) => issue.id === id);
   if (index !== -1) {
     const deleteItemIssue = issues.splice(index, 1)[0];
-    const issuesInRoom = issues.filter((item) => item.roomId === room);
-    const checkIssue = issuesInRoom.filter((item) => item.current === true);
-    if (checkIssue.length === 0) {
-      issues[0].current = true;
-    }
+    setCurrentIssue(room);
     return deleteItemIssue;
   }
   return undefined;
 };
 
-export const setCurrentIssue = (id: string): void => {
+export const setCurrentIssueClick = (id: string): void => {
   for (let i = issues.length - 1; i >= 0; i -= 1) {
     issues[i].current = false;
     if (issues[i].id === id) issues[i].current = true;
@@ -49,13 +48,17 @@ export const setCurrentIssue = (id: string): void => {
 export const nextIssue = (room: string): void => {
   const issuesInRoom = issues.filter((item) => item.roomId === room);
   const maxIndex = issuesInRoom.length - 1;
-  const index = issuesInRoom.findIndex((issue) => issue.current === true);
-  if (index < maxIndex) {
+  const index = issuesInRoom.findIndex((issue) => issue.current);
+  if (issuesInRoom[index + 1] || index < maxIndex) {
     issuesInRoom[index].current = false;
     issuesInRoom[index + 1].current = true;
   }
 };
 
-export const getIssues = (room: string): IssueModel[] => issues.filter((issue) => issue.roomId === room);
+export const deleteIssuesInRoom = (room: string): void => {
+  for (let i = issues.length - 1; i >= 0; i -= 1) {
+    if (issues[i].roomId === room) issues.splice(i, 1);
+  }
+};
 
-// export const checkRoom = (room: string): boolean => users.some((user: UserModel) => user.room === room);
+export const getIssues = (room: string): IssueModel[] => issues.filter((issue) => issue.roomId === room);

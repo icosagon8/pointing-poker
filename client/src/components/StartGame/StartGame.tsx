@@ -5,6 +5,7 @@ import { MemberCard } from '../MemberCard/MemberCard';
 import { UserModel } from '../../models/userModel';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { off } from '../../store/slices/chatSlice';
+import { cleanIssues } from '../../store/slices/issuesSlice';
 import { SocketContext } from '../../socketContext';
 import './StartGame.scss';
 
@@ -27,6 +28,7 @@ export const StartGame = (): JSX.Element => {
       if (chatOpen) {
         dispatch(off());
       }
+      dispatch(cleanIssues());
       history.push('/');
     });
   }, [socket, dispatch, history, chatOpen]);
