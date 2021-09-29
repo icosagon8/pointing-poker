@@ -4,6 +4,7 @@ import userSlice from './slices/userSlice';
 import roomSlice from './slices/roomSlice';
 import usersSlice from './slices/usersSlice';
 import settingsSlice from './slices/settingsSlice';
+import issuesSlice from './slices/issuesSlice';
 import votingSlice from './slices/votingSlice';
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     room: roomSlice,
     users: usersSlice,
     settings: settingsSlice,
+    issues: issuesSlice,
     voting: votingSlice,
   },
 });

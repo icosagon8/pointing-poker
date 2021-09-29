@@ -4,6 +4,15 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
+import {
+  addIssue,
+  editIssue,
+  getIssues,
+  deleteIssue,
+  setCurrentIssueClick,
+  nextIssue,
+  deleteIssuesInRoom,
+} from './issues';
 import { sendSettings } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 
@@ -34,6 +43,7 @@ io.on('connection', (socket: Socket) => {
   socket.on('cancelGame', (room) => {
     io.in(room).emit('redirectToHomePage');
     deleteUsersInRoom(room);
+    deleteIssuesInRoom(room);
   });
 
   socket.on('message', (text) => {
@@ -50,6 +60,31 @@ io.on('connection', (socket: Socket) => {
   socket.on('saveSettings', (settings) => {
     sendSettings(settings);
     io.in(settings.roomId).emit('sendSettings', settings);
+  });
+
+  socket.on('saveIssue', (issue) => {
+    addIssue(issue);
+    io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
+  });
+
+  socket.on('editIssue', (issue, id) => {
+    editIssue(issue, id);
+    io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
+  });
+
+  socket.on('deleteIssue', (id, room) => {
+    deleteIssue(id, room);
+    io.in(room).emit('issues', getIssues(room));
+  });
+
+  socket.on('setCurrentIssue', (id, room) => {
+    setCurrentIssueClick(id);
+    io.in(room).emit('issues', getIssues(room));
+  });
+
+  socket.on('nextIssue', (room) => {
+    nextIssue(room);
+    io.in(room).emit('issues', getIssues(room));
   });
 
   socket.on('disconnect', () => {

@@ -3,12 +3,13 @@ import { Container, Grid } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { Chat } from '../../components/Chat/Chat';
 import { GameSettings } from '../../components/GameSettings/GameSettings';
-import { IssueListLobby } from '../../components/IssueListLobby/IssueListLobby';
+import { IssueList } from '../../components/IssueList/IssueList';
 import { MembersList } from '../../components/MembersList/MembersList';
 import { StartGame } from '../../components/StartGame/StartGame';
 import { Title } from '../../components/Title/Title';
 import './LobbyPage.scss';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
+import { addIssues } from '../../store/slices/issuesSlice';
 import { SocketContext } from '../../socketContext';
 import { saveSettings } from '../../store/slices/settingsSlice';
 import { UserModel } from '../../models/userModel';
@@ -37,6 +38,9 @@ export const LobbyPage = (): JSX.Element => {
   }, [socket, history, dispatch]);
 
   useEffect(() => {
+    socket?.on('issues', (issues) => {
+      dispatch(addIssues(issues));
+    });
     socket?.on('sendSettings', (item) => {
       dispatch(saveSettings(item));
     });
@@ -75,7 +79,7 @@ export const LobbyPage = (): JSX.Element => {
           <MembersList kickMember={kickMember} checkUser={checkUser} />
           {user?.role === 'scram-master' && (
             <>
-              <IssueListLobby />
+              <IssueList />
               <GameSettings />
             </>
           )}

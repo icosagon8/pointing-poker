@@ -1,6 +1,6 @@
+import { useContext } from 'react';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useContext } from 'react';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
 import { AddGameCard } from '../AddGameCard/AddGameCard';
 import { Timer } from '../Timer/Timer';

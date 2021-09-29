@@ -1,41 +1,31 @@
-import './IssueList.scss';
-import IssueCard from '../../models/iIssueCard';
-import { Issue } from '../Issue/Issue';
+import { useAppSelector } from '../../store/hooks/hooks';
 import { IssueCreate } from '../IssueCreate/IssueCreate';
+import { Issue } from '../Issue/Issue';
+import { Title } from '../Title/Title';
+import './IssueList.scss';
 
-interface IssueListType {
-  role: string;
-  issues: IssueCard[];
-  setIssueState: (issues: IssueCard[]) => void;
-  currentId: string;
-  setCurrentId: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export function IssueList(props: IssueListType): JSX.Element {
-  const { issues, setIssueState, role, currentId, setCurrentId } = props;
+export const IssueList = (): JSX.Element => {
+  const user = useAppSelector((state) => state.user.user);
+  const issues = useAppSelector((state) => state.issues.issues);
 
   return (
     <div className="issue-list">
-      <h2 className="issue-list__title">Issues:</h2>
-      <ul className="issue-list__items">
-        {issues.map(({ id, title, priority }) => (
-          <li className="issue-list__item" key={id}>
+      <Title title="Issues:" />
+      <div className="issue-list__block">
+        {issues.map((item) => {
+          return (
             <Issue
-              title={title}
-              priority={priority}
-              role={role}
-              id={id}
-              setCurrentId={setCurrentId}
-              className={currentId === id ? 'active' : null}
+              title={item.title}
+              priority={item.priority}
+              key={item.id}
+              id={item.id}
+              current={item.current}
+              roomId={item.roomId}
             />
-          </li>
-        ))}
-        {role === 'scram-master' ? (
-          <li className="issue-list__item">
-            <IssueCreate issues={issues} setIssueState={setIssueState} />
-          </li>
-        ) : null}
-      </ul>
+          );
+        })}
+        {user?.role === 'scram-master' && <IssueCreate />}
+      </div>
     </div>
   );
-}
+};
