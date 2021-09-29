@@ -5,5 +5,5 @@ export interface UserModel {
   position: string;
   role: string;
   avatar: string;
-  room: string;
+  room?: string;
 }
