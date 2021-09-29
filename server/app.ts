@@ -26,11 +26,11 @@ io.on('connection', (socket: Socket) => {
     io.in(room).emit('users', getUsers(room));
     callback();
   });
-    
+
   socket.on('startGame', (room) => {
     io.in(room).emit('redirectToNewGame');
   });
-  
+
   socket.on('cancelGame', (room) => {
     io.in(room).emit('redirectToHomePage');
     deleteUsersInRoom(room);
@@ -39,7 +39,7 @@ io.on('connection', (socket: Socket) => {
   socket.on('message', (text) => {
     const messageId = nanoid();
     const user = getUser(socket.id);
-    io.in(user.room).emit('message', {
+    io.in(user?.room).emit('message', {
       text,
       messageId,
       ...user,
