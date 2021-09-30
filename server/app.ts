@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
 import { sendSettings } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
+import { addTitle, checkTitle, editTitle, getTitle } from './title';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -58,6 +59,7 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('joinRoom', (room) => {
     io.to(socket.id).emit('room', checkRoom(room));
+    io.to(socket.id).emit('title', getTitle(room));
   });
 
   socket.on('kickMember', (kickedUser, userAgainst) => {
@@ -113,6 +115,16 @@ io.on('connection', (socket: Socket) => {
         });
       }
     }
+  });
+
+  socket.on('titleEdited', (text, room) => {
+    if (checkTitle(room)) {
+      editTitle({ text, room });
+    } else {
+      addTitle({ text, room });
+    }
+
+    io.in(room).emit('titleSent', text);
   });
 });
 

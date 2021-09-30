@@ -43,6 +43,7 @@ export function GamePage(): JSX.Element {
   const [currentId, setCurrentId] = useState<string>(issuesState[indexIssue].id);
   const users = useAppSelector((state) => state.users.users);
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
+  const title = useAppSelector((state) => state.title.title);
 
   useEffect(() => {
     setIndexIssue(issuesState.findIndex((elem: IssueCard) => elem.id === currentId));
@@ -67,7 +68,7 @@ export function GamePage(): JSX.Element {
     <Container className="page-game">
       <Grid container>
         <Grid item xs={8}>
-          <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
+          <Title title={title} />
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
               <MemberCard
