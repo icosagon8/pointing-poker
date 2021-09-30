@@ -1,3 +1,5 @@
+import { GameCardsValue } from './GameCardValue';
+
 export interface SettingsFormInput {
   roomId: string;
   masterAsPlayer: boolean;
@@ -7,4 +9,5 @@ export interface SettingsFormInput {
   scoreTypeShort: string;
   timerHours: string;
   timerMinutes: string;
+  cardsValue: GameCardsValue[];
 }

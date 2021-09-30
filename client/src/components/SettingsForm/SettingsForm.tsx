@@ -1,12 +1,13 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
-import { AddGameCard } from '../AddGameCard/AddGameCard';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
 import { SocketContext } from '../../socketContext';
 import { useAppSelector } from '../../store/hooks/hooks';
+import { GameCardsList } from '../GameCardsList/GameCardsList';
+import GameCardType from '../../models/iGameCard';
 import './SettingsForm.scss';
 
 export const SettingsForm = (): JSX.Element => {
@@ -16,9 +17,12 @@ export const SettingsForm = (): JSX.Element => {
     register,
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<SettingsFormInput>({ criteriaMode: 'all' });
-
+  const watchTimer: boolean = watch('timerIsNeeded', true);
+  const watchShortType: string = watch('scoreTypeShort', '');
+  const [gameCards, setGameCards] = useState<GameCardType[]>([]);
   const onSubmit: SubmitHandler<SettingsFormInput> = (data) => {
     if (data.timerHours.length === 1) {
       data.timerHours = `0${data.timerHours}`;
@@ -27,6 +31,7 @@ export const SettingsForm = (): JSX.Element => {
       data.timerMinutes = `0${data.timerMinutes}`;
     }
     data.roomId = room;
+    data.cardsValue = gameCards.map((item) => ({ id: item.id, value: item.value }));
     socket?.emit('saveSettings', data);
     socket?.emit('startGame', room);
   };
@@ -145,36 +150,38 @@ export const SettingsForm = (): JSX.Element => {
             )}
           </>
         </div>
-        <div className="settings-form__block">
-          <div className="settings-form__input-block">
-            <Title title="Round time:" />
-            <Timer register={register} start={false} location="lobby-page" />
+        {watchTimer && (
+          <div className="settings-form__block">
+            <div className="settings-form__input-block">
+              <Title title="Round time:" />
+              <Timer register={register} start={false} location="lobby-page" />
+            </div>
+            <>
+              {errors.timerHours?.type === 'maxLength' && (
+                <p className="settings-form__error-text">{errors.timerHours.types?.maxLength}</p>
+              )}
+              {errors.timerHours?.type === 'required' && (
+                <p className="settings-form__error-text">{errors.timerHours.types?.required}</p>
+              )}
+              {errors.timerHours?.type === 'pattern' && (
+                <p className="settings-form__error-text">{errors.timerHours.types?.pattern}</p>
+              )}
+              {errors.timerMinutes?.type === 'maxLength' && (
+                <p className="settings-form__error-text">{errors.timerMinutes.types?.maxLength}</p>
+              )}
+              {errors.timerMinutes?.type === 'required' && (
+                <p className="settings-form__error-text">{errors.timerMinutes.types?.required}</p>
+              )}
+              {errors.timerMinutes?.type === 'pattern' && (
+                <p className="settings-form__error-text">{errors.timerMinutes.types?.pattern}</p>
+              )}
+            </>
           </div>
-          <>
-            {errors.timerHours?.type === 'maxLength' && (
-              <p className="settings-form__error-text">{errors.timerHours.types?.maxLength}</p>
-            )}
-            {errors.timerHours?.type === 'required' && (
-              <p className="settings-form__error-text">{errors.timerHours.types?.required}</p>
-            )}
-            {errors.timerHours?.type === 'pattern' && (
-              <p className="settings-form__error-text">{errors.timerHours.types?.pattern}</p>
-            )}
-            {errors.timerMinutes?.type === 'maxLength' && (
-              <p className="settings-form__error-text">{errors.timerMinutes.types?.maxLength}</p>
-            )}
-            {errors.timerMinutes?.type === 'required' && (
-              <p className="settings-form__error-text">{errors.timerMinutes.types?.required}</p>
-            )}
-            {errors.timerMinutes?.type === 'pattern' && (
-              <p className="settings-form__error-text">{errors.timerMinutes.types?.pattern}</p>
-            )}
-          </>
-        </div>
+        )}
         <div className="settings-form__block-add-card">
           <Title title="Add card values:" />
-          <div>
-            <AddGameCard />
+          <div className="settings-form__block-cards-list">
+            <GameCardsList cards={gameCards} watchShortType={watchShortType} setGameCards={setGameCards} />
           </div>
         </div>
       </form>
