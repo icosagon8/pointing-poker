@@ -1,0 +1,40 @@
+.editable-title {
+  font-family: 'Ruda';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 30px;
+
+  &__text {
+    margin: 0;
+    font-size: inherit;
+    padding: 3px 0;
+  }
+
+  &__btn-container {
+    display: flex;
+  }
+
+  &__confirm-btn {
+    color: green;
+  }
+
+  &__cancel-btn {
+    color: red;
+  }
+
+  &__field {
+    width: 100%;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}
