@@ -9,12 +9,11 @@ import GameCardType from '../../models/iGameCard';
 export const GameCard = (props: GameCardType): JSX.Element => {
   const { id, title, value, cardSelection, lobbyPage, setCurrentId, className, setGameCards, gameCards } = props;
   const [cardNumber, setCardNumber] = useState<string>(value);
-  const [edit, setEdit] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(true);
   const ref = useRef<HTMLInputElement>(null);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value);
-    if (gameCards !== undefined && setGameCards !== undefined) {
+    if (gameCards && setGameCards) {
       const newCards = gameCards.map((item) => {
         if (item.id === id) {
           item.value = e.target.value;

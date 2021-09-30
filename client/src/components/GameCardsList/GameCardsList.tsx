@@ -13,7 +13,7 @@ interface CardListState {
 export const GameCardsList = (props: CardListState): JSX.Element => {
   const { cards, setGameCards, watchShortType } = props;
   const addCardClickHandler = () => {
-    setGameCards([...cards, { id: nanoid(), title: watchShortType, value: '1' }]);
+    setGameCards([...cards, { id: nanoid(), value: '' }]);
   };
 
   const onKeyPressHandler = () => {};

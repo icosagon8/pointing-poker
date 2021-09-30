@@ -1,5 +1,5 @@
 export default interface GameCardType {
-  title: string;
+  title?: string;
   value: string;
   id: string;
   setCurrentId?: React.Dispatch<React.SetStateAction<string>>;
