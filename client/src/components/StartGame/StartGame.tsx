@@ -6,6 +6,7 @@ import { UserModel } from '../../models/userModel';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { off } from '../../store/slices/chatSlice';
 import { cleanIssues } from '../../store/slices/issuesSlice';
+import { deleteStatusGame } from '../../store/slices/statusGameSlice';
 import { SocketContext } from '../../socketContext';
 import './StartGame.scss';
 
@@ -35,6 +36,7 @@ export const StartGame = (): JSX.Element => {
 
   const handleClick = () => {
     socket?.emit('cancelGame', room);
+    dispatch(deleteStatusGame());
   };
 
   return (

@@ -1,5 +1,5 @@
 import './GamePage.scss';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Container, Grid, Button } from '@material-ui/core';
 import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
@@ -8,8 +8,9 @@ import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
 import { Timer } from '../../components/Timer/Timer';
 import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
-import { useAppSelector } from '../../store/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
+import { gameInProgress } from '../../store/slices/statusGameSlice';
 import { UserModel } from '../../models/userModel';
 
 const members = [
@@ -30,12 +31,23 @@ const gameCardsStat = [
 
 export function GamePage(): JSX.Element {
   const { socket } = useContext(SocketContext);
+  const dispatch = useAppDispatch();
   const [role] = useState<string>('scram-master');
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
+  const user = useAppSelector((state) => state.user.user);
   const users = useAppSelector((state) => state.users.users);
   const room = useAppSelector((state) => state.room.room);
-  const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
+  const scramMaster = users.find((item) => item.role === 'scram-master') as UserModel;
+
+  useEffect(() => {
+    dispatch(gameInProgress());
+    if (user?.role === 'scram-master') {
+      socket?.on('loginRequest', (firstname, lastname) => {
+        console.log(`Do you want to add a user ${firstname} ${lastname}?`);
+      });
+    }
+  }, [socket, dispatch]);
 
   const handleClickNextIssue = () => {
     socket?.emit('nextIssue', room);

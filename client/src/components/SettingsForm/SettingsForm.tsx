@@ -29,6 +29,7 @@ export const SettingsForm = (): JSX.Element => {
     data.roomId = room;
     socket?.emit('saveSettings', data);
     socket?.emit('startGame', room);
+    socket?.emit('satatusGame-progress', room);
   };
 
   return (

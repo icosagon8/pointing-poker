@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { addIssues } from '../../store/slices/issuesSlice';
 import { SocketContext } from '../../socketContext';
 import { saveSettings } from '../../store/slices/settingsSlice';
+import { waitingGame } from '../../store/slices/statusGameSlice';
 import { UserModel } from '../../models/userModel';
 import { deleteUser } from '../../store/slices/userSlice';
 import { Message } from '../../models/Message';
@@ -38,6 +39,7 @@ export const LobbyPage = (): JSX.Element => {
   }, [socket, history, dispatch]);
 
   useEffect(() => {
+    dispatch(waitingGame());
     socket?.on('issues', (issues) => {
       dispatch(addIssues(issues));
     });

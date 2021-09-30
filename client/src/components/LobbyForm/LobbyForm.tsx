@@ -27,6 +27,7 @@ interface FormInputs {
 
 export function LobbyForm(props: Props): JSX.Element {
   const room = useAppSelector((state) => state.room.room);
+  const statusGame = useAppSelector((state) => state.statusGame.statusGame);
   const dispatch = useAppDispatch();
   const { handleClose, isScram } = props;
   const [src, setSrc] = useState<string>('');
@@ -69,7 +70,7 @@ export function LobbyForm(props: Props): JSX.Element {
     dispatch(addUser(data));
     const id = getId(room);
 
-    socket?.emit('login', { ...data, room: id }, () => {
+    socket?.emit('login', { ...data, room: id, statusGame, isScram }, () => {
       history.push('/lobby');
     });
   };
