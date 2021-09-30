@@ -1,48 +1,73 @@
 import { Button, Dialog, DialogActions, DialogContent } from '@material-ui/core';
+import { useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import IssueCard from '../../models/iIssueCard';
+import { nanoid } from 'nanoid';
+import { useAppSelector } from '../../store/hooks/hooks';
+import { SocketContext } from '../../socketContext';
+import { IssueModel } from '../../models/issueModel';
 import './IssueDialog.scss';
 
 interface IissueDialog {
+  id?: string;
   open: boolean;
   onClose: () => void;
-  issues: IssueCard[];
-  setIssueState: (issues: IssueCard[]) => void;
+  edit?: boolean;
 }
 
 enum PriorityEnum {
-  low = 'low',
-  middle = 'middle',
-  hight = 'hight',
+  low = 'Low',
+  middle = 'Middle',
+  hight = 'Hight',
 }
 
 interface IFormInput {
+  id: string;
   title: string;
-  link: string;
   priority: PriorityEnum;
+  roomId: string;
+  current: boolean;
 }
 
 export const IssueDialog = (props: IissueDialog): JSX.Element => {
-  const { onClose, open, issues, setIssueState } = props;
+  const { onClose, open, edit, id } = props;
+  const { socket } = useContext(SocketContext);
+  const room = useAppSelector((state) => state.room.room);
+  const issuesEdit = useAppSelector((state) => state.issues.issues);
+  const issueEdit = issuesEdit.find((issue) => issue.id === id) as IssueModel;
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<IFormInput>({ criteriaMode: 'all' });
 
+  useEffect(() => {
+    if (edit) {
+      setValue('title', issueEdit.title);
+      setValue('priority', issueEdit.priority);
+    }
+  }, [setValue, issueEdit, edit]);
+
   const handleClose = () => {
+    setValue('title', '');
+    setValue('priority', PriorityEnum.low);
     onClose();
   };
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    setIssueState([...issues, { id: '123123', title: data.title, priority: data.priority } as IssueCard]);
+    if (edit) {
+      socket?.emit('editIssue', { ...data, roomId: room, current: false }, id);
+    } else {
+      data.id = nanoid();
+      socket?.emit('saveIssue', { ...data, roomId: room, current: false });
+    }
     handleClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose} className="issue-dialog ">
       <div>
-        <h3 className="issue-dialog__title">Create Issue</h3>
+        <h3 className="issue-dialog__title">{edit ? 'Edit' : 'Create'} Issue</h3>
       </div>
       <DialogContent>
         <form className="issue-dialog__form" onSubmit={handleSubmit(onSubmit)}>
@@ -68,31 +93,6 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
             )}
             {errors.title?.type === 'required' && (
               <p className="issue-dialog__form__error-text">{errors.title.types?.required}</p>
-            )}
-          </div>
-          <div className="issue-dialog__form__block">
-            <div className="issue-dialog__form__input-wrapper">
-              <label htmlFor="link" className="issue-dialog__form__label">
-                Link:
-              </label>
-              <input
-                id="link"
-                className="issue-dialog__form__input"
-                {...register('link', {
-                  required: 'Enter link',
-                  pattern: {
-                    value:
-                      /https?:\/\/(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()@:%_+.~#?&//=]*)/i,
-                    message: 'This input must match the pattern.',
-                  },
-                })}
-              />
-            </div>
-            {errors.link?.type === 'pattern' && (
-              <p className="issue-dialog__form__error-text">{errors.link?.types?.pattern}</p>
-            )}
-            {errors.link?.type === 'required' && (
-              <p className="issue-dialog__form__error-text">{errors.link?.types?.required}</p>
             )}
           </div>
           <div className="issue-dialog__form__block issue-dialog__form__priority">
@@ -124,4 +124,9 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
       </DialogContent>
     </Dialog>
   );
+};
+
+IssueDialog.defaultProps = {
+  edit: false,
+  id: null,
 };

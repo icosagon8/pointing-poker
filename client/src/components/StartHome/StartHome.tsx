@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import { BaseModal } from '../BaseModal/BaseModal';
 import { LobbyForm } from '../LobbyForm/LobbyForm';
 import { useAppDispatch } from '../../store/hooks/hooks';
-import { addRoom } from '../../store/slices/roomSlice';
+import { addRoom, deleteRoom } from '../../store/slices/roomSlice';
 import { parsePath } from '../../helpers/utils';
 import { SocketContext } from '../../socketContext';
 
@@ -29,7 +29,7 @@ export function StartHome(): JSX.Element {
   });
 
   useEffect(() => {
-    dispatch(addRoom(''));
+    dispatch(deleteRoom());
   }, [dispatch]);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export function StartHome(): JSX.Element {
             exist: 'There is no such room',
           },
         });
-        dispatch(addRoom(''));
+        dispatch(deleteRoom());
       }
     });
   }, [socket, setError, dispatch]);
@@ -59,7 +59,7 @@ export function StartHome(): JSX.Element {
   const handleClose = () => {
     setOpen(false);
     setIsScram(false);
-    dispatch(addRoom(''));
+    dispatch(deleteRoom());
   };
 
   const onSubmit = (data: FormInputs) => {

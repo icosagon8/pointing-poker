@@ -3,8 +3,18 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
-import { addUser, deleteUser, getUser, getUsers, checkRoom } from './users';
+import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
+import {
+  addIssue,
+  editIssue,
+  getIssues,
+  deleteIssue,
+  setCurrentIssueClick,
+  nextIssue,
+  deleteIssuesInRoom,
+} from './issues';
 import { sendSettings } from './settings';
+import { addVote, deleteVotes, getResult, getVotes } from './votes';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -26,24 +36,55 @@ io.on('connection', (socket: Socket) => {
     callback();
   });
 
+  socket.on('startGame', (room) => {
+    io.in(room).emit('redirectToNewGame');
+  });
+
+  socket.on('cancelGame', (room) => {
+    io.in(room).emit('redirectToHomePage');
+    deleteUsersInRoom(room);
+    deleteIssuesInRoom(room);
+  });
+
   socket.on('message', (text) => {
     const messageId = nanoid();
     const user = getUser(socket.id);
-    io.in(user.room).emit('message', {
+    io.in(user?.room).emit('message', {
       text,
       messageId,
-      userId: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      position: user.position,
-      avatar: user.avatar,
+      ...user,
+      type: 'regular',
     });
   });
 
   socket.on('saveSettings', (settings) => {
-    console.log(settings);
     sendSettings(settings);
     io.in(settings.roomId).emit('sendSettings', settings);
+  });
+
+  socket.on('saveIssue', (issue) => {
+    addIssue(issue);
+    io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
+  });
+
+  socket.on('editIssue', (issue, id) => {
+    editIssue(issue, id);
+    io.in(issue.roomId).emit('issues', getIssues(issue.roomId));
+  });
+
+  socket.on('deleteIssue', (id, room) => {
+    deleteIssue(id, room);
+    io.in(room).emit('issues', getIssues(room));
+  });
+
+  socket.on('setCurrentIssue', (id, room) => {
+    setCurrentIssueClick(id);
+    io.in(room).emit('issues', getIssues(room));
+  });
+
+  socket.on('nextIssue', (room) => {
+    nextIssue(room);
+    io.in(room).emit('issues', getIssues(room));
   });
 
   socket.on('disconnect', () => {
@@ -52,6 +93,61 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('joinRoom', (room) => {
     io.to(socket.id).emit('room', checkRoom(room));
+  });
+
+  socket.on('kickMember', (kickedUser, userAgainst) => {
+    const { room, id } = kickedUser;
+
+    if (userAgainst.role === 'scram-master') {
+      deleteUser(id);
+      io.to(id).emit('logout');
+      io.in(room).emit('users', getUsers(room));
+      const messageId = nanoid();
+
+      io.in(room).emit('message', {
+        text: 'Kicked by scram master',
+        messageId,
+        ...kickedUser,
+        type: 'system',
+      });
+    } else {
+      io.in(room).emit('startVoting');
+      addVote(true, room);
+      const users = getUsers(room);
+
+      users.forEach((user) => {
+        if (user.id !== kickedUser.id && user.id !== socket.id) {
+          io.to(user.id).emit('showModal', kickedUser, userAgainst);
+        }
+      });
+    }
+  });
+
+  socket.on('vote', (vote, kickedUser) => {
+    const { room, id } = kickedUser;
+    addVote(vote, room);
+    const votes = getVotes(room);
+    const users = getUsers(room);
+
+    if (votes.length + 1 === users.length) {
+      const result = getResult(votes);
+
+      if (result) {
+        deleteUser(id);
+        deleteVotes(room);
+        io.to(id).emit('logout');
+        io.in(room).emit('users', getUsers(room));
+        io.in(room).emit('endVoting');
+        const messageId = nanoid();
+
+        io.in(room).emit('message', {
+          text: 'Kicked by voting',
+          messageId,
+          ...kickedUser,
+          type: 'system',
+        });
+      }
+    }
   });
 });
 

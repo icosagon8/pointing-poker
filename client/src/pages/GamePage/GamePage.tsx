@@ -1,7 +1,6 @@
 import './GamePage.scss';
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { Container, Grid, Button } from '@material-ui/core';
-import IssueCard from '../../models/iIssueCard';
 import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
 import { MemberCard } from '../../components/MemberCard/MemberCard';
@@ -10,6 +9,7 @@ import { Timer } from '../../components/Timer/Timer';
 import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
 import { useAppSelector } from '../../store/hooks/hooks';
+import { SocketContext } from '../../socketContext';
 import { UserModel } from '../../models/userModel';
 
 const members = [
@@ -29,38 +29,16 @@ const gameCardsStat = [
 ];
 
 export function GamePage(): JSX.Element {
-  const [issuesState, setIssuesState] = useState<IssueCard[]>([
-    { id: '1029341', title: 'Issue 1', priority: 'Low prority' },
-    { id: '3452346', title: 'Issue 2', priority: 'High prority' },
-    { id: '9000563', title: 'Issue 3', priority: 'Low prority' },
-    { id: '999933', title: 'Issue 4', priority: 'Low prority' },
-    { id: '409243000', title: 'Issue 5', priority: 'Low prority' },
-  ]);
+  const { socket } = useContext(SocketContext);
   const [role] = useState<string>('scram-master');
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
-  const [indexIssue, setIndexIssue] = useState<number>(0);
-  const [currentId, setCurrentId] = useState<string>(issuesState[indexIssue].id);
   const users = useAppSelector((state) => state.users.users);
+  const room = useAppSelector((state) => state.room.room);
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
 
-  useEffect(() => {
-    setIndexIssue(issuesState.findIndex((elem: IssueCard) => elem.id === currentId));
-  }, [issuesState, currentId]);
-
-  useEffect(() => {
-    setCurrentId(issuesState[indexIssue].id);
-  }, [issuesState, indexIssue]);
-
   const handleClickNextIssue = () => {
-    const maxIndex = issuesState.length - 1;
-    if (indexIssue < maxIndex) {
-      setIndexIssue((prev) => prev + 1);
-    }
-  };
-
-  const handleSetIssueState = (issues: IssueCard[]) => {
-    setIssuesState(issues);
+    socket?.emit('nextIssue', room);
   };
 
   return (
@@ -98,13 +76,7 @@ export function GamePage(): JSX.Element {
           </Grid>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={4}>
-              <IssueList
-                issues={issuesState}
-                setIssueState={handleSetIssueState}
-                role={role}
-                currentId={currentId}
-                setCurrentId={setCurrentId}
-              />
+              <IssueList />
             </Grid>
             {role === 'scram-master' && !play ? (
               <>

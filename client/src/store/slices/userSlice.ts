@@ -1,16 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-interface UserState {
-  id: string;
-  firstname: string;
-  lastname: string;
-  position: string;
-  role: string;
-  avatar: string;
-}
+import { UserModel } from '../../models/userModel';
 
 interface UserInitialState {
-  user: UserState | null;
+  user: UserModel | null;
 }
 
 const initialState: UserInitialState = {
@@ -24,9 +16,12 @@ const userSlice = createSlice({
     addUser: (state, action) => {
       state.user = action.payload;
     },
+    deleteUser: (state) => {
+      state.user = null;
+    },
   },
 });
 
-export const { addUser } = userSlice.actions;
+export const { addUser, deleteUser } = userSlice.actions;
 
 export default userSlice.reducer;

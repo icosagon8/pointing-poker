@@ -4,11 +4,11 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
-import './SettingsForm.scss';
 import { SocketContext } from '../../socketContext';
 import { useAppSelector } from '../../store/hooks/hooks';
 import { GameCardsList } from '../GameCardsList/GameCardsList';
 import GameCardType from '../../models/iGameCard';
+import './SettingsForm.scss';
 
 export const SettingsForm = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
@@ -33,6 +33,7 @@ export const SettingsForm = (): JSX.Element => {
     data.roomId = room;
     data.cardsValue = gameCards.map((item) => ({ id: item.id, value: item.value }));
     socket?.emit('saveSettings', data);
+    socket?.emit('startGame', room);
   };
 
   return (
