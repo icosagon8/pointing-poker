@@ -7,4 +7,10 @@ export interface SettingsModel {
   scoreTypeShort: string;
   timerHours: string;
   timerMinutes: string;
+  cardsValue: GameCardsValue[];
+}
+
+interface GameCardsValue {
+  id: string;
+  value: string;
 }

@@ -1,6 +1,6 @@
 import './GamePage.scss';
-import { useState, useContext, useEffect } from 'react';
-import { Container, Grid, Button } from '@material-ui/core';
+import { useState, useContext } from 'react';
+import { Container, Grid, Button, Card } from '@material-ui/core';
 import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
 import { MemberCard } from '../../components/MemberCard/MemberCard';
@@ -18,11 +18,11 @@ const members = [
   { id: '43513325423', name: 'Kim Foon', lastname: 'Doe', src: 'adsasd2rr23' },
   { id: '213423', name: 'Li', lastname: 'Doe', position: 'driver', src: 'adsasd2rr23' },
 ];
-const gameCards = [
-  { id: '35635463', title: 'sp', value: '2' },
-  { id: '990934', title: 'sp', value: '5' },
-  { id: '1234090', title: 'sp', value: '1' },
-];
+// const gameCards = [
+//   { id: '35635463', title: 'sp', value: '2' },
+//   { id: '990934', title: 'sp', value: '5' },
+//   { id: '1234090', title: 'sp', value: '1' },
+// ];
 const gameCardsStat = [
   { id: '35635463', title: 'sp', value: '2', percent: 90.5 },
   { id: '990934', title: 'sp', value: '5', percent: 7.2 },
@@ -40,9 +40,14 @@ export function GamePage(): JSX.Element {
   const title = useAppSelector((state) => state.title.title);
   const [timerIsOver, setTimerIsOver] = useState<boolean>(false);
   const settings = useAppSelector((state) => state.settings.settings);
+  const cards = settings?.cardsValue.map((card) => {
+    return {
+      ...card,
+      title: settings.scoreTypeShort,
+    };
+  });
 
   const timerIsOverHandler = () => {
-    console.log('timer is ', true);
     setTimerIsOver(true);
   };
 
@@ -117,7 +122,7 @@ export function GamePage(): JSX.Element {
               <Statistics gameCardsStat={gameCardsStat} />
             </Grid>
             <Grid item xs={6}>
-              <CardList gameCards={gameCards} />
+              {cards && <CardList gameCards={cards} />}
             </Grid>
           </Grid>
         </Grid>
