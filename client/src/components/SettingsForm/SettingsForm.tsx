@@ -34,6 +34,7 @@ export const SettingsForm = (): JSX.Element => {
     data.cardsValue = gameCards.map((item) => ({ id: item.id, value: item.value }));
     socket?.emit('saveSettings', data);
     socket?.emit('startGame', room);
+    socket?.emit('statusGame-progress', room);
   };
 
   return (
