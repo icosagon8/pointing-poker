@@ -57,5 +57,11 @@ module.exports = {
         exceptions: ['input', 'select', 'Switch', 'IOSSwitch'],
       },
     ],
+    'react/require-default-props': [
+      2,
+      {
+        ignoreFunctionalComponents: true,
+      },
+    ],
   },
 };

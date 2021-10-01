@@ -37,6 +37,7 @@ export function GamePage(): JSX.Element {
   const [location] = useState<string>('game-page');
   const users = useAppSelector((state) => state.users.users);
   const room = useAppSelector((state) => state.room.room);
+  const title = useAppSelector((state) => state.title.title);
   const scramMaster = users.find((item) => item.role === 'scram-master') as UserModel;
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export function GamePage(): JSX.Element {
     <Container className="page-game">
       <Grid container>
         <Grid item xs={8}>
-          <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
+          <Title title={title} />
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
               <MemberCard

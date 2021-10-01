@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { addUser } from '../../store/slices/userSlice';
 import { addRoom } from '../../store/slices/roomSlice';
 import { addUsers } from '../../store/slices/usersSlice';
+import { setTitle } from '../../store/slices/titleSlice';
 
 interface Props {
   isScram: boolean;
@@ -37,6 +38,10 @@ export function LobbyForm(props: Props): JSX.Element {
   useEffect(() => {
     socket?.on('users', (users) => {
       dispatch(addUsers(users));
+    });
+
+    socket?.on('title', (title) => {
+      if (title) dispatch(setTitle(title));
     });
   }, [dispatch, socket]);
 

@@ -7,13 +7,21 @@ import { useRef, useState } from 'react';
 import GameCardType from '../../models/iGameCard';
 
 export const GameCard = (props: GameCardType): JSX.Element => {
-  const { id, title, value, cardSelection, lobbyPage, setCurrentId, className } = props;
+  const { id, title, value, cardSelection, lobbyPage, setCurrentId, className, setGameCards, gameCards } = props;
   const [cardNumber, setCardNumber] = useState<string>(value);
-  const [edit, setEdit] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(true);
   const ref = useRef<HTMLInputElement>(null);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value);
+    if (gameCards && setGameCards) {
+      const newCards = gameCards.map((item) => {
+        if (item.id === id) {
+          item.value = e.target.value;
+        }
+        return item;
+      });
+      setGameCards(newCards);
+    }
   };
 
   const handleFocus = () => {
@@ -35,6 +43,13 @@ export const GameCard = (props: GameCardType): JSX.Element => {
   const handleClick = () => {
     if (setCurrentId && cardSelection) {
       setCurrentId(id);
+    }
+  };
+
+  const removeCardClickHandler = () => {
+    if (gameCards && setGameCards) {
+      const newArr = gameCards?.filter((item) => item.id !== id);
+      setGameCards(newArr);
     }
   };
 
@@ -73,7 +88,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
       <span className="game-card__title">{title}</span>
       <div className="game-card__input-box">
         {lobbyPage ? (
-          <IconButton className="game-card__btn">
+          <IconButton className="game-card__btn" onClick={removeCardClickHandler}>
             <DeleteOutlineIcon className="game-card__delete-btn" />
           </IconButton>
         ) : null}

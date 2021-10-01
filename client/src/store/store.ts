@@ -7,6 +7,7 @@ import settingsSlice from './slices/settingsSlice';
 import issuesSlice from './slices/issuesSlice';
 import votingSlice from './slices/votingSlice';
 import statusGameSlice from './slices/statusGameSlice';
+import titleSlice from './slices/titleSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     issues: issuesSlice,
     voting: votingSlice,
     statusGame: statusGameSlice,
+    title: titleSlice,
   },
 });
 
