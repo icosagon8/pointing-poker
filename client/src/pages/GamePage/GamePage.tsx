@@ -1,5 +1,5 @@
 import './GamePage.scss';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Container, Grid, Button } from '@material-ui/core';
 import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
@@ -11,6 +11,7 @@ import { CardList } from '../../components/CardList/CardList';
 import { useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
 import { UserModel } from '../../models/userModel';
+import { SettingsFormInput } from '../../models/SettingsFormInput';
 
 const members = [
   { id: '13423', name: 'Alex', lastname: 'Doe', position: 'driver', src: 'adsasd2rr23' },
@@ -37,6 +38,13 @@ export function GamePage(): JSX.Element {
   const room = useAppSelector((state) => state.room.room);
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
   const title = useAppSelector((state) => state.title.title);
+  const [timerIsOver, setTimerIsOver] = useState<boolean>(false);
+  const settings = useAppSelector((state) => state.settings.settings);
+
+  const timerIsOverHandler = () => {
+    console.log('timer is ', true);
+    setTimerIsOver(true);
+  };
 
   const handleClickNextIssue = () => {
     socket?.emit('nextIssue', room);
@@ -57,7 +65,7 @@ export function GamePage(): JSX.Element {
               />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
-              <Timer start={play} location={location} />
+              <Timer start={play} timerIsOverHandler={timerIsOverHandler} location={location} />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
               {role === 'scram-master' && play ? (

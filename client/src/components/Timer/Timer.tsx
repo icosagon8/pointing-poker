@@ -3,18 +3,21 @@ import { Card } from '@material-ui/core';
 import { useState, useEffect } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
+import { useAppSelector } from '../../store/hooks/hooks';
 
 interface TimeType {
   start: boolean;
   register?: UseFormRegister<SettingsFormInput>;
   location?: string;
+  timerIsOverHandler?: () => void;
 }
 
 export function Timer(props: TimeType): JSX.Element {
-  const MIN = '02';
-  const SEC = '00';
-  const { start, location, register } = props;
-  const [count, setCount] = useState<number>(0);
+  const settings = useAppSelector((state) => state.settings.settings);
+  const MIN = settings?.timerHours;
+  const SEC = settings?.timerMinutes;
+  const { start, location, register, timerIsOverHandler } = props;
+  const [count, setCount] = useState<number>(1);
 
   const getZero = (num: number) => {
     return String(num).length === 1 ? `0${num}` : `${num}`;
@@ -37,6 +40,7 @@ export function Timer(props: TimeType): JSX.Element {
     if (count > 0 && start) {
       timer = setTimeout(() => setCount((prev) => prev - 1), 1000);
     }
+    if (count === 0 && timerIsOverHandler) timerIsOverHandler();
     return () => {
       if (timer) {
         clearTimeout(timer);
