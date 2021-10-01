@@ -5,7 +5,7 @@ interface GameState {
 }
 
 const initialState: GameState = {
-  statusGame: '',
+  statusGame: 'before-game',
 };
 
 const statusGameSlice = createSlice({
@@ -21,12 +21,12 @@ const statusGameSlice = createSlice({
     endGame: (state) => {
       state.statusGame = 'end-game';
     },
-    deleteStatusGame: (state) => {
-      state.statusGame = '';
+    beforeGameStatusGame: (state) => {
+      state.statusGame = 'before-game';
     },
   },
 });
 
-export const { waitingGame, gameInProgress, endGame, deleteStatusGame } = statusGameSlice.actions;
+export const { waitingGame, gameInProgress, endGame, beforeGameStatusGame } = statusGameSlice.actions;
 
 export default statusGameSlice.reducer;

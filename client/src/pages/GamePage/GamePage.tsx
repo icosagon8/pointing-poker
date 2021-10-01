@@ -35,18 +35,15 @@ export function GamePage(): JSX.Element {
   const [role] = useState<string>('scram-master');
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
-  const user = useAppSelector((state) => state.user.user);
   const users = useAppSelector((state) => state.users.users);
   const room = useAppSelector((state) => state.room.room);
   const scramMaster = users.find((item) => item.role === 'scram-master') as UserModel;
 
   useEffect(() => {
     dispatch(gameInProgress());
-    if (user?.role === 'scram-master') {
-      socket?.on('loginRequest', (firstname, lastname) => {
-        console.log(`Do you want to add a user ${firstname} ${lastname}?`);
-      });
-    }
+    socket?.on('loginRequest', (firstname, lastname) => {
+      console.log(`Do you want to add a user ${firstname} ${lastname}?`);
+    });
   }, [socket, dispatch]);
 
   const handleClickNextIssue = () => {

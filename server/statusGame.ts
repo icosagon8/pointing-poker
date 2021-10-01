@@ -5,7 +5,7 @@ const statusGames: StatusGameModel[] = [];
 export const addStatus = ({ statusGame, room }: StatusGameModel): void => {
   const checkRoom = statusGames.some((item) => item.room === room);
   if (!checkRoom) {
-    const newStatus = { statusGame, room }
+    const newStatus = { statusGame, room };
     statusGames.push(newStatus);
   }
 };

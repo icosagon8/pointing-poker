@@ -25,6 +25,10 @@ export const deleteUsersInRoom = (room: string): void => {
   }
 };
 
+export const getScramMasterInRoom = (room: string): UserModel => {
+  return users.filter((user) => user.room === room).find((user) => user.role === 'scram-master') as UserModel;
+};
+
 export const getUsers = (room: string): UserModel[] => users.filter((user) => user.room === room);
 
 export const checkRoom = (room: string): boolean => users.some((user: UserModel) => user.room === room);

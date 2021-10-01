@@ -3,7 +3,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
-import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
+import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom, getScramMasterInRoom } from './users';
 import { addStatus, waitingGame, gameInProgress, endGame, checkStatusGame, deleteStatusGameInRoom } from './statusGame';
 import {
   addIssue,
@@ -30,8 +30,8 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket: Socket) => {
-  socket.on('login', ({ firstname, lastname, position, role, avatar, room, statusGame, isScram }, callback) => {
-    if (checkStatusGame(room) === 'waiting-game' || isScram) {
+  socket.on('login', ({ firstname, lastname, position, role, avatar, room, statusGame }, callback) => {
+    if (checkStatusGame(room) === 'waiting-game' || role === 'scram-master') {
       const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
       addStatus({ statusGame, room });
       waitingGame(room);
@@ -39,15 +39,15 @@ io.on('connection', (socket: Socket) => {
       io.in(room).emit('users', getUsers(room));
       callback();
     } else {
-      io.in(room).emit('loginRequest', firstname, lastname);
+      io.to(getScramMasterInRoom(room).id).emit('loginRequest', firstname, lastname);
     }
   });
 
-  socket.on('satatusGame-progress', (room) => {
+  socket.on('statusGame-progress', (room) => {
     gameInProgress(room);
   });
 
-  socket.on('satatusGame-end', (room) => {
+  socket.on('statusGame-end', (room) => {
     endGame(room);
   });
 

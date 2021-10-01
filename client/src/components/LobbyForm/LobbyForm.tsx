@@ -70,7 +70,7 @@ export function LobbyForm(props: Props): JSX.Element {
     dispatch(addUser(data));
     const id = getId(room);
 
-    socket?.emit('login', { ...data, room: id, statusGame, isScram }, () => {
+    socket?.emit('login', { ...data, room: id, statusGame }, () => {
       history.push('/lobby');
     });
   };
