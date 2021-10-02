@@ -1,19 +1,18 @@
-.accept-user-modal {
+.waiting-modal {
   &__text {
     font-size: 36px;
     line-height: 42px;
     text-align: center;
-    margin-top: 50px;
-    margin-bottom: 100px;
+    margin: 50px 0 20px;
   }
 
-  &__username {
-    color: #66999b;
+  &__text--loading {
+    margin: 20px 0 50px;
   }
 
   &__btn-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 30px;
   }
 }

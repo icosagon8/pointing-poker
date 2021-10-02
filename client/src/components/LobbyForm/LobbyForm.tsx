@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { FileInput } from '../FileInput/FileInput';
+import { WaitingModal } from '../WaitingModal/WaitingModal';
 import { getInitials } from '../../helpers/utils';
 import { SocketContext } from '../../socketContext';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
@@ -43,10 +44,12 @@ export function LobbyForm(props: Props): JSX.Element {
   useEffect(() => {
     socket?.on('redirectToGame', (users) => {
       dispatch(addUsers(users));
-      console.log('1111');
       history.push('/game');
     });
-  }, [dispatch, socket, history]);
+    socket?.on('rejectEnterToGame', () => {
+      handleClose();
+    });
+  }, [dispatch, socket, history, handleClose]);
 
   const {
     register,
@@ -212,6 +215,7 @@ export function LobbyForm(props: Props): JSX.Element {
           Cancel
         </Button>
       </div>
+      <WaitingModal />
     </form>
   );
 }

@@ -4,6 +4,7 @@ import { Container, Grid } from '@material-ui/core';
 import { io } from 'socket.io-client';
 import image from '../../assets/images/cards.png';
 import { StartHome } from '../../components/StartHome/StartHome';
+import { RejectEnterModal } from '../../components/RejectEnterModal/RejectEnterModal';
 import { SocketContext } from '../../socketContext';
 
 export function Home(): JSX.Element {
@@ -32,6 +33,7 @@ export function Home(): JSX.Element {
             </Grid>
           </Grid>
         </div>
+        <RejectEnterModal />
       </Container>
     </main>
   );

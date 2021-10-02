@@ -31,27 +31,31 @@ const io = new Server(server, {
 
 io.on('connection', (socket: Socket) => {
   socket.on('login', ({ firstname, lastname, position, role, avatar, room, statusGame }, callback) => {
+    const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
     if (checkStatusGame(room) === 'waiting-game' || role === 'scram-master') {
-      console.log('NO!!!!');
-      const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
       addStatus({ statusGame, room });
       waitingGame(room);
       socket.join(user.room);
       io.in(room).emit('users', getUsers(room));
       callback();
     } else {
-      console.log('yes1');
-      io.to(getScramMasterInRoom(room).id).emit('loginRequest', firstname, lastname, position, role, avatar, room, statusGame);
+      io.to(getScramMasterInRoom(room).id).emit('loginRequest', user.id, firstname, lastname, room);
+      io.to(user.id).emit('waitingEnterGame');
     }
   });
 
-  socket.on('receiveUser', ({ firstname, lastname, position, role, avatar, room, statusGame }, answer) => {
+  socket.on('receiveUser', ({ id, room }, answer) => {
     if (answer) {
-      const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
-      io.to(user.id).emit('redirectToGame', getUsers(room));
+      io.to(getUser(id).id).emit('redirectToGame', getUsers(room));
     } else {
-      
+      io.to(getUser(id).id).emit('rejectEnterToGame');
+      deleteUser(id);
     }
+  });
+
+  socket.on('waitingEnterGameCancel', (room) => {
+    io.to(getScramMasterInRoom(room).id).emit('loginRequestCancel');
+    deleteUser(socket.id);
   });
 
   socket.on('statusGame-progress', (room) => {

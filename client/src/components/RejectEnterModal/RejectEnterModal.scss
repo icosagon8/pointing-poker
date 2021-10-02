@@ -1,4 +1,4 @@
-.accept-user-modal {
+.reject-enter-modal {
   &__text {
     font-size: 36px;
     line-height: 42px;
@@ -7,13 +7,9 @@
     margin-bottom: 100px;
   }
 
-  &__username {
-    color: #66999b;
-  }
-
   &__btn-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 30px;
   }
 }

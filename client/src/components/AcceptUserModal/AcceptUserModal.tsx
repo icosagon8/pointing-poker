@@ -4,33 +4,30 @@ import { Button } from '@material-ui/core';
 import { BaseModal } from '../BaseModal/BaseModal';
 import { SocketContext } from '../../socketContext';
 
-interface NewUserType {
+interface RequestedUserType {
+  id: string | null;
   firstname: string | null;
   lastname: string | null;
-  position: string | null;
-  role: string | null;
-  avatar: string | null;
   room: string | null;
-  statusGame: string | null;
 }
 
 export const AcceptUserModal = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
   const [open, setOpen] = useState<boolean>(false);
-  const [newUser, setNewUser] = useState<NewUserType>({
+  const [requestedUser, setRequestedUser] = useState<RequestedUserType>({
+    id: null,
     firstname: null,
     lastname: null,
-    position: null,
-    role: null,
-    avatar: null,
     room: null,
-    statusGame: null,
   });
-  
+
   useEffect(() => {
-    socket?.on('loginRequest', (firstname, lastname, position, role, avatar, room, statusGame) => {
+    socket?.on('loginRequest', (id, firstname, lastname, room) => {
       setOpen(true);
-      setNewUser({ firstname, lastname, position, role, avatar, room, statusGame });
+      setRequestedUser({ id, firstname, lastname, room });
+    });
+    socket?.on('loginRequestCancel', () => {
+      setOpen(false);
     });
   }, [socket]);
 
@@ -41,12 +38,12 @@ export const AcceptUserModal = (): JSX.Element => {
   };
 
   const handleYesButton = () => {
-    socket?.emit('receiveUser', newUser, true);
+    socket?.emit('receiveUser', requestedUser, true);
     setOpen(false);
   };
 
   const handleNoButton = () => {
-    socket?.emit('receiveUser', newUser, false);
+    socket?.emit('receiveUser', requestedUser, false);
     setOpen(false);
   };
 
@@ -56,7 +53,7 @@ export const AcceptUserModal = (): JSX.Element => {
         <p className="accept-user-modal__text">
           User&nbsp;
           <span className="accept-user-modal__username">
-            {newUser?.firstname} {newUser?.lastname}&nbsp;
+            {requestedUser?.firstname} {requestedUser?.lastname}&nbsp;
           </span>
           want to join. Resolve?
         </p>
