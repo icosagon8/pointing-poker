@@ -11,12 +11,18 @@ export const KickUserModal = (): JSX.Element => {
   const [kickedUser, setKickUser] = useState<UserModel | null>(null);
   const [open, setOpen] = useState<boolean>(false);
 
+  const handleShowModal = (kicked: UserModel, userAgainst: UserModel) => {
+    setSender(userAgainst);
+    setKickUser(kicked);
+    setOpen(true);
+  };
+
   useEffect(() => {
-    socket?.on('showModal', (kicked: UserModel, userAgainst: UserModel) => {
-      setSender(userAgainst);
-      setKickUser(kicked);
-      setOpen(true);
-    });
+    socket?.on('showModal', handleShowModal);
+
+    return () => {
+      socket?.off('showModal', handleShowModal);
+    };
   }, [socket]);
 
   const handleClose = (event: React.MouseEvent | React.KeyboardEvent, reason?: string) => {

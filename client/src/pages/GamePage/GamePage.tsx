@@ -12,12 +12,8 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
 import { gameInProgress } from '../../store/slices/statusGameSlice';
 import { UserModel } from '../../models/userModel';
+import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
 
-const members = [
-  { id: '13423', name: 'Alex', lastname: 'Doe', position: 'driver', src: 'adsasd2rr23' },
-  { id: '43513325423', name: 'Kim Foon', lastname: 'Doe', src: 'adsasd2rr23' },
-  { id: '213423', name: 'Li', lastname: 'Doe', position: 'driver', src: 'adsasd2rr23' },
-];
 const gameCards = [
   { id: '35635463', title: 'sp', value: '2' },
   { id: '990934', title: 'sp', value: '5' },
@@ -63,6 +59,7 @@ export function GamePage(): JSX.Element {
                 lastname={scramMaster?.lastname}
                 src={scramMaster?.avatar}
                 position={scramMaster?.position}
+                kickButtonDisplay={false}
               />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
@@ -123,9 +120,10 @@ export function GamePage(): JSX.Element {
           </Grid>
         </Grid>
         <Grid item xs={4} className="page-game__aside">
-          <MemberCardList members={members} />
+          <MemberCardList />
         </Grid>
       </Grid>
+      <KickUserModal />
     </Container>
   );
 }

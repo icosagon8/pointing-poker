@@ -7,19 +7,17 @@ import { MemberCard } from '../MemberCard/MemberCard';
 import { Message } from '../../models/Message';
 import { UserModel } from '../../models/userModel';
 import { useAppSelector } from '../../store/hooks/hooks';
+import { checkUser, kickMember } from '../../helpers/utils';
 
-interface Props {
-  kickMember: (kicked: Message, userAgainst: UserModel) => void;
-  checkUser: (member: Message) => boolean;
-}
-
-export function Chat(props: Props): JSX.Element {
-  const { kickMember, checkUser } = props;
+export function Chat(): JSX.Element {
   const user = useAppSelector((state) => state.user.user) as UserModel;
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const { socket } = useContext(SocketContext);
   const scrollRef = useRef<HTMLLIElement>(null);
+  const users = useAppSelector((state) => state.users.users);
+  const members = users.filter((member) => member.role !== 'scram-master');
+  const isVoting = useAppSelector((state) => state.voting.isVoting);
 
   const handleMessages = (chatMessage: Message) => {
     setMessages((chatMessages) => [...chatMessages, chatMessage]);
@@ -83,9 +81,9 @@ export function Chat(props: Props): JSX.Element {
                     lastname={chatMessage.lastname}
                     position={chatMessage.position}
                     src={chatMessage.avatar}
-                    kickButtonDisplay={checkUser(chatMessage)}
+                    kickButtonDisplay={checkUser(socket, chatMessage, members, isVoting)}
                     onKick={() => {
-                      kickMember(chatMessage, user);
+                      kickMember(socket, chatMessage, user);
                     }}
                   />
                 </Grid>

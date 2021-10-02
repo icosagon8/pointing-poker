@@ -12,9 +12,7 @@ import { addIssues } from '../../store/slices/issuesSlice';
 import { SocketContext } from '../../socketContext';
 import { saveSettings } from '../../store/slices/settingsSlice';
 import { waitingGame } from '../../store/slices/statusGameSlice';
-import { UserModel } from '../../models/userModel';
 import { deleteUser } from '../../store/slices/userSlice';
-import { Message } from '../../models/Message';
 import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
 import { endVoting, startVoting } from '../../store/slices/votingSlice';
 import { EditableTitle } from '../../components/EditableTitle/EditableTitle';
@@ -25,13 +23,9 @@ export const LobbyPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const { socket } = useContext(SocketContext);
-  const isVoting = useAppSelector((state) => state.voting.isVoting);
   const user = useAppSelector((state) => state.user.user);
-  const users = useAppSelector((state) => state.users.users);
-  const members = users.filter((member) => member.role !== 'scram-master');
   const title = useAppSelector((state) => state.title.title);
   const room = useAppSelector((state) => state.room.room);
-  const MAX_MEMBERS = 3;
 
   useEffect(() => {
     socket?.on('logout', () => {
@@ -67,20 +61,6 @@ export const LobbyPage = (): JSX.Element => {
     });
   }, [dispatch, socket]);
 
-  const kickMember = (kicked: UserModel | Message, userAgainst: UserModel) => {
-    socket?.emit('kickMember', kicked, userAgainst);
-  };
-
-  const checkUser = (member: UserModel | Message): boolean => {
-    return !(
-      socket?.id === member.id ||
-      member.role === 'scram-master' ||
-      members.length <= MAX_MEMBERS ||
-      members.findIndex((item) => item.id === member.id) === -1 ||
-      isVoting
-    );
-  };
-
   const handleSave = (newTitle: string) => {
     socket?.emit('titleEdited', newTitle, room);
   };
@@ -91,7 +71,7 @@ export const LobbyPage = (): JSX.Element => {
         <Grid item xs={12} md={8} className="lobby-page__info">
           <EditableTitle title={title} onSave={handleSave} editButtonDisplay={user?.role === 'scram-master'} />
           <StartGame />
-          <MembersList kickMember={kickMember} checkUser={checkUser} />
+          <MembersList />
           {user?.role === 'scram-master' && (
             <>
               <IssueList />
@@ -101,7 +81,7 @@ export const LobbyPage = (): JSX.Element => {
         </Grid>
         {isOpen && (
           <Grid item xs={12} md={4}>
-            <Chat kickMember={kickMember} checkUser={checkUser} />
+            <Chat />
           </Grid>
         )}
       </Grid>
