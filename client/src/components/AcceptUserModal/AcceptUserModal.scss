@@ -1,0 +1,18 @@
+.accept-user-modal {
+  &__text {
+    font-size: 36px;
+    line-height: 42px;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 120px;
+  }
+
+  &__username {
+    color: #66999b;
+  }
+
+  &__btn-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+}

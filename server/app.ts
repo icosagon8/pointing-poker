@@ -16,7 +16,6 @@ import {
 } from './issues';
 import { sendSettings } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
-import { addTitle, checkTitle, editTitle, getTitle } from './title';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -33,6 +32,7 @@ const io = new Server(server, {
 io.on('connection', (socket: Socket) => {
   socket.on('login', ({ firstname, lastname, position, role, avatar, room, statusGame }, callback) => {
     if (checkStatusGame(room) === 'waiting-game' || role === 'scram-master') {
+      console.log('NO!!!!');
       const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
       addStatus({ statusGame, room });
       waitingGame(room);
@@ -40,7 +40,17 @@ io.on('connection', (socket: Socket) => {
       io.in(room).emit('users', getUsers(room));
       callback();
     } else {
-      io.to(getScramMasterInRoom(room).id).emit('loginRequest', firstname, lastname);
+      console.log('yes1');
+      io.to(getScramMasterInRoom(room).id).emit('loginRequest', firstname, lastname, position, role, avatar, room, statusGame);
+    }
+  });
+
+  socket.on('receiveUser', ({ firstname, lastname, position, role, avatar, room, statusGame }, answer) => {
+    if (answer) {
+      const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
+      io.to(user.id).emit('redirectToGame', getUsers(room));
+    } else {
+      
     }
   });
 
@@ -110,7 +120,6 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('joinRoom', (room) => {
     io.to(socket.id).emit('room', checkRoom(room));
-    io.to(socket.id).emit('title', getTitle(room));
   });
 
   socket.on('kickMember', (kickedUser, userAgainst) => {
@@ -166,16 +175,6 @@ io.on('connection', (socket: Socket) => {
         });
       }
     }
-  });
-
-  socket.on('titleEdited', (text, room) => {
-    if (checkTitle(room)) {
-      editTitle({ text, room });
-    } else {
-      addTitle({ text, room });
-    }
-
-    io.in(room).emit('titleSent', text);
   });
 });
 

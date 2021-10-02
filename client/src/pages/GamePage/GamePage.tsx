@@ -8,6 +8,7 @@ import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
 import { Timer } from '../../components/Timer/Timer';
 import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
+import { AcceptUserModal } from '../../components/AcceptUserModal/AcceptUserModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
 import { gameInProgress } from '../../store/slices/statusGameSlice';
@@ -37,15 +38,11 @@ export function GamePage(): JSX.Element {
   const [location] = useState<string>('game-page');
   const users = useAppSelector((state) => state.users.users);
   const room = useAppSelector((state) => state.room.room);
-  const title = useAppSelector((state) => state.title.title);
   const scramMaster = users.find((item) => item.role === 'scram-master') as UserModel;
 
   useEffect(() => {
     dispatch(gameInProgress());
-    socket?.on('loginRequest', (firstname, lastname) => {
-      console.log(`Do you want to add a user ${firstname} ${lastname}?`);
-    });
-  }, [socket, dispatch]);
+  }, [dispatch]);
 
   const handleClickNextIssue = () => {
     socket?.emit('nextIssue', room);
@@ -55,7 +52,7 @@ export function GamePage(): JSX.Element {
     <Container className="page-game">
       <Grid container>
         <Grid item xs={8}>
-          <Title title={title} />
+          <Title title="Spring 23 planning (issues 13, 533, 5623, 3252, 6623, ...)" />
           <Grid container alignItems="flex-end" justifyContent="space-between">
             <Grid item xs={4}>
               <MemberCard
@@ -126,6 +123,7 @@ export function GamePage(): JSX.Element {
           <MemberCardList members={members} />
         </Grid>
       </Grid>
+      <AcceptUserModal />
     </Container>
   );
 }
