@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { addIssues } from '../../store/slices/issuesSlice';
 import { SocketContext } from '../../socketContext';
 import { saveSettings } from '../../store/slices/settingsSlice';
+import { waitingGame } from '../../store/slices/statusGameSlice';
 import { deleteUser } from '../../store/slices/userSlice';
 import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
 import { endVoting, startVoting } from '../../store/slices/votingSlice';
@@ -35,6 +36,7 @@ export const LobbyPage = (): JSX.Element => {
   }, [socket, history, dispatch]);
 
   useEffect(() => {
+    dispatch(waitingGame());
     socket?.on('issues', (issues) => {
       dispatch(addIssues(issues));
     });
