@@ -16,6 +16,7 @@ import {
 import { sendSettings } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
+import { addGameVote, getGameVotes } from './gameVote';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -58,6 +59,17 @@ io.on('connection', (socket: Socket) => {
     });
   });
 
+  socket.on('sendGameVote', (vote) => {
+    if (vote.roomId) {
+      addGameVote(vote);
+      io.in(vote.roomId).emit('getGameVote', vote);
+    }
+  });
+
+  socket?.on('stopTimer', (room) => {
+    io.in(room).emit('stopTimerUsers');
+  });
+
   socket.on('saveSettings', (settings) => {
     sendSettings(settings);
     io.in(settings.roomId).emit('sendSettings', settings);
@@ -90,6 +102,10 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('disconnect', () => {
     deleteUser(socket.id);
+  });
+
+  socket.on('startTimer', (room) => {
+    socket?.in(room).emit('startTimerUsers');
   });
 
   socket.on('joinRoom', (room) => {

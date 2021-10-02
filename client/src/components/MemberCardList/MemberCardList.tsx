@@ -1,19 +1,16 @@
+import { useContext } from 'react';
 import './MemberCardList.scss';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { ScoreCard } from '../ScoreCard/ScoreCard';
+import { useAppSelector } from '../../store/hooks/hooks';
+import { SocketContext } from '../../socketContext';
 
-interface MemberCardListType {
-  members: {
-    id: string;
-    name: string;
-    lastname?: string;
-    position?: string;
-    src?: string;
-  }[];
-}
+export function MemberCardList(): JSX.Element {
+  const users = useAppSelector((state) => state.users.users);
+  const votes = useAppSelector((state) => state.gameVotes.votes);
+  const settings = useAppSelector((state) => state.settings.settings);
+  const socket = useContext(SocketContext);
 
-export function MemberCardList(props: MemberCardListType): JSX.Element {
-  const { members } = props;
   return (
     <div className="member-list">
       <div className="member-list__title-box">
@@ -21,10 +18,16 @@ export function MemberCardList(props: MemberCardListType): JSX.Element {
         <h2 className="member-list__title">Players:</h2>
       </div>
       <ul className="member-list__items">
-        {members.map(({ id, name, lastname, position, src }) => (
-          <li className="member-list__item" key={id}>
-            <ScoreCard />
-            <MemberCard name={name} lastname={lastname} position={position} src={src} />
+        {users.map((user) => (
+          <li className="member-list__item" key={user.id}>
+            <ScoreCard
+              score={
+                settings?.cardsValue.find((card) => card.id === votes.find((vote) => vote.userId === user.id)?.cardId)
+                  ?.value
+              }
+              title={settings?.scoreTypeShort}
+            />
+            <MemberCard name={user.firstname} lastname={user.lastname} position={user.position} src={user.avatar} />
           </li>
         ))}
       </ul>

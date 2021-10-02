@@ -8,11 +8,12 @@ interface CardListType {
     title: string;
     value: string;
   }[];
+  currentId?: string;
+  setCurrentId?: (flag: string) => void;
 }
 
 export function CardList(props: CardListType): JSX.Element {
-  const { gameCards } = props;
-  const [currentId, setCurrentId] = useState<string>('');
+  const { gameCards, currentId, setCurrentId } = props;
 
   return (
     <ul className="card-list">
