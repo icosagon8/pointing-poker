@@ -117,7 +117,7 @@ export function GamePage(): JSX.Element {
             <Grid item xs={4}>
               <Statistics gameCardsStat={gameCardsStat} />
             </Grid>
-            {user?.role === 'observer' && (
+            {user?.role === 'player' && (
               <Grid item xs={6}>
                 <CardList gameCards={gameCards} />
               </Grid>
