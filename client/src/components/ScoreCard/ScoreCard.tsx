@@ -11,7 +11,12 @@ export const ScoreCard = (props: ScoreType): JSX.Element => {
   if (score !== 'In progress') {
     return <div className="score-card">{`${score} ${title}`}</div>;
   }
-  return <div className="score-card">{`${score}`}</div>;
+  return (
+    <div className="score-card">
+      {score}
+      {score !== 'In progress' && { title }}
+    </div>
+  );
 };
 
 ScoreCard.defaultProps = {
