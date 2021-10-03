@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { nanoid } from 'nanoid';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
 import { Timer } from '../Timer/Timer';
 import { Title } from '../Title/Title';
@@ -9,6 +10,8 @@ import { useAppSelector } from '../../store/hooks/hooks';
 import { GameCardsList } from '../GameCardsList/GameCardsList';
 import GameCardType from '../../models/iGameCard';
 import './SettingsForm.scss';
+import { fibonacci, power2 } from '../../helpers/utils';
+import { CARDS_NUMBER_IN_SET } from '../../helpers/constants';
 
 export const SettingsForm = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
@@ -22,16 +25,53 @@ export const SettingsForm = (): JSX.Element => {
   } = useForm<SettingsFormInput>({ criteriaMode: 'all' });
   const watchTimer: boolean = watch('timerIsNeeded', true);
   const watchShortType: string = watch('scoreTypeShort', '');
+  const watchCardSet: string = watch('cardSet', 'Own');
   const [gameCards, setGameCards] = useState<GameCardType[]>([]);
+
+  const getCardValues = (n: number, cb: (n: number) => number) => {
+    const numbers: number[] = [];
+    let i = 0;
+
+    while (numbers.length < n) {
+      const number = cb(i);
+      if (!numbers.includes(number)) numbers.push(number);
+      i++;
+    }
+
+    return numbers;
+  };
+
+  const createCardSet = (arr: number[]): GameCardType[] =>
+    arr.map((number) => ({ id: nanoid(), value: String(number) }));
+
+  const selectCardSet = () => {
+    const cardSet = [];
+
+    if (watchCardSet === 'Fibonacci') {
+      const values = getCardValues(CARDS_NUMBER_IN_SET, fibonacci);
+      cardSet.push(...createCardSet(values));
+    } else if (watchCardSet === 'Powers of 2') {
+      const values = getCardValues(CARDS_NUMBER_IN_SET, power2);
+      cardSet.push(...createCardSet(values));
+    } else {
+      cardSet.push(...gameCards.map((item) => ({ id: item.id, value: item.value })));
+    }
+
+    return cardSet;
+  };
+
   const onSubmit: SubmitHandler<SettingsFormInput> = (data) => {
     if (data.timerHours.length === 1) {
       data.timerHours = `0${data.timerHours}`;
     }
+
     if (data.timerMinutes.length === 1) {
       data.timerMinutes = `0${data.timerMinutes}`;
     }
+
+    const cardSet = selectCardSet();
+    data.cardsValue = cardSet;
     data.roomId = room;
-    data.cardsValue = gameCards.map((item) => ({ id: item.id, value: item.value }));
     socket?.emit('saveSettings', data);
     socket?.emit('startGame', room);
     socket?.emit('statusGame-progress', room);
@@ -179,12 +219,26 @@ export const SettingsForm = (): JSX.Element => {
             </>
           </div>
         )}
-        <div className="settings-form__block-add-card">
-          <Title title="Add card values:" />
-          <div className="settings-form__block-cards-list">
-            <GameCardsList cards={gameCards} watchShortType={watchShortType} setGameCards={setGameCards} />
+        <div className="settings-form__block">
+          <div className="settings-form__input-block">
+            <label htmlFor="card-set" className="settings-form__label">
+              Choose your card set:
+            </label>
+            <select id="card-set" className="settings-form__input" {...register('cardSet')}>
+              <option value="Own">Own</option>
+              <option value="Fibonacci">Fibonacci</option>
+              <option value="Powers of 2">Powers of 2</option>
+            </select>
           </div>
         </div>
+        {watchCardSet === 'Own' && (
+          <div className="settings-form__block-add-card">
+            <Title title="Add card values:" />
+            <div className="settings-form__block-cards-list">
+              <GameCardsList cards={gameCards} watchShortType={watchShortType} setGameCards={setGameCards} />
+            </div>
+          </div>
+        )}
       </form>
     </>
   );
