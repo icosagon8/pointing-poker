@@ -71,7 +71,11 @@ export function Chat(): JSX.Element {
                 </Grid>
               </Grid>
             ) : (
-              <Grid className="chat__message" container wrap="nowrap">
+              <Grid
+                className={`chat__message${chatMessage.id === socket?.id ? ' chat__message--my' : ''}`}
+                container
+                wrap="nowrap"
+              >
                 <Grid className="chat__text-wrapper" item xs="auto">
                   <ListItemText className="chat__text" primary={chatMessage.text} />
                 </Grid>

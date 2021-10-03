@@ -30,6 +30,7 @@ export function MemberCardList(): JSX.Element {
               lastname={member.lastname}
               position={member.position}
               src={member.avatar}
+              role={member.role}
               kickButtonDisplay={checkUser(socket, member, players, isVoting)}
               onKick={() => {
                 kickMember(socket, member, user);

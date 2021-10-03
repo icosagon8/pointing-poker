@@ -29,11 +29,21 @@
   }
 
   .member-card {
-    width: 195px;
-    height: 45px;
+    width: 200px;
+    height: 50px;
+
+    &__avatar {
+      width: 33px;
+      height: 33px;
+      font-size: 15px;
+    }
 
     &__title {
       font-size: 18px;
+    }
+
+    &__position {
+      font-size: 8px;
     }
   }
 }
