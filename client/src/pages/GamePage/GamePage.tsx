@@ -28,10 +28,10 @@ const gameCardsStat = [
 export function GamePage(): JSX.Element {
   const { socket } = useContext(SocketContext);
   const dispatch = useAppDispatch();
-  const [role] = useState<string>('scram-master');
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
   const users = useAppSelector((state) => state.users.users);
+  const user = useAppSelector((state) => state.user.user);
   const room = useAppSelector((state) => state.room.room);
   const title = useAppSelector((state) => state.title.title);
   const scramMaster = users.find((item) => item.role === 'scram-master') as UserModel;
@@ -66,7 +66,7 @@ export function GamePage(): JSX.Element {
               <Timer start={play} location={location} />
             </Grid>
             <Grid item container xs={4} justifyContent="center">
-              {role === 'scram-master' && play ? (
+              {user?.role === 'scram-master' && play ? (
                 <Button
                   className="page-game__btn page-game__btn-outlined"
                   variant="outlined"
@@ -85,7 +85,7 @@ export function GamePage(): JSX.Element {
             <Grid item xs={4}>
               <IssueList />
             </Grid>
-            {role === 'scram-master' && !play ? (
+            {user?.role === 'scram-master' && !play ? (
               <>
                 <Grid item container xs={4} justifyContent="center">
                   <Button
@@ -114,9 +114,11 @@ export function GamePage(): JSX.Element {
             <Grid item xs={4}>
               <Statistics gameCardsStat={gameCardsStat} />
             </Grid>
-            <Grid item xs={6}>
-              <CardList gameCards={gameCards} />
-            </Grid>
+            {user?.role === 'player' && (
+              <Grid item xs={6}>
+                <CardList gameCards={gameCards} />
+              </Grid>
+            )}
           </Grid>
         </Grid>
         <Grid item xs={4} className="page-game__aside">

@@ -63,6 +63,12 @@ io.on('connection', (socket: Socket) => {
     deleteStatusGameInRoom(room);
   });
 
+  socket.on('exitUser', (room) => {
+    deleteUser(socket.id);
+    io.to(socket.id).emit('logout');
+    io.in(room).emit('users', getUsers(room));
+  });
+
   socket.on('message', (text) => {
     const messageId = nanoid();
     const user = getUser(socket.id);

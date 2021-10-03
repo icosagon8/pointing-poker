@@ -6,7 +6,6 @@ import { UserModel } from '../../models/userModel';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { off } from '../../store/slices/chatSlice';
 import { cleanIssues } from '../../store/slices/issuesSlice';
-import { beforeGameStatusGame } from '../../store/slices/statusGameSlice';
 import { SocketContext } from '../../socketContext';
 import './StartGame.scss';
 
@@ -34,9 +33,12 @@ export const StartGame = (): JSX.Element => {
     });
   }, [socket, dispatch, history, chatOpen]);
 
-  const handleClick = () => {
+  const handleClickCancel = () => {
     socket?.emit('cancelGame', room);
-    dispatch(beforeGameStatusGame());
+  };
+
+  const handleClickExit = () => {
+    socket?.emit('exitUser', room);
   };
 
   return (
@@ -82,14 +84,19 @@ export const StartGame = (): JSX.Element => {
               variant="outlined"
               color="primary"
               className="start-game__btn start-game__cancel"
-              onClick={handleClick}
+              onClick={handleClickCancel}
             >
               Cancel game
             </Button>
           </>
         ) : (
           <div className="start-game__btn-block-user ">
-            <Button variant="outlined" color="primary" className="start-game__btn start-game__cancel">
+            <Button
+              variant="outlined"
+              color="primary"
+              className="start-game__btn start-game__cancel"
+              onClick={handleClickExit}
+            >
               Exit
             </Button>
           </div>
