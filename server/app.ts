@@ -61,8 +61,9 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('sendGameVote', (vote) => {
     if (vote.roomId) {
-      addGameVote(vote);
-      io.in(vote.roomId).emit('getGameVote', vote);
+      if (addGameVote(vote)) {
+        io.in(vote.roomId).emit('getGameVote', getGameVotes(vote.roomId));
+      }
     }
   });
 

@@ -14,7 +14,7 @@ const gameVoteSlice = createSlice({
   initialState,
   reducers: {
     addVote: (state, action) => {
-      state.votes.push(action.payload);
+      state.votes = state.votes.concat(action.payload);
     },
   },
 });
