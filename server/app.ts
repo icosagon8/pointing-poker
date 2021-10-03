@@ -129,9 +129,9 @@ io.on('connection', (socket: Socket) => {
       const messageId = nanoid();
 
       io.in(room).emit('message', {
+        ...kickedUser,
         text: 'Kicked by scram master',
         messageId,
-        ...kickedUser,
         type: 'system',
       });
     } else {
@@ -159,15 +159,15 @@ io.on('connection', (socket: Socket) => {
       if (result) {
         deleteUser(id);
         deleteVotes(room);
+        io.in(room).emit('endVoting');
         io.to(id).emit('logout');
         io.in(room).emit('users', getUsers(room));
-        io.in(room).emit('endVoting');
         const messageId = nanoid();
 
         io.in(room).emit('message', {
+          ...kickedUser,
           text: 'Kicked by voting',
           messageId,
-          ...kickedUser,
           type: 'system',
         });
       }

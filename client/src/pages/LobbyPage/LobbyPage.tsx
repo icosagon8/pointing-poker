@@ -26,10 +26,7 @@ export const LobbyPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const { socket } = useContext(SocketContext);
-  const isVoting = useAppSelector((state) => state.voting.isVoting);
   const user = useAppSelector((state) => state.user.user);
-  const users = useAppSelector((state) => state.users.users);
-  const members = users.filter((member) => member.role !== 'scram-master');
   const title = useAppSelector((state) => state.title.title);
   const room = useAppSelector((state) => state.room.room);
   const chatOpen = useAppSelector((state) => state.chat.isOpen);
@@ -73,20 +70,6 @@ export const LobbyPage = (): JSX.Element => {
     });
   }, [dispatch, socket]);
 
-  const kickMember = (kicked: UserModel | Message, userAgainst: UserModel) => {
-    socket?.emit('kickMember', kicked, userAgainst);
-  };
-
-  const checkUser = (member: UserModel | Message): boolean => {
-    return !(
-      socket?.id === member.id ||
-      member.role === 'scram-master' ||
-      members.length <= MAX_MEMBERS ||
-      members.findIndex((item) => item.id === member.id) === -1 ||
-      isVoting
-    );
-  };
-
   const handleSave = (newTitle: string) => {
     socket?.emit('titleEdited', newTitle, room);
   };
@@ -97,7 +80,7 @@ export const LobbyPage = (): JSX.Element => {
         <Grid item xs={12} md={8} className="lobby-page__info">
           <EditableTitle title={title} onSave={handleSave} editButtonDisplay={user?.role === 'scram-master'} />
           <StartGame />
-          <MembersList kickMember={kickMember} checkUser={checkUser} />
+          <MembersList />
           {user?.role === 'scram-master' && (
             <>
               <IssueList />
@@ -107,7 +90,7 @@ export const LobbyPage = (): JSX.Element => {
         </Grid>
         {isOpen && (
           <Grid item xs={12} md={4}>
-            <Chat kickMember={kickMember} checkUser={checkUser} />
+            <Chat />
           </Grid>
         )}
       </Grid>
