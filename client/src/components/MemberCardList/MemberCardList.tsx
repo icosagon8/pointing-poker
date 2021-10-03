@@ -9,7 +9,7 @@ export function MemberCardList(): JSX.Element {
   const users = useAppSelector((state) => state.users.users);
   const votes = useAppSelector((state) => state.gameVotes.votes);
   const settings = useAppSelector((state) => state.settings.settings);
-  const socket = useContext(SocketContext);
+  const currentIssue = useAppSelector((state) => state.issues.issues.find((issue) => issue.current));
 
   return (
     <div className="member-list">
@@ -22,8 +22,11 @@ export function MemberCardList(): JSX.Element {
           <li className="member-list__item" key={user.id}>
             <ScoreCard
               score={
-                settings?.cardsValue.find((card) => card.id === votes.find((vote) => vote.userId === user.id)?.cardId)
-                  ?.value
+                settings?.cardsValue.find(
+                  (card) =>
+                    card.id ===
+                    votes.find((vote) => vote.userId === user.id && vote.issueId === currentIssue?.id)?.cardId
+                )?.value
               }
               title={settings?.scoreTypeShort}
             />

@@ -7,7 +7,8 @@ interface ScoreType {
 
 export const ScoreCard = (props: ScoreType): JSX.Element => {
   const { score, title } = props;
-  if (score) {
+
+  if (score !== 'In progress') {
     return <div className="score-card">{`${score} ${title}`}</div>;
   }
   return <div className="score-card">{`${score}`}</div>;
