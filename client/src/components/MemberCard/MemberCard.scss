@@ -8,6 +8,7 @@
   user-select: none;
   font-family: 'Roboto';
   font-style: normal;
+  flex-shrink: 0;
 
   &__user {
     width: 85%;

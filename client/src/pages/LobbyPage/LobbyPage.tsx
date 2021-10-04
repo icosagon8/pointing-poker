@@ -77,7 +77,7 @@ export const LobbyPage = (): JSX.Element => {
   return (
     <Container>
       <Grid container>
-        <Grid item xs={12} md={8} className="lobby-page__info">
+        <Grid item xs={12} md={7} lg={8} className="lobby-page__info">
           <EditableTitle title={title} onSave={handleSave} editButtonDisplay={user?.role === 'scram-master'} />
           <StartGame />
           <MembersList />
@@ -89,7 +89,7 @@ export const LobbyPage = (): JSX.Element => {
           )}
         </Grid>
         {isOpen && (
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={5} lg={4}>
             <Chat />
           </Grid>
         )}

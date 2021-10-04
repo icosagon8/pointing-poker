@@ -78,22 +78,37 @@
     line-height: 56px;
   }
 
+  .file-input {
+    margin-bottom: 10px;
+  }
+
   .file-input__wrapper {
     width: 60%;
-    margin-bottom: 10px;
   }
 }
 
 @media (max-width: 900px) {
-  .lobby-form__title {
-    font-size: 35px;
-    line-height: 45px;
+  .lobby-form {
+    &__title {
+      font-size: 35px;
+      line-height: 45px;
+    }
   }
 }
 
 @media (max-width: 600px) {
-  .lobby-form__title {
-    font-size: 23px;
-    line-height: 33px;
+  .lobby-form {
+    &__title {
+      font-size: 23px;
+      line-height: 33px;
+    }
+
+    &__field {
+      width: 100%;
+    }
+
+    .file-input__wrapper {
+      width: 100%;
+    }
   }
 }

@@ -2,23 +2,20 @@
   font-family: 'Ruda';
   width: 120px;
   height: 53px;
+  overflow: visible;
 
   &__titles {
     display: flex;
     justify-content: space-around;
     font-size: 10px;
     font-weight: 100;
-    margin-bottom: -4px;
-    margin: 0 auto;
   }
 
   &__edit {
-    width: 110px;
     height: 38px;
     display: flex;
     font-size: 42px;
     line-height: 1;
-    margin: 2px auto 0;
   }
 
   &__edit-dots {

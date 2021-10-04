@@ -133,6 +133,7 @@ export const SettingsForm = (): JSX.Element => {
             <input
               id="scoreType"
               className="settings-form__input"
+              autoComplete="off"
               {...register('scoreType', {
                 required: 'Enter score type',
                 maxLength: {
@@ -166,6 +167,7 @@ export const SettingsForm = (): JSX.Element => {
             <input
               id="scoreTypeShort"
               className="settings-form__input"
+              autoComplete="off"
               {...register('scoreTypeShort', {
                 required: 'Enter short score type',
                 maxLength: {
