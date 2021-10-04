@@ -14,7 +14,7 @@ import {
   nextIssue,
   deleteIssuesInRoom,
 } from './issues';
-import { sendSettings } from './settings';
+import { sendSettings, getSettings } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
 
@@ -48,6 +48,7 @@ io.on('connection', (socket: Socket) => {
   socket.on('receiveUser', ({ id, room }, answer) => {
     if (answer) {
       io.to(getUser(id).id).emit('redirectToGame', getUsers(room));
+      io.in(room).emit('users', getUsers(room));
     } else {
       io.to(getUser(id).id).emit('rejectEnterToGame');
       deleteUser(id);
@@ -126,6 +127,8 @@ io.on('connection', (socket: Socket) => {
   socket.on('joinRoom', (room) => {
     io.to(socket.id).emit('room', checkRoom(room));
     io.to(socket.id).emit('title', getTitle(room));
+    io.to(socket.id).emit('issues', getIssues(room));
+    io.to(socket.id).emit('sendSettings', getSettings(room));
   });
 
   socket.on('kickMember', (kickedUser, userAgainst) => {

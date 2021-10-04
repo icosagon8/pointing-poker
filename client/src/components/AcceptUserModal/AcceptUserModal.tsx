@@ -5,20 +5,20 @@ import { BaseModal } from '../BaseModal/BaseModal';
 import { SocketContext } from '../../socketContext';
 
 interface RequestedUserType {
-  id: string | null;
-  firstname: string | null;
-  lastname: string | null;
-  room: string | null;
+  id: string;
+  firstname: string;
+  lastname: string;
+  room: string;
 }
 
 export const AcceptUserModal = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
   const [open, setOpen] = useState<boolean>(false);
   const [requestedUser, setRequestedUser] = useState<RequestedUserType>({
-    id: null,
-    firstname: null,
-    lastname: null,
-    room: null,
+    id: '',
+    firstname: '',
+    lastname: '',
+    room: '',
   });
 
   useEffect(() => {

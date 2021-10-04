@@ -6,3 +6,5 @@ export const sendSettings = (data: SettingsModel): SettingsModel[] => {
   settings.push(data);
   return settings;
 };
+
+export const getSettings = (room: string): SettingsModel[] => settings.filter((setting) => setting.roomId === room);

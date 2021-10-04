@@ -13,6 +13,8 @@ import { addUser } from '../../store/slices/userSlice';
 import { addRoom } from '../../store/slices/roomSlice';
 import { addUsers } from '../../store/slices/usersSlice';
 import { setTitle } from '../../store/slices/titleSlice';
+import { addIssues } from '../../store/slices/issuesSlice';
+import { saveSettings } from '../../store/slices/settingsSlice';
 
 interface Props {
   isScram: boolean;
@@ -43,6 +45,14 @@ export function LobbyForm(props: Props): JSX.Element {
 
     socket?.on('title', (title) => {
       if (title) dispatch(setTitle(title));
+    });
+
+    socket?.on('issues', (issues) => {
+      if (issues) dispatch(addIssues(issues));
+    });
+
+    socket?.on('sendSettings', (item) => {
+      if (item) dispatch(saveSettings(item));
     });
   }, [dispatch, socket]);
 
