@@ -14,12 +14,7 @@ import { UserModel } from '../../models/userModel';
 import { SettingsFormInput } from '../../models/SettingsFormInput';
 import { GameVote } from '../../models/gameVote';
 import { addVote } from '../../store/slices/gameVoteSlice';
-
-const gameCardsStat = [
-  { id: '35635463', title: 'sp', value: '2', percent: 90.5 },
-  { id: '990934', title: 'sp', value: '5', percent: 7.2 },
-  { id: '1234090', title: 'sp', value: '1', percent: 2.3 },
-];
+import { addStatistic } from '../../store/slices/statisticSlice';
 
 export function GamePage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -44,8 +39,14 @@ export function GamePage(): JSX.Element {
   });
 
   useEffect(() => {
+    socket?.on('getStatistic', (result) => {
+      dispatch(addStatistic(result));
+    });
+
     socket?.on('stopTimerUsers', () => {
       setPlay(false);
+      setTimerIsOver(false);
+      setCurrentId('');
     });
 
     socket?.on('getGameVote', (vote) => {
@@ -54,6 +55,7 @@ export function GamePage(): JSX.Element {
 
     socket?.on('startTimerUsers', () => {
       setPlay(true);
+      setTimerIsOver(false);
     });
   }, [socket]);
 
@@ -66,11 +68,14 @@ export function GamePage(): JSX.Element {
         cardId: currentId,
       });
       setTimerIsOver(false);
+      setPlay(false);
+      setCurrentId('');
     }
-  }, [currentId, currentIssueId, room, socket, timerIsOver]);
+  }, [currentId, currentIssueId, room, socket, timerIsOver, play]);
 
   const timerIsOverHandler = () => {
     setTimerIsOver(true);
+    setPlay(false);
   };
 
   const handleClickNextIssue = () => {
@@ -101,7 +106,6 @@ export function GamePage(): JSX.Element {
                   variant="outlined"
                   onClick={() => {
                     socket?.emit('stopTimer', room);
-                    setPlay(false);
                   }}
                 >
                   Stop Game
@@ -126,7 +130,6 @@ export function GamePage(): JSX.Element {
                     color="primary"
                     onClick={() => {
                       socket?.emit('startTimer', room);
-                      setPlay(true);
                     }}
                   >
                     Run Round
@@ -147,7 +150,7 @@ export function GamePage(): JSX.Element {
           </Grid>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item xs={4}>
-              <Statistics gameCardsStat={gameCardsStat} />
+              <Statistics />
             </Grid>
             <Grid item xs={6}>
               {cards && <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />}
