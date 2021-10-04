@@ -34,6 +34,9 @@ io.on('connection', (socket: Socket) => {
   socket.on('login', ({ firstname, lastname, position, role, avatar, room, statusGame }, callback) => {
     const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
     socket.join(user.room);
+    io.to(socket.id).emit('title', getTitle(room));
+    io.to(socket.id).emit('issues', getIssues(room));
+    io.to(socket.id).emit('sendSettings', getSettings(room));
     if (checkStatusGame(room) === 'waiting-game' || role === 'scram-master') {
       addStatus({ statusGame, room });
       waitingGame(room);
@@ -126,9 +129,6 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('joinRoom', (room) => {
     io.to(socket.id).emit('room', checkRoom(room));
-    io.to(socket.id).emit('title', getTitle(room));
-    io.to(socket.id).emit('issues', getIssues(room));
-    io.to(socket.id).emit('sendSettings', getSettings(room));
   });
 
   socket.on('kickMember', (kickedUser, userAgainst) => {
