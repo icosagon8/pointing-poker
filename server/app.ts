@@ -33,10 +33,10 @@ const io = new Server(server, {
 io.on('connection', (socket: Socket) => {
   socket.on('login', ({ firstname, lastname, position, role, avatar, room, statusGame }, callback) => {
     const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
+    socket.join(user.room);
     if (checkStatusGame(room) === 'waiting-game' || role === 'scram-master') {
       addStatus({ statusGame, room });
       waitingGame(room);
-      socket.join(user.room);
       io.in(room).emit('users', getUsers(room));
       callback();
     } else {
