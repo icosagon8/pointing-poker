@@ -33,10 +33,10 @@ export const WaitingModal = (): JSX.Element => {
   return (
     <BaseModal open={open} handleClose={handleClose}>
       <div className="waiting-modal">
-        <p className="waiting-modal__text">Your request is being reviewed by the game administrator</p>
-        <p className="waiting-modal__text waiting-modal__text--loading">
-          please wait <CircularProgress />
-        </p>
+        <p className="waiting-modal__text">Your request is being reviewed by the game administrator. Please wait</p>
+        <div className="waiting-modal__loading">
+          <CircularProgress />
+        </div>
         <div className="waiting-modal__btn-wrapper">
           <Button className="btn btn--small btn--cancel" variant="outlined" color="primary" onClick={handleClick}>
             Cancel
