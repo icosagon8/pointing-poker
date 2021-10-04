@@ -50,79 +50,60 @@ export function GamePage(): JSX.Element {
   return (
     <Container className="page-game">
       <Grid container>
-        <Grid item xs={8}>
+        <Grid className="page-game__main" item xs={12} md={7} lg={8}>
           <Title title={title} />
-          <Grid container alignItems="flex-end" justifyContent="space-between">
-            <Grid item xs={4}>
-              <MemberCard
-                name={scramMaster?.firstname}
-                lastname={scramMaster?.lastname}
-                src={scramMaster?.avatar}
-                position={scramMaster?.position}
-                kickButtonDisplay={false}
-              />
-            </Grid>
-            <Grid item container xs={4} justifyContent="center">
-              <Timer start={play} location={location} />
-            </Grid>
-            <Grid item container xs={4} justifyContent="center">
-              {user?.role === 'scram-master' && play ? (
-                <Button
-                  className="page-game__btn page-game__btn-outlined"
-                  variant="outlined"
-                  onClick={() => setPlay(false)}
-                >
-                  Stop Game
-                </Button>
-              ) : (
-                <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
-                  Exit
-                </Button>
-              )}
-            </Grid>
-          </Grid>
-          <Grid container alignItems="center" justifyContent="space-between">
-            <Grid item xs={4}>
-              <IssueList />
-            </Grid>
-            {user?.role === 'scram-master' && !play ? (
-              <>
-                <Grid item container xs={4} justifyContent="center">
-                  <Button
-                    className="page-game__btn page-game__btn-primary"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setPlay(true)}
-                  >
-                    Run Round
-                  </Button>
-                </Grid>
-                <Grid item container xs={4} justifyContent="center">
-                  <Button
-                    className="page-game__btn page-game__btn-primary"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClickNextIssue}
-                  >
-                    Next ISSUE
-                  </Button>
-                </Grid>
-              </>
-            ) : null}
-          </Grid>
-          <Grid container alignItems="center" justifyContent="space-between">
-            <Grid item xs={4}>
-              <Statistics gameCardsStat={gameCardsStat} />
-            </Grid>
-            {user?.role === 'player' && (
-              <Grid item xs={6}>
-                <CardList gameCards={gameCards} />
-              </Grid>
+          <Grid className="page-game__start" container alignItems="flex-end" justifyContent="space-between">
+            <MemberCard
+              name={scramMaster?.firstname}
+              lastname={scramMaster?.lastname}
+              src={scramMaster?.avatar}
+              position={scramMaster?.position}
+              kickButtonDisplay={false}
+            />
+
+            <Timer start={play} location={location} />
+
+            {user?.role === 'scram-master' && play ? (
+              <Button
+                className="page-game__btn page-game__btn-outlined"
+                variant="outlined"
+                onClick={() => setPlay(false)}
+              >
+                Stop Game
+              </Button>
+            ) : (
+              <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
+                Exit
+              </Button>
             )}
           </Grid>
+          {user?.role === 'scram-master' && !play ? (
+            <div className="page-game__btn-container">
+              <Button
+                className="page-game__btn page-game__btn-primary"
+                variant="contained"
+                color="primary"
+                onClick={() => setPlay(true)}
+              >
+                Run Round
+              </Button>
+
+              <Button
+                className="page-game__btn page-game__btn-primary"
+                variant="contained"
+                color="primary"
+                onClick={handleClickNextIssue}
+              >
+                Next ISSUE
+              </Button>
+            </div>
+          ) : null}
+          <IssueList />
+          {user?.role === 'player' && <CardList gameCards={gameCards} />}
         </Grid>
-        <Grid item xs={4} className="page-game__aside">
+        <Grid item xs={12} md={5} lg={4} className="page-game__aside">
           <MemberCardList />
+          <Statistics gameCardsStat={gameCardsStat} />
         </Grid>
       </Grid>
       <KickUserModal />

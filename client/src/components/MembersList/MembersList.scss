@@ -1,8 +1,10 @@
 .members-list {
   font-family: 'Ruda';
-  margin-bottom: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 
   &__title {
+    margin-top: 0;
     font-weight: 700;
     text-align: center;
     font-size: 24px;
@@ -11,9 +13,17 @@
   &__wrapper {
     margin-left: auto;
     margin-right: auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 10px;
+    gap: 10px 24px;
+  }
+}
+
+@media (max-width: 620px) {
+  .members-list {
+    &__wrapper {
+      justify-content: center;
+    }
   }
 }
