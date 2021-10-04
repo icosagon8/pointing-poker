@@ -14,6 +14,20 @@ export function parsePath(url: string): string {
   return new URL(url).pathname.slice(1);
 }
 
+export const fibonacci = (n: number): number => {
+  let [prev, next] = [0, 1];
+
+  for (let i = 0; i < n; i++) {
+    const temp = next;
+    next = prev + next;
+    prev = temp;
+  }
+
+  return prev;
+};
+
+export const power2 = (n: number): number => 2 ** n;
+
 export const kickMember = (
   socket: Socket<DefaultEventsMap, DefaultEventsMap> | null,
   kicked: UserModel,

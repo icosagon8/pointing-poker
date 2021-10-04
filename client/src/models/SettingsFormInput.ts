@@ -10,4 +10,5 @@ export interface SettingsFormInput {
   timerHours: string;
   timerMinutes: string;
   cardsValue: GameCardsValue[];
+  cardSet: string;
 }
