@@ -4,9 +4,10 @@ export interface IssueModel {
   priority: PriorityEnum;
   roomId: string;
   current: boolean;
+  isResult?: boolean;
 }
 
-enum PriorityEnum {
+export enum PriorityEnum {
   low = 'low',
   middle = 'middle',
   hight = 'hight',
