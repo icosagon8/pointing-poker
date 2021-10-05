@@ -15,7 +15,7 @@ export function Statistics(): JSX.Element {
       <h2 className="statistics__title">Statistics:</h2>
       <ul className="statistics__items">
         {cards?.map((card) => (
-          <li className="statistics__item">
+          <li className="statistics__item" key={card.id}>
             <GameCard title={title} value={card.value} id={card.id} />
             <div className="statistics__percent">
               {results && results.find((res) => res.cardId === card.id)?.percent.toFixed(2)}%

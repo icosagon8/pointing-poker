@@ -1,5 +1,4 @@
 import './CardList.scss';
-import { useState } from 'react';
 import { GameCard } from '../GameCard/GameCard';
 
 interface CardListType {

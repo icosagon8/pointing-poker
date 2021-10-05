@@ -8,14 +8,10 @@ import { MembersList } from '../../components/MembersList/MembersList';
 import { StartGame } from '../../components/StartGame/StartGame';
 import './LobbyPage.scss';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
-import { addIssues } from '../../store/slices/issuesSlice';
 import { SocketContext } from '../../socketContext';
-import { saveSettings } from '../../store/slices/settingsSlice';
 import { waitingGame, beforeGameStatusGame } from '../../store/slices/statusGameSlice';
-import { UserModel } from '../../models/userModel';
 import { deleteUser } from '../../store/slices/userSlice';
 import { off } from '../../store/slices/chatSlice';
-import { Message } from '../../models/Message';
 import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
 import { endVoting, startVoting } from '../../store/slices/votingSlice';
 import { EditableTitle } from '../../components/EditableTitle/EditableTitle';
@@ -30,7 +26,6 @@ export const LobbyPage = (): JSX.Element => {
   const title = useAppSelector((state) => state.title.title);
   const room = useAppSelector((state) => state.room.room);
   const chatOpen = useAppSelector((state) => state.chat.isOpen);
-  const MAX_MEMBERS = 3;
 
   useEffect(() => {
     socket?.on('logout', () => {
@@ -42,7 +37,7 @@ export const LobbyPage = (): JSX.Element => {
       history.push('/');
       socket?.disconnect();
     });
-  }, [socket, history, dispatch]);
+  }, [socket, history, dispatch, chatOpen]);
 
   useEffect(() => {
     dispatch(waitingGame());

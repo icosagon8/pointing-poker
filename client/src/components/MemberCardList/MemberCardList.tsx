@@ -31,7 +31,9 @@ export function MemberCardList(): JSX.Element {
                 settings?.cardsValue.find(
                   (card) =>
                     card.id ===
-                    votes.find((vote) => vote.userId === user.id && vote.issueId === currentIssue?.id)?.cardId
+                    votes.find((vote) => {
+                      return vote.userId === member.id && vote.issueId === currentIssue?.id;
+                    })?.cardId
                 )?.value
               }
               title={settings?.scoreTypeShort}

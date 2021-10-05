@@ -46,7 +46,7 @@ export function Timer(props: TimeType): JSX.Element {
         clearTimeout(timer);
       }
     };
-  }, [count, start]);
+  }, [count, start, timerIsOverHandler]);
 
   return (
     <Card className="timer">

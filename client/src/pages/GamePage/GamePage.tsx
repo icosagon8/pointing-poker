@@ -57,21 +57,24 @@ export function GamePage(): JSX.Element {
       setPlay(true);
       setTimerIsOver(false);
     });
-  }, [socket]);
+  }, [dispatch, socket]);
 
   useEffect(() => {
     if (timerIsOver) {
-      socket?.emit('sendGameVote', {
-        roomId: room,
-        issueId: currentIssueId,
-        userId: socket?.id,
-        cardId: currentId,
-      });
+      if (user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) {
+        socket?.emit('sendGameVote', {
+          roomId: room,
+          issueId: currentIssueId,
+          userId: socket?.id,
+          cardId: currentId,
+        });
+      }
+
       setTimerIsOver(false);
       setPlay(false);
       setCurrentId('');
     }
-  }, [currentId, currentIssueId, room, socket, timerIsOver, play]);
+  }, [currentId, currentIssueId, room, socket, timerIsOver, play, user?.role, settings?.masterAsPlayer]);
 
   const timerIsOverHandler = () => {
     setTimerIsOver(true);
@@ -139,7 +142,7 @@ export function GamePage(): JSX.Element {
             </div>
           ) : null}
           <IssueList />
-          {cards && user?.role === 'player' && (
+          {(user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) && cards && (
             <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
           )}
         </Grid>
