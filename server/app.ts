@@ -14,11 +14,11 @@ import {
   nextIssue,
   deleteIssuesInRoom,
 } from './issues';
-import { sendSettings, getSettings } from './settings';
+import { sendSettings, getSettings, getSettingsAdmitUser } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
 import { addGameVote, getGameVotes } from './gameVote';
-import { addGameStat, getStat } from './statistic';
+import { getStat } from './statistic';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -44,6 +44,8 @@ io.on('connection', (socket: Socket) => {
       waitingGame(room);
       io.in(room).emit('users', getUsers(room));
       callback();
+    } else if (getSettingsAdmitUser(room)) {
+      io.to(user.id).emit('redirectToGame', getUsers(room));
     } else {
       io.to(getScramMasterInRoom(room).id).emit('loginRequest', user.id, firstname, lastname, room);
       io.to(user.id).emit('waitingEnterGame');
@@ -102,11 +104,9 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('sendGameVote', (vote) => {
-    if (vote.roomId) {
-      if (addGameVote(vote)) {
-        io.in(vote.roomId).emit('getGameVote', getGameVotes(vote.roomId));
-        io.in(vote.roomId).emit('getStatistic', getStat(vote.roomId));
-      }
+    if (addGameVote(vote)) {
+      io.in(vote.roomId).emit('getGameVote', getGameVotes(vote.roomId));
+      io.in(vote.roomId).emit('getStatistic', getStat(vote.roomId));
     }
   });
 

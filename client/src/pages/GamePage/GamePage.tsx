@@ -181,21 +181,24 @@ export function GamePage(): JSX.Element {
       setPlay(true);
       setTimerIsOver(false);
     });
-  }, [socket]);
+  }, [dispatch, socket]);
 
   useEffect(() => {
     if (timerIsOver) {
-      socket?.emit('sendGameVote', {
-        roomId: room,
-        issueId: currentIssueId,
-        userId: socket?.id,
-        cardId: currentId,
-      });
+      if (user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) {
+        socket?.emit('sendGameVote', {
+          roomId: room,
+          issueId: currentIssueId,
+          userId: socket?.id,
+          cardId: currentId,
+        });
+      }
+
       setTimerIsOver(false);
       setPlay(false);
       setCurrentId('');
     }
-  }, [currentId, currentIssueId, room, socket, timerIsOver, play]);
+  }, [currentId, currentIssueId, room, socket, timerIsOver, play, user?.role, settings?.masterAsPlayer]);
 
   const timerIsOverHandler = () => {
     setTimerIsOver(true);
@@ -251,32 +254,32 @@ export function GamePage(): JSX.Element {
                 </Button>
               )}
             </Grid>
-            {user?.role === 'scram-master' && !play ? (
-              <div className="page-game__btn-container">
-                <Button
-                  className="page-game__btn page-game__btn-primary"
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    socket?.emit('startTimer', room);
-                  }}
-                >
-                  Run Round
-                </Button>
-                <Button
-                  className="page-game__btn page-game__btn-primary"
-                  variant="contained"
-                  color="primary"
-                  onClick={handleClickNextIssue}
-                >
-                  Next ISSUE
-                </Button>
-              </div>
-            ) : null}
-            <IssueList />
-            {user?.role === 'player' && cards && (
-              <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
-            )}
+           {user?.role === 'scram-master' && !play ? (
+            <div className="page-game__btn-container">
+              <Button
+                className="page-game__btn page-game__btn-primary"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  socket?.emit('startTimer', room);
+                }}
+              >
+                Run Round
+              </Button>
+              <Button
+                className="page-game__btn page-game__btn-primary"
+                variant="contained"
+                color="primary"
+                onClick={handleClickNextIssue}
+              >
+                Next ISSUE
+              </Button>
+            </div>
+          ) : null}
+          <IssueList />
+          {(user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) && cards && (
+            <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
+          )}
           </Grid>
           <Grid item xs={12} md={5} lg={4} className="page-game__aside">
             <MemberCardList />

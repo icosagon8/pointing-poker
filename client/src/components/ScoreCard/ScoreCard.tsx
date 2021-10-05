@@ -7,16 +7,7 @@ interface ScoreType {
 
 export const ScoreCard = (props: ScoreType): JSX.Element => {
   const { score, title } = props;
-
-  if (score !== 'In progress') {
-    return <div className="score-card">{`${score} ${title}`}</div>;
-  }
-  return (
-    <div className="score-card">
-      {score}
-      {score !== 'In progress' && { title }}
-    </div>
-  );
+  return <div className="score-card">{score !== 'In progress' ? `${score} ${title}` : score}</div>;
 };
 
 ScoreCard.defaultProps = {
