@@ -122,7 +122,7 @@ export const Issue = (props: IssueModel): JSX.Element => {
           ) : (
             <p className="issue__score-text">
               <span className="issue__score-title">Score:</span>
-              {score ? `${score} ${scoreTypeShort}` : '-'}
+              {valueScore !== '-' ? `${valueScore} ${scoreTypeShort}` : '-'}
             </p>
           )}
         </div>
