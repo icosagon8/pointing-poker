@@ -16,10 +16,12 @@ export const addIssue = (issue: IssueModel): IssueModel => {
   return issue;
 };
 
-export const editIssue = ({ title, priority }: IssueModel, id: string): IssueModel => {
+export const editIssue = ({ title, link, description, priority }: IssueModel, id: string): IssueModel => {
   const issue = issues.find((item) => item.id === id) as IssueModel;
   issue.title = title;
   issue.priority = priority;
+  issue.link = link;
+  issue.description = description;
   return issue;
 };
 
@@ -62,3 +64,8 @@ export const deleteIssuesInRoom = (room: string): void => {
 };
 
 export const getIssues = (room: string): IssueModel[] => issues.filter((issue) => issue.roomId === room);
+
+export const setScoreIssue = (id: string, score: string): void => {
+  const issueEdit = issues.find((issue) => issue.id === id) as IssueModel;
+  issueEdit.score = score;
+};

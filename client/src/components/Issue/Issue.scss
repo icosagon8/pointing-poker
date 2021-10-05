@@ -1,23 +1,25 @@
 .issue {
-  width: 250px;
-  height: 55px;
-  padding: 0 10px;
+  width: 280px;
+  height: 70px;
+  padding: 0 10px 14px;
   display: inline-flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
+  cursor: pointer;
 
   &.active {
     background-color: #cbf3ea;
   }
 
+  &__box-score {
+    display: flex;
+    align-items: center;
+  }
+
   &__text {
     font-family: 'Roboto';
     font-style: normal;
-  }
-
-  &__link {
-    font-size: 12px;
   }
 
   &__text-current {
@@ -36,15 +38,69 @@
   &__text-priority {
     position: absolute;
     margin: 0;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 300;
+  }
+
+  &__btn-score-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__score-label {
+    margin-top: -14px;
+    font-size: 14px;
+  }
+
+  &__score-label,
+  &__score-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__score-input {
+    font-size: 18px;
+    width: 30px;
+    border: none;
+    border: 1px solid rgba(238, 238, 238, 0);
+    border-color: rgba(238, 238, 238, 1);
+    box-shadow: inset 1px 3px 5px 1px rgba(238, 238, 238, 1);
+    border-radius: 3px;
   }
 
   &__delete-btn {
     color: red;
   }
+
+  &__link {
+    font-size: 14px;
+    color: #2b3a67;
+    position: absolute;
+    right: 7px;
+    bottom: 1px;
+
+    &:hover {
+      color: red;
+    }
+  }
+
+  &__score {
+    font-family: 'Roboto';
+    font-weight: 300;
+  }
+
+  &__score-text {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  &__score-title {
+    font-weight: 300;
+  }
 }
 
-.page-game .issue__edit-btn {
+.lobby-page__info .issue__score {
   display: none;
 }

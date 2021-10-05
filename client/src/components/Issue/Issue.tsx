@@ -1,5 +1,5 @@
 import './Issue.scss';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import { Card, IconButton, Popover, Typography } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -23,13 +23,22 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Issue = (props: IssueModel): JSX.Element => {
   const classes = useStyles();
-  const { title, link, priority, id, current, roomId } = props;
+  const [valueScore, setValueScore] = useState<string>('-');
+  const { title, link, priority, id, current, roomId, description, score } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const openPopover = Boolean(anchorEl);
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { socket } = useContext(SocketContext);
   const user = useAppSelector((state) => state.user.user);
+  const room = useAppSelector((state) => state.room.room);
+  const scoreTypeShort = useAppSelector((state) => state.settings.settings?.scoreTypeShort);
+
+  useEffect(() => {
+    socket?.on('scoreIssue', (scoreIssue) => {
+      setValueScore(scoreIssue);
+    });
+  }, [socket]);
 
   const handleClickCard = () => {
     if (user?.role === 'scram-master' && location.pathname === '/game') {
@@ -40,6 +49,10 @@ export const Issue = (props: IssueModel): JSX.Element => {
   const handleClickDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     socket?.emit('deleteIssue', id, roomId);
+  };
+
+  const handleClickLink = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.stopPropagation();
   };
 
   const handleClickOpen = () => {
@@ -58,6 +71,11 @@ export const Issue = (props: IssueModel): JSX.Element => {
     setAnchorEl(null);
   };
 
+  const handleChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValueScore(e.target.value);
+     socket?.emit('setScoreIssue', id, e.target.value, room);
+  };
+
   return (
     <Card
       className={current && location.pathname === '/game' ? 'issue active' : 'issue'}
@@ -66,49 +84,70 @@ export const Issue = (props: IssueModel): JSX.Element => {
       aria-haspopup="true"
       onMouseEnter={handlePopoverOpen}
       onMouseLeave={handlePopoverClose}
-    >
-      <div className="issue__text">
-        {current && location.pathname === '/game' && <span className="issue__text-current">current</span>}
-        <h3 className="issue__text-title">{title}</h3>
-        <p className="issue__text-priority">{priority}</p>
-      </div>
-      {user?.role === 'scram-master' && (
-        <>
-          <div>
-            <IconButton className="issue__edit-btn" onClick={handleClickOpen}>
-              <EditIcon />
-            </IconButton>
-            <IconButton onClick={handleClickDelete}>
-              <DeleteOutlineIcon className="issue__delete-btn" />
-            </IconButton>
-          </div>
-          <IssueDialog edit id={id} open={open} onClose={handleClose} />
-        </>
-      )}
-      <a className="issue__link" href={link} target="_blank" rel="noreferrer" onClick={handleClickLink}>
-        link on issue more details
-      </a>
-      <Popover
-        id="mouse-over-popover"
-        className={classes.popover}
-        classes={{
-          paper: classes.paper,
-        }}
-        open={openPopover}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus
       >
-        <Typography>I use Popover.</Typography>
-      </Popover>
+        <div className="issue__text">
+          {current && location.pathname === '/game' && <span className="issue__text-current">current</span>}
+          <h3 className="issue__text-title">{title}</h3>
+          <p className="issue__text-priority">{priority}</p>
+        </div>
+        <div className="issue__box-score">
+          {user?.role === 'scram-master' && (
+            <>
+              <IconButton className="issue__edit-btn" onClick={handleClickOpen}>
+                <EditIcon />
+              </IconButton>
+              <IconButton onClick={handleClickDelete}>
+                <DeleteOutlineIcon className="issue__delete-btn" />
+              </IconButton>
+              <IssueDialog edit id={id} open={open} onClose={handleClose} />
+            </>
+          )}
+          <div className="issue__score">
+            {user?.role === 'scram-master' ? (
+              <label className="issue__score-label" htmlFor="score">
+                Score:
+                <input
+                  className="issue__score-input"
+                  name="score"
+                  type="text"
+                  value={valueScore}
+                  onChange={handleChangeScore}
+                />
+              </label>
+            ) : (
+              <p className="issue__score-text">
+                <span className="issue__score-title">Score:</span>
+                {score ? `${score} ${scoreTypeShort}` : '-'}
+              </p>
+            )}
+          </div>
+        </div>
+        <a className="issue__link" href={link} target="_blank" rel="noreferrer" onClick={handleClickLink}>
+          link on issue {`>`}
+        </a>
+        <Popover
+          id="mouse-over-popover"
+          className={classes.popover}
+          classes={{
+            paper: classes.paper,
+          }}
+          open={openPopover}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+          disableAutoFocus
+          disableEnforceFocus   
+        >
+          <Typography>{description}</Typography>
+        </Popover>
     </Card>
   );
 };
