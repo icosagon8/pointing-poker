@@ -97,6 +97,25 @@ export const SettingsForm = (): JSX.Element => {
         </>
         <>
           <Controller
+            name="admitNewUser"
+            control={control}
+            defaultValue
+            render={({ field }) => (
+              <FormControlLabel
+                className="settings-form__block-switch"
+                label={
+                  <Typography className="settings-form__label">
+                    Automatically admit all new player, if the game has already started
+                  </Typography>
+                }
+                labelPlacement="start"
+                control={<Switch {...field} checked={field.value} />}
+              />
+            )}
+          />
+        </>
+        <>
+          <Controller
             name="changingCard"
             control={control}
             defaultValue

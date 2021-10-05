@@ -14,7 +14,7 @@ import {
   nextIssue,
   deleteIssuesInRoom,
 } from './issues';
-import { sendSettings, getSettings } from './settings';
+import { sendSettings, getSettings, getSettingsAdmitUser } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
 import { addGameVote, getGameVotes } from './gameVote';
@@ -44,6 +44,8 @@ io.on('connection', (socket: Socket) => {
       waitingGame(room);
       io.in(room).emit('users', getUsers(room));
       callback();
+    } else if (getSettingsAdmitUser(room)) {
+      io.to(user.id).emit('redirectToGame', getUsers(room));
     } else {
       io.to(getScramMasterInRoom(room).id).emit('loginRequest', user.id, firstname, lastname, room);
       io.to(user.id).emit('waitingEnterGame');
