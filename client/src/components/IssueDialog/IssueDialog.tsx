@@ -23,6 +23,7 @@ enum PriorityEnum {
 interface IFormInput {
   id: string;
   title: string;
+  link?: string;
   priority: PriorityEnum;
   roomId: string;
   current: boolean;
@@ -44,12 +45,14 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
   useEffect(() => {
     if (edit) {
       setValue('title', issueEdit.title);
+      setValue('link', issueEdit.link);
       setValue('priority', issueEdit.priority);
     }
   }, [setValue, issueEdit, edit]);
 
   const handleClose = () => {
     setValue('title', '');
+    setValue('link', '');
     setValue('priority', PriorityEnum.low);
     onClose();
   };
@@ -93,6 +96,31 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
             )}
             {errors.title?.type === 'required' && (
               <p className="issue-dialog__form__error-text">{errors.title.types?.required}</p>
+            )}
+          </div>
+          <div className="issue-dialog__form__block">
+            <div className="issue-dialog__form__input-wrapper">
+              <label htmlFor="link" className="issue-dialog__form__label">
+                Link:
+              </label>
+              <input
+                id="link"
+                className="issue-dialog__form__input"
+                {...register('link', {
+                  required: 'Enter link',
+                  pattern: {
+                    value:
+                      /https?:\/\/(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()@:%_+.~#?&//=]*)/i,
+                    message: 'This input must match the pattern.',
+                  },
+                })}
+              />
+            </div>
+            {errors.link?.type === 'pattern' && (
+              <p className="issue-dialog__form__error-text">{errors.link?.types?.pattern}</p>
+            )}
+            {errors.link?.type === 'required' && (
+              <p className="issue-dialog__form__error-text">{errors.link?.types?.required}</p>
             )}
           </div>
           <div className="issue-dialog__form__block issue-dialog__form__priority">

@@ -16,6 +16,7 @@ export const IssueList = (): JSX.Element => {
           return (
             <Issue
               title={item.title}
+              link={item.link}
               priority={item.priority}
               key={item.id}
               id={item.id}
