@@ -1,16 +1,18 @@
 .member-list {
-  margin-left: 5px;
+  margin-bottom: 20px;
 
   &__title-box {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 150px;
   }
 
   &__title {
     font-size: 24px;
     line-height: 30px;
-    font-family: Ruda;
+    font-family: 'Ruda';
     font-weight: 700;
+    margin: 0;
   }
 
   &__items {
@@ -21,7 +23,8 @@
   &__item {
     margin-bottom: 10px;
     display: flex;
-    justify-content: space-around;
+    gap: 10px;
+    justify-content: center;
 
     &:last-child {
       margin-bottom: 0;
@@ -29,11 +32,21 @@
   }
 
   .member-card {
-    width: 195px;
-    height: 45px;
+    width: 200px;
+    height: 50px;
+
+    &__avatar {
+      width: 33px;
+      height: 33px;
+      font-size: 15px;
+    }
 
     &__title {
       font-size: 18px;
+    }
+
+    &__position {
+      font-size: 8px;
     }
   }
 }
