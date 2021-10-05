@@ -1,6 +1,6 @@
 import './GamePage.scss';
 import { useState, useContext, useEffect } from 'react';
-import { Container, Grid, Button, Card } from '@material-ui/core';
+import { Container, Grid, Button } from '@material-ui/core';
 import { Title } from '../../components/Title/Title';
 import { IssueList } from '../../components/IssueList/IssueList';
 import { MemberCard } from '../../components/MemberCard/MemberCard';
@@ -8,29 +8,29 @@ import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
 import { Timer } from '../../components/Timer/Timer';
 import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
+import { AcceptUserModal } from '../../components/AcceptUserModal/AcceptUserModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
+import { gameInProgress } from '../../store/slices/statusGameSlice';
 import { UserModel } from '../../models/userModel';
-import { SettingsFormInput } from '../../models/SettingsFormInput';
-import { GameVote } from '../../models/gameVote';
 import { addVote } from '../../store/slices/gameVoteSlice';
 import { addStatistic } from '../../store/slices/statisticSlice';
+import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
 
 export function GamePage(): JSX.Element {
   const dispatch = useAppDispatch();
   const { socket } = useContext(SocketContext);
-  const [role] = useState<string>('scram-master');
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
   const users = useAppSelector((state) => state.users.users);
+  const user = useAppSelector((state) => state.user.user);
   const room = useAppSelector((state) => state.room.room);
-  const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
+  const scramMaster = users.find((item) => item.role === 'scram-master') as UserModel;
   const title = useAppSelector((state) => state.title.title);
   const [timerIsOver, setTimerIsOver] = useState<boolean>(false);
   const settings = useAppSelector((state) => state.settings.settings);
   const [currentId, setCurrentId] = useState<string>('');
   const currentIssueId = useAppSelector((state) => state.issues.issues.find((issue) => issue.current))?.id;
-  const [scoreArr, setScoreArr] = useState<GameVote[]>([]);
   const cards = settings?.cardsValue.map((card) => {
     return {
       ...card,
@@ -78,6 +78,10 @@ export function GamePage(): JSX.Element {
     setPlay(false);
   };
 
+  useEffect(() => {
+    dispatch(gameInProgress());
+  }, [dispatch]);
+
   const handleClickNextIssue = () => {
     socket?.emit('nextIssue', room);
   };
@@ -85,82 +89,67 @@ export function GamePage(): JSX.Element {
   return (
     <Container className="page-game">
       <Grid container>
-        <Grid item xs={8}>
+        <Grid className="page-game__main" item xs={12} md={7} lg={8}>
           <Title title={title} />
-          <Grid container alignItems="flex-end" justifyContent="space-between">
-            <Grid item xs={4}>
-              <MemberCard
-                name={scramMaster?.firstname}
-                lastname={scramMaster?.lastname}
-                src={scramMaster?.avatar}
-                position={scramMaster?.position}
-              />
-            </Grid>
-            <Grid item container xs={4} justifyContent="center">
-              <Timer start={play} timerIsOverHandler={timerIsOverHandler} location={location} />
-            </Grid>
-            <Grid item container xs={4} justifyContent="center">
-              {role === 'scram-master' && play ? (
-                <Button
-                  className="page-game__btn page-game__btn-outlined"
-                  variant="outlined"
-                  onClick={() => {
-                    socket?.emit('stopTimer', room);
-                  }}
-                >
-                  Stop Game
-                </Button>
-              ) : (
-                <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
-                  Exit
-                </Button>
-              )}
-            </Grid>
+          <Grid className="page-game__start" container alignItems="flex-end" justifyContent="space-between">
+            <MemberCard
+              name={scramMaster?.firstname}
+              lastname={scramMaster?.lastname}
+              src={scramMaster?.avatar}
+              position={scramMaster?.position}
+              kickButtonDisplay={false}
+            />
+            <Timer start={play} timerIsOverHandler={timerIsOverHandler} location={location} />
+            {user?.role === 'scram-master' && play ? (
+              <Button
+                className="page-game__btn page-game__btn-outlined"
+                variant="outlined"
+                onClick={() => {
+                  socket?.emit('stopTimer', room);
+                }}
+              >
+                Stop Game
+              </Button>
+            ) : (
+              <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
+                Exit
+              </Button>
+            )}
           </Grid>
-          <Grid container alignItems="center" justifyContent="space-between">
-            <Grid item xs={4}>
-              <IssueList />
-            </Grid>
-            {role === 'scram-master' && !play ? (
-              <>
-                <Grid item container xs={4} justifyContent="center">
-                  <Button
-                    className="page-game__btn page-game__btn-primary"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      socket?.emit('startTimer', room);
-                    }}
-                  >
-                    Run Round
-                  </Button>
-                </Grid>
-                <Grid item container xs={4} justifyContent="center">
-                  <Button
-                    className="page-game__btn page-game__btn-primary"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClickNextIssue}
-                  >
-                    Next ISSUE
-                  </Button>
-                </Grid>
-              </>
-            ) : null}
-          </Grid>
-          <Grid container alignItems="center" justifyContent="space-between">
-            <Grid item xs={4}>
-              <Statistics />
-            </Grid>
-            <Grid item xs={6}>
-              {cards && <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />}
-            </Grid>
-          </Grid>
+          {user?.role === 'scram-master' && !play ? (
+            <div className="page-game__btn-container">
+              <Button
+                className="page-game__btn page-game__btn-primary"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  socket?.emit('startTimer', room);
+                }}
+              >
+                Run Round
+              </Button>
+              <Button
+                className="page-game__btn page-game__btn-primary"
+                variant="contained"
+                color="primary"
+                onClick={handleClickNextIssue}
+              >
+                Next ISSUE
+              </Button>
+            </div>
+          ) : null}
+          <IssueList />
+          {cards && user?.role === 'player' && (
+            <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
+          )}
         </Grid>
-        <Grid item xs={4} className="page-game__aside">
+        <Grid item xs={12} md={5} lg={4} className="page-game__aside">
           <MemberCardList />
+          <Statistics />
         </Grid>
       </Grid>
+      <AcceptUserModal />
+      <KickUserModal />
     </Container>
   );
 }

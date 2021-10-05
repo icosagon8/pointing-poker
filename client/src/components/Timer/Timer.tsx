@@ -59,6 +59,7 @@ export function Timer(props: TimeType): JSX.Element {
           <input
             className="timer__edit-input"
             type="text"
+            autoComplete="off"
             {...(register && {
               ...register('timerHours', {
                 required: 'Enter the time',
@@ -77,6 +78,7 @@ export function Timer(props: TimeType): JSX.Element {
           <input
             className="timer__edit-input"
             type="text"
+            autoComplete="off"
             {...(register && {
               ...register('timerMinutes', {
                 required: 'Enter the time',

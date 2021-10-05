@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { FileInput } from '../FileInput/FileInput';
+import { WaitingModal } from '../WaitingModal/WaitingModal';
 import { getInitials } from '../../helpers/utils';
 import { SocketContext } from '../../socketContext';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
@@ -12,6 +13,8 @@ import { addUser } from '../../store/slices/userSlice';
 import { addRoom } from '../../store/slices/roomSlice';
 import { addUsers } from '../../store/slices/usersSlice';
 import { setTitle } from '../../store/slices/titleSlice';
+import { addIssues } from '../../store/slices/issuesSlice';
+import { saveSettings } from '../../store/slices/settingsSlice';
 
 interface Props {
   isScram: boolean;
@@ -28,6 +31,7 @@ interface FormInputs {
 
 export function LobbyForm(props: Props): JSX.Element {
   const room = useAppSelector((state) => state.room.room);
+  const statusGame = useAppSelector((state) => state.statusGame.statusGame);
   const dispatch = useAppDispatch();
   const { handleClose, isScram } = props;
   const [src, setSrc] = useState<string>('');
@@ -42,7 +46,25 @@ export function LobbyForm(props: Props): JSX.Element {
     socket?.on('title', (title) => {
       if (title) dispatch(setTitle(title));
     });
+
+    socket?.on('issues', (issues) => {
+      if (issues) dispatch(addIssues(issues));
+    });
+
+    socket?.on('sendSettings', (item) => {
+      if (item) dispatch(saveSettings(item));
+    });
   }, [dispatch, socket]);
+
+  useEffect(() => {
+    socket?.on('redirectToGame', (users) => {
+      dispatch(addUsers(users));
+      history.push('/game');
+    });
+    socket?.on('rejectEnterToGame', () => {
+      handleClose();
+    });
+  }, [dispatch, socket, history, handleClose]);
 
   const {
     register,
@@ -74,7 +96,7 @@ export function LobbyForm(props: Props): JSX.Element {
     dispatch(addUser(data));
     const id = getId(room);
 
-    socket?.emit('login', { ...data, room: id }, () => {
+    socket?.emit('login', { ...data, room: id, statusGame }, () => {
       history.push('/lobby');
     });
   };
@@ -208,6 +230,7 @@ export function LobbyForm(props: Props): JSX.Element {
           Cancel
         </Button>
       </div>
+      <WaitingModal />
     </form>
   );
 }

@@ -3,7 +3,8 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
-import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom } from './users';
+import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom, getScramMasterInRoom } from './users';
+import { addStatus, waitingGame, gameInProgress, endGame, checkStatusGame, deleteStatusGameInRoom } from './statusGame';
 import {
   addIssue,
   editIssue,
@@ -13,7 +14,7 @@ import {
   nextIssue,
   deleteIssuesInRoom,
 } from './issues';
-import { sendSettings } from './settings';
+import { sendSettings, getSettings } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
 import { addGameVote, getGameVotes } from './gameVote';
@@ -32,11 +33,44 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket: Socket) => {
-  socket.on('login', ({ firstname, lastname, position, role, avatar, room }, callback) => {
+  socket.on('login', ({ firstname, lastname, position, role, avatar, room, statusGame }, callback) => {
     const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
     socket.join(user.room);
-    io.in(room).emit('users', getUsers(room));
-    callback();
+    io.to(socket.id).emit('title', getTitle(room));
+    io.to(socket.id).emit('issues', getIssues(room));
+    io.to(socket.id).emit('sendSettings', getSettings(room));
+    if (checkStatusGame(room) === 'waiting-game' || role === 'scram-master') {
+      addStatus({ statusGame, room });
+      waitingGame(room);
+      io.in(room).emit('users', getUsers(room));
+      callback();
+    } else {
+      io.to(getScramMasterInRoom(room).id).emit('loginRequest', user.id, firstname, lastname, room);
+      io.to(user.id).emit('waitingEnterGame');
+    }
+  });
+
+  socket.on('receiveUser', ({ id, room }, answer) => {
+    if (answer) {
+      io.to(getUser(id).id).emit('redirectToGame', getUsers(room));
+      io.in(room).emit('users', getUsers(room));
+    } else {
+      io.to(getUser(id).id).emit('rejectEnterToGame');
+      deleteUser(id);
+    }
+  });
+
+  socket.on('waitingEnterGameCancel', (room) => {
+    io.to(getScramMasterInRoom(room).id).emit('loginRequestCancel');
+    deleteUser(socket.id);
+  });
+
+  socket.on('statusGame-progress', (room) => {
+    gameInProgress(room);
+  });
+
+  socket.on('statusGame-end', (room) => {
+    endGame(room);
   });
 
   socket.on('startGame', (room) => {
@@ -47,6 +81,13 @@ io.on('connection', (socket: Socket) => {
     io.in(room).emit('redirectToHomePage');
     deleteUsersInRoom(room);
     deleteIssuesInRoom(room);
+    deleteStatusGameInRoom(room);
+  });
+
+  socket.on('exitUser', (room) => {
+    deleteUser(socket.id);
+    io.to(socket.id).emit('logout');
+    io.in(room).emit('users', getUsers(room));
   });
 
   socket.on('message', (text) => {
@@ -113,7 +154,6 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('joinRoom', (room) => {
     io.to(socket.id).emit('room', checkRoom(room));
-    io.to(socket.id).emit('title', getTitle(room));
   });
 
   socket.on('kickMember', (kickedUser, userAgainst) => {
@@ -126,9 +166,9 @@ io.on('connection', (socket: Socket) => {
       const messageId = nanoid();
 
       io.in(room).emit('message', {
+        ...kickedUser,
         text: 'Kicked by scram master',
         messageId,
-        ...kickedUser,
         type: 'system',
       });
     } else {
@@ -156,15 +196,15 @@ io.on('connection', (socket: Socket) => {
       if (result) {
         deleteUser(id);
         deleteVotes(room);
+        io.in(room).emit('endVoting');
         io.to(id).emit('logout');
         io.in(room).emit('users', getUsers(room));
-        io.in(room).emit('endVoting');
         const messageId = nanoid();
 
         io.in(room).emit('message', {
+          ...kickedUser,
           text: 'Kicked by voting',
           messageId,
-          ...kickedUser,
           type: 'system',
         });
       }

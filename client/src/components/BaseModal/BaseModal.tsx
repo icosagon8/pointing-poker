@@ -11,7 +11,7 @@ export function BaseModal(props: Props): JSX.Element {
   const { open, handleClose, children } = props;
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal className="modal-overlay" open={open} onClose={handleClose}>
       <div className="modal">{children}</div>
     </Modal>
   );

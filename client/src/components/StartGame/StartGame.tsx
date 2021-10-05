@@ -33,8 +33,12 @@ export const StartGame = (): JSX.Element => {
     });
   }, [socket, dispatch, history, chatOpen]);
 
-  const handleClick = () => {
+  const handleClickCancel = () => {
     socket?.emit('cancelGame', room);
+  };
+
+  const handleClickExit = () => {
+    socket?.emit('exitUser', room);
   };
 
   return (
@@ -80,14 +84,19 @@ export const StartGame = (): JSX.Element => {
               variant="outlined"
               color="primary"
               className="start-game__btn start-game__cancel"
-              onClick={handleClick}
+              onClick={handleClickCancel}
             >
               Cancel game
             </Button>
           </>
         ) : (
           <div className="start-game__btn-block-user ">
-            <Button variant="outlined" color="primary" className="start-game__btn start-game__cancel">
+            <Button
+              variant="outlined"
+              color="primary"
+              className="start-game__btn start-game__cancel"
+              onClick={handleClickExit}
+            >
               Exit
             </Button>
           </div>

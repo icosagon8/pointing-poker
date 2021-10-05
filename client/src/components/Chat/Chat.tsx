@@ -7,19 +7,17 @@ import { MemberCard } from '../MemberCard/MemberCard';
 import { Message } from '../../models/Message';
 import { UserModel } from '../../models/userModel';
 import { useAppSelector } from '../../store/hooks/hooks';
+import { checkUser, kickMember } from '../../helpers/utils';
 
-interface Props {
-  kickMember: (kicked: Message, userAgainst: UserModel) => void;
-  checkUser: (member: Message) => boolean;
-}
-
-export function Chat(props: Props): JSX.Element {
-  const { kickMember, checkUser } = props;
+export function Chat(): JSX.Element {
   const user = useAppSelector((state) => state.user.user) as UserModel;
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const { socket } = useContext(SocketContext);
-  const scrollRef = useRef<HTMLLIElement>(null);
+  const scrollRef = useRef<HTMLUListElement>(null);
+  const users = useAppSelector((state) => state.users.users);
+  const members = users.filter((member) => member.role !== 'scram-master');
+  const isVoting = useAppSelector((state) => state.voting.isVoting);
 
   const handleMessages = (chatMessage: Message) => {
     setMessages((chatMessages) => [...chatMessages, chatMessage]);
@@ -33,10 +31,12 @@ export function Chat(props: Props): JSX.Element {
     };
   }, [socket]);
 
+  const scrollToBottom = () => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  };
+
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-    }
+    scrollToBottom();
   }, [messages]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,9 +54,9 @@ export function Chat(props: Props): JSX.Element {
 
   return (
     <Grid className="chat" container direction="column" wrap="nowrap">
-      <List className="chat__message-list">
-        {messages.map((chatMessage, index) => (
-          <ListItem ref={index === messages.length - 1 ? scrollRef : null} key={chatMessage.messageId}>
+      <List className="chat__message-list" ref={scrollRef}>
+        {messages.map((chatMessage) => (
+          <ListItem key={chatMessage.messageId}>
             {chatMessage.type === 'system' ? (
               <Grid className="chat__message chat__message--system" container wrap="nowrap">
                 <Grid item xs="auto">
@@ -73,7 +73,11 @@ export function Chat(props: Props): JSX.Element {
                 </Grid>
               </Grid>
             ) : (
-              <Grid className="chat__message" container wrap="nowrap">
+              <Grid
+                className={`chat__message${chatMessage.id === socket?.id ? ' chat__message--my' : ''}`}
+                container
+                wrap="nowrap"
+              >
                 <Grid className="chat__text-wrapper" item xs="auto">
                   <ListItemText className="chat__text" primary={chatMessage.text} />
                 </Grid>
@@ -83,9 +87,9 @@ export function Chat(props: Props): JSX.Element {
                     lastname={chatMessage.lastname}
                     position={chatMessage.position}
                     src={chatMessage.avatar}
-                    kickButtonDisplay={checkUser(chatMessage)}
+                    kickButtonDisplay={checkUser(socket, chatMessage, members, isVoting)}
                     onKick={() => {
-                      kickMember(chatMessage, user);
+                      kickMember(socket, chatMessage, user);
                     }}
                   />
                 </Grid>
