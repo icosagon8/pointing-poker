@@ -17,6 +17,22 @@
     gap: 14px;
   }
 
+  &__results {
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+  }
+
+  &__item {
+    margin-right: 14px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
   &__percent {
     text-align: center;
     font-size: 24px;

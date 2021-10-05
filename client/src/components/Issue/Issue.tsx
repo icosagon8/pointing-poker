@@ -10,11 +10,12 @@ import { SocketContext } from '../../socketContext';
 import { useAppSelector } from '../../store/hooks/hooks';
 
 export const Issue = (props: IssueModel): JSX.Element => {
-  const { title, priority, id, current, roomId } = props;
+  const { title, priority, id, current, roomId, isResult } = props;
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { socket } = useContext(SocketContext);
   const user = useAppSelector((state) => state.user.user);
+  const status = useAppSelector((state) => state.statusGame.statusGame);
 
   const handleClickCard = () => {
     if (user?.role === 'scram-master' && location.pathname === '/game') {
@@ -36,13 +37,18 @@ export const Issue = (props: IssueModel): JSX.Element => {
   };
 
   return (
-    <Card className={current && location.pathname === '/game' ? 'issue active' : 'issue'} onClick={handleClickCard}>
+    <Card
+      className={current && status !== 'end-game' && location.pathname === '/game' ? 'issue active' : 'issue'}
+      onClick={handleClickCard}
+    >
       <div className="issue__text">
-        {current && location.pathname === '/game' && <span className="issue__text-current">current</span>}
+        {current && location.pathname === '/game' && status !== 'end-game' && (
+          <span className="issue__text-current">current</span>
+        )}
         <h3 className="issue__text-title">{title}</h3>
         <p className="issue__text-priority">{priority}</p>
       </div>
-      {user?.role === 'scram-master' && (
+      {user?.role === 'scram-master' && status !== 'end-game' && (
         <>
           <div>
             <IconButton className="issue__edit-btn" onClick={handleClickOpen}>
