@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Issue = (props: IssueModel): JSX.Element => {
   const classes = useStyles();
   const [valueScore, setValueScore] = useState<string>('-');
-  const { title, link, priority, id, current, roomId, description, score } = props;
+  const { title, link, priority, id, current, roomId, description } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const openPopover = Boolean(anchorEl);
   const [open, setOpen] = useState(false);
