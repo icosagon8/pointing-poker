@@ -13,22 +13,13 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
 import { gameInProgress } from '../../store/slices/statusGameSlice';
 import { UserModel } from '../../models/userModel';
+import { addVote } from '../../store/slices/gameVoteSlice';
+import { addStatistic } from '../../store/slices/statisticSlice';
 import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
 
-const gameCards = [
-  { id: '35635463', title: 'sp', value: '2' },
-  { id: '990934', title: 'sp', value: '5' },
-  { id: '1234090', title: 'sp', value: '1' },
-];
-const gameCardsStat = [
-  { id: '35635463', title: 'sp', value: '2', percent: 90.5 },
-  { id: '990934', title: 'sp', value: '5', percent: 7.2 },
-  { id: '1234090', title: 'sp', value: '1', percent: 2.3 },
-];
-
 export function GamePage(): JSX.Element {
-  const { socket } = useContext(SocketContext);
   const dispatch = useAppDispatch();
+  const { socket } = useContext(SocketContext);
   const [play, setPlay] = useState<boolean>(false);
   const [location] = useState<string>('game-page');
   const users = useAppSelector((state) => state.users.users);
@@ -36,6 +27,56 @@ export function GamePage(): JSX.Element {
   const room = useAppSelector((state) => state.room.room);
   const scramMaster = users.find((item) => item.role === 'scram-master') as UserModel;
   const title = useAppSelector((state) => state.title.title);
+  const [timerIsOver, setTimerIsOver] = useState<boolean>(false);
+  const settings = useAppSelector((state) => state.settings.settings);
+  const [currentId, setCurrentId] = useState<string>('');
+  const currentIssueId = useAppSelector((state) => state.issues.issues.find((issue) => issue.current))?.id;
+  const cards = settings?.cardsValue.map((card) => {
+    return {
+      ...card,
+      title: settings.scoreTypeShort,
+    };
+  });
+
+  useEffect(() => {
+    socket?.on('getStatistic', (result) => {
+      dispatch(addStatistic(result));
+    });
+
+    socket?.on('stopTimerUsers', () => {
+      setPlay(false);
+      setTimerIsOver(false);
+      setCurrentId('');
+    });
+
+    socket?.on('getGameVote', (vote) => {
+      dispatch(addVote(vote));
+    });
+
+    socket?.on('startTimerUsers', () => {
+      setPlay(true);
+      setTimerIsOver(false);
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    if (timerIsOver) {
+      socket?.emit('sendGameVote', {
+        roomId: room,
+        issueId: currentIssueId,
+        userId: socket?.id,
+        cardId: currentId,
+      });
+      setTimerIsOver(false);
+      setPlay(false);
+      setCurrentId('');
+    }
+  }, [currentId, currentIssueId, room, socket, timerIsOver, play]);
+
+  const timerIsOverHandler = () => {
+    setTimerIsOver(true);
+    setPlay(false);
+  };
 
   useEffect(() => {
     dispatch(gameInProgress());
@@ -58,14 +99,14 @@ export function GamePage(): JSX.Element {
               position={scramMaster?.position}
               kickButtonDisplay={false}
             />
-
-            <Timer start={play} location={location} />
-
+            <Timer start={play} timerIsOverHandler={timerIsOverHandler} location={location} />
             {user?.role === 'scram-master' && play ? (
               <Button
                 className="page-game__btn page-game__btn-outlined"
                 variant="outlined"
-                onClick={() => setPlay(false)}
+                onClick={() => {
+                  socket?.emit('stopTimer', room);
+                }}
               >
                 Stop Game
               </Button>
@@ -81,11 +122,12 @@ export function GamePage(): JSX.Element {
                 className="page-game__btn page-game__btn-primary"
                 variant="contained"
                 color="primary"
-                onClick={() => setPlay(true)}
+                onClick={() => {
+                  socket?.emit('startTimer', room);
+                }}
               >
                 Run Round
               </Button>
-
               <Button
                 className="page-game__btn page-game__btn-primary"
                 variant="contained"
@@ -97,11 +139,13 @@ export function GamePage(): JSX.Element {
             </div>
           ) : null}
           <IssueList />
-          {user?.role === 'player' && <CardList gameCards={gameCards} />}
+          {cards && user?.role === 'player' && (
+            <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
+          )}
         </Grid>
         <Grid item xs={12} md={5} lg={4} className="page-game__aside">
           <MemberCardList />
-          <Statistics gameCardsStat={gameCardsStat} />
+          <Statistics />
         </Grid>
       </Grid>
       <AcceptUserModal />

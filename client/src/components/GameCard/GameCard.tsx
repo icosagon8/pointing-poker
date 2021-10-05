@@ -9,7 +9,7 @@ import GameCardType from '../../models/iGameCard';
 export const GameCard = (props: GameCardType): JSX.Element => {
   const { id, title, value, cardSelection, lobbyPage, setCurrentId, className, setGameCards, gameCards } = props;
   const [cardNumber, setCardNumber] = useState<string>(value);
-  const [edit, setEdit] = useState<boolean>(true);
+  const [edit, setEdit] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value);

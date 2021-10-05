@@ -1,5 +1,5 @@
-import './MemberCardList.scss';
 import { useContext } from 'react';
+import './MemberCardList.scss';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { ScoreCard } from '../ScoreCard/ScoreCard';
 import { UserModel } from '../../models/userModel';
@@ -10,6 +10,8 @@ import { checkUser, kickMember } from '../../helpers/utils';
 export function MemberCardList(): JSX.Element {
   const { socket } = useContext(SocketContext);
   const user = useAppSelector((state) => state.user.user) as UserModel;
+  const currentIssue = useAppSelector((state) => state.issues.issues.find((issue) => issue.current));
+  const votes = useAppSelector((state) => state.gameVotes.votes);
   const isVoting = useAppSelector((state) => state.voting.isVoting);
   const users = useAppSelector((state) => state.users.users);
   const settings = useAppSelector((state) => state.settings.settings);
@@ -24,7 +26,16 @@ export function MemberCardList(): JSX.Element {
       <ul className="member-list__items">
         {players.map((member) => (
           <li className="member-list__item" key={member.id}>
-            <ScoreCard />
+            <ScoreCard
+              score={
+                settings?.cardsValue.find(
+                  (card) =>
+                    card.id ===
+                    votes.find((vote) => vote.userId === user.id && vote.issueId === currentIssue?.id)?.cardId
+                )?.value
+              }
+              title={settings?.scoreTypeShort}
+            />
             <MemberCard
               name={member.firstname}
               lastname={member.lastname}
