@@ -46,13 +46,7 @@ export const LobbyPage = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(waitingGame());
-    socket?.on('issues', (issues) => {
-      dispatch(addIssues(issues));
-    });
-    socket?.on('sendSettings', (item) => {
-      dispatch(saveSettings(item));
-    });
-  }, [socket, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     socket?.on('startVoting', () => {

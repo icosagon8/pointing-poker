@@ -8,6 +8,7 @@ import { MemberCardList } from '../../components/MemberCardList/MemberCardList';
 import { Timer } from '../../components/Timer/Timer';
 import { Statistics } from '../../components/Statistics/Statistics';
 import { CardList } from '../../components/CardList/CardList';
+import { AcceptUserModal } from '../../components/AcceptUserModal/AcceptUserModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
 import { gameInProgress } from '../../store/slices/statusGameSlice';
@@ -33,15 +34,12 @@ export function GamePage(): JSX.Element {
   const users = useAppSelector((state) => state.users.users);
   const user = useAppSelector((state) => state.user.user);
   const room = useAppSelector((state) => state.room.room);
-  const title = useAppSelector((state) => state.title.title);
   const scramMaster = users.find((item) => item.role === 'scram-master') as UserModel;
+  const title = useAppSelector((state) => state.title.title);
 
   useEffect(() => {
     dispatch(gameInProgress());
-    socket?.on('loginRequest', (firstname, lastname) => {
-      console.log(`Do you want to add a user ${firstname} ${lastname}?`);
-    });
-  }, [socket, dispatch]);
+  }, [dispatch]);
 
   const handleClickNextIssue = () => {
     socket?.emit('nextIssue', room);
@@ -106,6 +104,7 @@ export function GamePage(): JSX.Element {
           <Statistics gameCardsStat={gameCardsStat} />
         </Grid>
       </Grid>
+      <AcceptUserModal />
       <KickUserModal />
     </Container>
   );

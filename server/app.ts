@@ -14,7 +14,7 @@ import {
   nextIssue,
   deleteIssuesInRoom,
 } from './issues';
-import { sendSettings } from './settings';
+import { sendSettings, getSettings } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
 
@@ -32,16 +32,35 @@ const io = new Server(server, {
 
 io.on('connection', (socket: Socket) => {
   socket.on('login', ({ firstname, lastname, position, role, avatar, room, statusGame }, callback) => {
+    const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
+    socket.join(user.room);
+    io.to(socket.id).emit('title', getTitle(room));
+    io.to(socket.id).emit('issues', getIssues(room));
+    io.to(socket.id).emit('sendSettings', getSettings(room));
     if (checkStatusGame(room) === 'waiting-game' || role === 'scram-master') {
-      const user = addUser({ id: socket.id, firstname, lastname, position, role, avatar, room });
       addStatus({ statusGame, room });
       waitingGame(room);
-      socket.join(user.room);
       io.in(room).emit('users', getUsers(room));
       callback();
     } else {
-      io.to(getScramMasterInRoom(room).id).emit('loginRequest', firstname, lastname);
+      io.to(getScramMasterInRoom(room).id).emit('loginRequest', user.id, firstname, lastname, room);
+      io.to(user.id).emit('waitingEnterGame');
     }
+  });
+
+  socket.on('receiveUser', ({ id, room }, answer) => {
+    if (answer) {
+      io.to(getUser(id).id).emit('redirectToGame', getUsers(room));
+      io.in(room).emit('users', getUsers(room));
+    } else {
+      io.to(getUser(id).id).emit('rejectEnterToGame');
+      deleteUser(id);
+    }
+  });
+
+  socket.on('waitingEnterGameCancel', (room) => {
+    io.to(getScramMasterInRoom(room).id).emit('loginRequestCancel');
+    deleteUser(socket.id);
   });
 
   socket.on('statusGame-progress', (room) => {
@@ -116,7 +135,6 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('joinRoom', (room) => {
     io.to(socket.id).emit('room', checkRoom(room));
-    io.to(socket.id).emit('title', getTitle(room));
   });
 
   socket.on('kickMember', (kickedUser, userAgainst) => {
