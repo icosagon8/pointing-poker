@@ -1,4 +1,5 @@
 import { UserModel } from './models/UserModel';
+import { getSettings } from './settings';
 
 const users: UserModel[] = [];
 
@@ -30,5 +31,12 @@ export const getScramMasterInRoom = (room: string): UserModel => {
 };
 
 export const getUsers = (room: string): UserModel[] => users.filter((user) => user.room === room);
+
+export const getPlayers = (room: string): UserModel[] =>
+  users.filter(
+    (user) =>
+      user.room === room &&
+      (user.role === 'player' || (user?.role === 'scram-master' && getSettings(room)?.masterAsPlayer))
+  );
 
 export const checkRoom = (room: string): boolean => users.some((user: UserModel) => user.room === room);

@@ -78,7 +78,7 @@ export const SettingsForm = (): JSX.Element => {
   };
 
   return (
-    <>
+    <div className="settings-form-wrapper">
       <form id="modalForm" className="settings-form" onSubmit={handleSubmit(onSubmit)}>
         <>
           <Controller
@@ -252,15 +252,15 @@ export const SettingsForm = (): JSX.Element => {
             </select>
           </div>
         </div>
-        {watchCardSet === 'Own' && (
-          <div className="settings-form__block-add-card">
-            <Title title="Add card values:" />
-            <div className="settings-form__block-cards-list">
-              <GameCardsList cards={gameCards} watchShortType={watchShortType} setGameCards={setGameCards} />
-            </div>
-          </div>
-        )}
       </form>
-    </>
+      {watchCardSet === 'Own' && (
+        <div className="settings-form__block-add-card">
+          <Title title="Add card values:" />
+          <div className="settings-form__block-cards-list">
+            <GameCardsList cards={gameCards} watchShortType={watchShortType} setGameCards={setGameCards} />
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

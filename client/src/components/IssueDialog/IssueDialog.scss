@@ -1,4 +1,7 @@
 .issue-dialog {
+  padding-left: 155px;
+  padding-right: 155px;
+
   &__title {
     font-family: 'Roboto';
     font-weight: 700;
@@ -51,17 +54,17 @@
     }
 
     &__label {
-      cursor: pointer;
       font-size: 24px;
     }
 
     &__input {
       font-size: 24px;
-      width: 320px;
+      width: 100%;
       height: 47px;
       border: 1px solid #2b3a67;
       box-sizing: border-box;
       box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+      outline: 0;
     }
 
     &__priority {
@@ -77,5 +80,12 @@
   &__buttons {
     display: flex;
     justify-content: space-between;
+  }
+}
+
+@media (max-width: 900px) {
+  .issue-dialog {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
