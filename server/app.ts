@@ -12,6 +12,7 @@ import {
   checkStatusGame,
   deleteStatusGameInRoom,
   roundInProgress,
+  getStatusGame,
 } from './statusGame';
 import {
   addIssue,
@@ -87,6 +88,7 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('statusGame-end', (room) => {
     endGame(room);
+    io.in(room).emit('getStatusGame', getStatusGame(room));
   });
 
   socket.on('startGame', (room) => {

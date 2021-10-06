@@ -13,7 +13,13 @@ import { CardList } from '../../components/CardList/CardList';
 import { AcceptUserModal } from '../../components/AcceptUserModal/AcceptUserModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
-import { beforeGameStatusGame, endGame, gameInProgress, roundInProgress } from '../../store/slices/statusGameSlice';
+import {
+  beforeGameStatusGame,
+  endGame,
+  gameInProgress,
+  roundInProgress,
+  getStatusGame,
+} from '../../store/slices/statusGameSlice';
 import { UserModel } from '../../models/userModel';
 import { addVote } from '../../store/slices/gameVoteSlice';
 import { addStatistic } from '../../store/slices/statisticSlice';
@@ -66,6 +72,12 @@ export function GamePage(): JSX.Element {
       });
     });
   }
+
+  useEffect(() => {
+    socket?.on('getStatusGame', (statusGame) => {
+      dispatch(getStatusGame(statusGame));
+    });
+  }, [socket, dispatch]);
 
   useEffect(() => {
     socket?.on('logout', () => {
@@ -168,6 +180,7 @@ export function GamePage(): JSX.Element {
                     onClick={() => {
                       if (user?.role === 'scram-master') {
                         dispatch(endGame());
+                        socket?.emit('statusGame-end', room);
                       } else {
                         socket?.emit('exitUser', room);
                       }

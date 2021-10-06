@@ -11,7 +11,7 @@ export const StartGame = (): JSX.Element => {
   const { socket } = useContext(SocketContext);
   const history = useHistory();
   const room = useAppSelector((state) => state.room.room);
-  const link = `http://localhost:3000/${room}`;
+  const link = `https://clever-kirch-c3b9cb.netlify.app/${room}`;
   const users = useAppSelector((state) => state.users.users);
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
   const user = useAppSelector((state) => state.user.user);
