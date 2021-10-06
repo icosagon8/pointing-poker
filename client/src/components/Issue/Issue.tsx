@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Issue = (props: IssueModel): JSX.Element => {
   const classes = useStyles();
   const [valueScore, setValueScore] = useState<string>('-');
-  const { title, link, priority, id, current, roomId, description } = props;
+  const { title, link, priority, id, current, roomId, description, isResult } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const openPopover = Boolean(anchorEl);
   const [open, setOpen] = useState(false);
@@ -33,6 +33,7 @@ export const Issue = (props: IssueModel): JSX.Element => {
   const user = useAppSelector((state) => state.user.user);
   const room = useAppSelector((state) => state.room.room);
   const scoreTypeShort = useAppSelector((state) => state.settings.settings?.scoreTypeShort);
+  const status = useAppSelector((state) => state.statusGame.statusGame);
 
   useEffect(() => {
     socket?.on('scoreIssue', (scoreIssue) => {
@@ -82,20 +83,23 @@ export const Issue = (props: IssueModel): JSX.Element => {
 
   return (
     <Card
-      className={current && location.pathname === '/game' ? 'issue active' : 'issue'}
+      className={current && status !== 'end-game' && location.pathname === '/game' ? 'issue active' : 'issue'}
       onClick={handleClickCard}
       aria-owns={openPopover ? 'mouse-over-popover' : undefined}
       aria-haspopup="true"
       onMouseEnter={handlePopoverOpen}
       onMouseLeave={handlePopoverClose}
+
     >
       <div className="issue__text">
-        {current && location.pathname === '/game' && <span className="issue__text-current">current</span>}
+        {current && location.pathname === '/game' && status !== 'end-game' && (
+          <span className="issue__text-current">current</span>
+        )}
         <h3 className="issue__text-title">{title}</h3>
         <p className="issue__text-priority">{priority}</p>
       </div>
       <div className="issue__box-score">
-        {user?.role === 'scram-master' && (
+        {user?.role === 'scram-master' && status !== 'end-game' && (
           <>
             <IconButton className="issue__edit-btn" onClick={handleClickOpen}>
               <EditIcon />

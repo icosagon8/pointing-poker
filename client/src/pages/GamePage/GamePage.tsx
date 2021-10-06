@@ -11,11 +11,13 @@ import { CardList } from '../../components/CardList/CardList';
 import { AcceptUserModal } from '../../components/AcceptUserModal/AcceptUserModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
-import { gameInProgress } from '../../store/slices/statusGameSlice';
+import { endGame, gameInProgress } from '../../store/slices/statusGameSlice';
 import { UserModel } from '../../models/userModel';
 import { addVote } from '../../store/slices/gameVoteSlice';
 import { addStatistic } from '../../store/slices/statisticSlice';
 import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
+import { Issue } from '../../components/Issue/Issue';
+import { PriorityEnum } from '../../models/issueModel';
 
 export function GamePage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -31,6 +33,128 @@ export function GamePage(): JSX.Element {
   const settings = useAppSelector((state) => state.settings.settings);
   const [currentId, setCurrentId] = useState<string>('');
   const currentIssueId = useAppSelector((state) => state.issues.issues.find((issue) => issue.current))?.id;
+  const gameStatus = useAppSelector((state) => state.statusGame.statusGame) === 'end-game';
+
+  const mockRes = [
+    {
+      issueId: '1',
+      results: [
+        {
+          cardId: 'c1',
+          percent: 60,
+        },
+        {
+          cardId: 'c2',
+          percent: 40,
+        },
+        {
+          cardId: 'c3',
+          percent: 0,
+        },
+      ],
+    },
+    {
+      issueId: '2',
+      results: [
+        {
+          cardId: 'c1',
+          percent: 60,
+        },
+        {
+          cardId: 'c2',
+          percent: 40,
+        },
+        {
+          cardId: 'c3',
+          percent: 0,
+        },
+      ],
+    },
+    {
+      issueId: '3',
+      results: [
+        {
+          cardId: 'c1',
+          percent: 60,
+        },
+        {
+          cardId: 'c2',
+          percent: 40,
+        },
+        {
+          cardId: 'c3',
+          percent: 0,
+        },
+      ],
+    },
+    {
+      issueId: '4',
+      results: [
+        {
+          cardId: 'c1',
+          percent: 60,
+        },
+        {
+          cardId: 'c2',
+          percent: 40,
+        },
+        {
+          cardId: 'c3',
+          percent: 0,
+        },
+      ],
+    },
+  ];
+
+  const mockIssues = [
+    {
+      id: '1',
+      title: 'first',
+      priority: PriorityEnum.low,
+      roomId: 'r1',
+      current: false,
+    },
+    {
+      id: '2',
+      title: 'second',
+      priority: PriorityEnum.low,
+      roomId: 'r1',
+      current: false,
+    },
+    {
+      id: '3',
+      title: 'third',
+      priority: PriorityEnum.low,
+      roomId: 'r1',
+      current: false,
+    },
+    {
+      id: '4',
+      title: 'forth',
+      priority: PriorityEnum.low,
+      roomId: 'r1',
+      current: true,
+    },
+  ];
+
+  const mockCards = [
+    {
+      id: 'c1',
+      value: '1',
+      title: 'da',
+    },
+    {
+      id: 'c2',
+      value: '2',
+      title: 'da',
+    },
+    {
+      id: 'c3',
+      value: '3',
+      title: 'da',
+    },
+  ];
+
   const cards = settings?.cardsValue.map((card) => {
     return {
       ...card,
@@ -57,21 +181,24 @@ export function GamePage(): JSX.Element {
       setPlay(true);
       setTimerIsOver(false);
     });
-  }, [socket]);
+  }, [dispatch, socket]);
 
   useEffect(() => {
     if (timerIsOver) {
-      socket?.emit('sendGameVote', {
-        roomId: room,
-        issueId: currentIssueId,
-        userId: socket?.id,
-        cardId: currentId,
-      });
+      if (user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) {
+        socket?.emit('sendGameVote', {
+          roomId: room,
+          issueId: currentIssueId,
+          userId: socket?.id,
+          cardId: currentId,
+        });
+      }
+
       setTimerIsOver(false);
       setPlay(false);
       setCurrentId('');
     }
-  }, [currentId, currentIssueId, room, socket, timerIsOver, play]);
+  }, [currentId, currentIssueId, room, socket, timerIsOver, play, user?.role, settings?.masterAsPlayer]);
 
   const timerIsOverHandler = () => {
     setTimerIsOver(true);
@@ -88,35 +215,46 @@ export function GamePage(): JSX.Element {
 
   return (
     <Container className="page-game">
-      <Grid container>
-        <Grid className="page-game__main" item xs={12} md={7} lg={8}>
-          <Title title={title} />
-          <Grid className="page-game__start" container alignItems="flex-end" justifyContent="space-between">
-            <MemberCard
-              name={scramMaster?.firstname}
-              lastname={scramMaster?.lastname}
-              src={scramMaster?.avatar}
-              position={scramMaster?.position}
-              kickButtonDisplay={false}
-            />
-            <Timer start={play} timerIsOverHandler={timerIsOverHandler} location={location} />
-            {user?.role === 'scram-master' && play ? (
-              <Button
-                className="page-game__btn page-game__btn-outlined"
-                variant="outlined"
-                onClick={() => {
-                  socket?.emit('stopTimer', room);
-                }}
-              >
-                Stop Game
-              </Button>
-            ) : (
-              <Button className="page-game__btn page-game__btn-outlined" variant="outlined">
-                Exit
-              </Button>
-            )}
-          </Grid>
-          {user?.role === 'scram-master' && !play ? (
+      {!gameStatus ? (
+        <Grid container>
+          <Grid className="page-game__main" item xs={12} md={7} lg={8}>
+            <Title title={title} />
+            <Grid className="page-game__start" container alignItems="flex-end" justifyContent="space-between">
+              <MemberCard
+                name={scramMaster?.firstname}
+                lastname={scramMaster?.lastname}
+                src={scramMaster?.avatar}
+                position={scramMaster?.position}
+                kickButtonDisplay={false}
+              />
+              <Timer start={play} timerIsOverHandler={timerIsOverHandler} location={location} />
+              {user?.role === 'scram-master' && play ? (
+                <Button
+                  className="page-game__btn page-game__btn-outlined"
+                  variant="outlined"
+                  onClick={() => {
+                    socket?.emit('stopTimer', room);
+                  }}
+                >
+                  Stop Game
+                </Button>
+              ) : (
+                <Button
+                  className="page-game__btn page-game__btn-outlined"
+                  variant="outlined"
+                  onClick={() => {
+                    if (user?.role === 'scram-master') {
+                      dispatch(endGame());
+                    } else {
+                      console.log('exit');
+                    }
+                  }}
+                >
+                  {user?.role === 'scram-master' ? 'Stop Game' : 'Exit'}
+                </Button>
+              )}
+            </Grid>
+           {user?.role === 'scram-master' && !play ? (
             <div className="page-game__btn-container">
               <Button
                 className="page-game__btn page-game__btn-primary"
@@ -139,15 +277,37 @@ export function GamePage(): JSX.Element {
             </div>
           ) : null}
           <IssueList />
-          {cards && user?.role === 'player' && (
+          {(user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) && cards && (
             <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
           )}
+          </Grid>
+          <Grid item xs={12} md={5} lg={4} className="page-game__aside">
+            <MemberCardList />
+            <Statistics />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={5} lg={4} className="page-game__aside">
-          <MemberCardList />
-          <Statistics />
+      ) : (
+        <Grid container>
+          <div className="page-result">
+            <Title title={title} />
+            {mockRes.map((res) => (
+              <div className="page-result__block">
+                <Issue
+                  roomId="r1"
+                  key={res.issueId}
+                  id={res.issueId}
+                  title={mockIssues.find((issue) => issue.id === res.issueId)?.title as string}
+                  priority={mockIssues.find((issue) => issue.id === res.issueId)?.priority as PriorityEnum}
+                  current={mockIssues.find((issue) => issue.id === res.issueId)?.current as boolean}
+                  isResult
+                />
+                <Statistics issueId={res.issueId} />
+              </div>
+            ))}
+          </div>
         </Grid>
-      </Grid>
+      )}
+
       <AcceptUserModal />
       <KickUserModal />
     </Container>

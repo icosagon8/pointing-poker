@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { nanoid } from 'nanoid';
@@ -6,6 +6,7 @@ import { useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
 import { IssueModel } from '../../models/issueModel';
 import './IssueDialog.scss';
+import { BaseModal } from '../BaseModal/BaseModal';
 
 interface IissueDialog {
   id?: string;
@@ -71,11 +72,9 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} className="issue-dialog ">
-      <div>
+    <BaseModal open={open} handleClose={handleClose} className="issue-dialog">
+      <>
         <h3 className="issue-dialog__title">{edit ? 'Edit' : 'Create'} Issue</h3>
-      </div>
-      <DialogContent>
         <form className="issue-dialog__form" onSubmit={handleSubmit(onSubmit)}>
           <div className="issue-dialog__form__block">
             <div className="issue-dialog__form__input-wrapper">
@@ -162,22 +161,17 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
               </select>
             </div>
           </div>
-          <DialogActions className="issue-dialog__buttons">
-            <button type="submit" className="issue-dialog__btn issue-dialog__yes">
+          <div className="issue-dialog__buttons">
+            <Button className="btn btn--small" variant="contained" type="submit">
               Yes
-            </button>
-            <Button
-              onClick={handleClose}
-              variant="outlined"
-              color="primary"
-              className="issue-dialog__btn issue-dialog__no"
-            >
+            </Button>
+            <Button className="btn btn--small btn--cancel" variant="outlined" color="primary" onClick={handleClose}>
               No
             </Button>
-          </DialogActions>
+          </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </>
+    </BaseModal>
   );
 };
 
