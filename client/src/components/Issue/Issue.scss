@@ -99,6 +99,14 @@
   &__score-title {
     font-weight: 300;
   }
+
+  &__popper {
+    border: 1px solid #ececec;
+    border-radius: 5px;
+    font-family: 'Roboto';
+    padding: 5px;
+    background-color: #fff;
+  }
 }
 
 .lobby-page__info .issue__score {
