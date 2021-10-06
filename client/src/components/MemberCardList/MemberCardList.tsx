@@ -15,7 +15,9 @@ export function MemberCardList(): JSX.Element {
   const isVoting = useAppSelector((state) => state.voting.isVoting);
   const users = useAppSelector((state) => state.users.users);
   const settings = useAppSelector((state) => state.settings.settings);
-  const players = settings?.masterAsPlayer ? users : users.filter((currentUser) => currentUser.role !== 'scram-master');
+  const players = users.filter(
+    (currentUser) => currentUser.role === 'player' || (settings?.masterAsPlayer && currentUser.role === 'scram-master')
+  );
 
   return (
     <div className="member-list">

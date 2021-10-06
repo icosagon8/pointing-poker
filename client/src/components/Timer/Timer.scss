@@ -1,7 +1,7 @@
 .timer {
   font-family: 'Ruda';
   width: 120px;
-  height: 53px;
+  padding: 5px;
   overflow: visible;
 
   &__titles {
@@ -29,12 +29,13 @@
     border-radius: 5px;
     box-shadow: inset 1px 3px 5px 1px rgba(238, 238, 238, 1);
     outline: none;
+    line-height: 1;
   }
 
   &__counter {
-    padding: 0 7px;
     font-weight: 700;
-    font-size: 42px;
+    font-size: 37px;
     line-height: 1;
+    text-align: center;
   }
 }

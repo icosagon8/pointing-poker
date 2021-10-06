@@ -4,7 +4,15 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { addUser, deleteUser, getUser, getUsers, checkRoom, deleteUsersInRoom, getScramMasterInRoom } from './users';
-import { addStatus, waitingGame, gameInProgress, endGame, checkStatusGame, deleteStatusGameInRoom } from './statusGame';
+import {
+  addStatus,
+  waitingGame,
+  gameInProgress,
+  endGame,
+  checkStatusGame,
+  deleteStatusGameInRoom,
+  roundInProgress,
+} from './statusGame';
 import {
   addIssue,
   editIssue,
@@ -13,6 +21,7 @@ import {
   setCurrentIssueClick,
   nextIssue,
   deleteIssuesInRoom,
+  setScoreIssue,
 } from './issues';
 import { sendSettings, getSettings, getSettingsAdmitUser } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
@@ -45,7 +54,8 @@ io.on('connection', (socket: Socket) => {
       io.in(room).emit('users', getUsers(room));
       callback();
     } else if (getSettingsAdmitUser(room)) {
-      io.to(user.id).emit('redirectToGame', getUsers(room));
+      io.to(user.id).emit('redirectToGame');
+      io.in(room).emit('users', getUsers(room));
     } else {
       io.to(getScramMasterInRoom(room).id).emit('loginRequest', user.id, firstname, lastname, room);
       io.to(user.id).emit('waitingEnterGame');
@@ -71,6 +81,10 @@ io.on('connection', (socket: Socket) => {
     gameInProgress(room);
   });
 
+  socket.on('statusGame-round', (room) => {
+    roundInProgress(room);
+  });
+
   socket.on('statusGame-end', (room) => {
     endGame(room);
   });
@@ -80,7 +94,7 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('cancelGame', (room) => {
-    io.in(room).emit('redirectToHomePage');
+    io.in(room).emit('logout');
     deleteUsersInRoom(room);
     deleteIssuesInRoom(room);
     deleteStatusGameInRoom(room);
@@ -144,6 +158,11 @@ io.on('connection', (socket: Socket) => {
     io.in(room).emit('issues', getIssues(room));
   });
 
+  socket.on('setScoreIssue', (id, score, room) => {
+    setScoreIssue(id, score);
+    io.in(room).emit('scoreIssue', score);
+  });
+
   socket.on('disconnect', () => {
     deleteUser(socket.id);
   });
@@ -174,6 +193,7 @@ io.on('connection', (socket: Socket) => {
     } else {
       io.in(room).emit('startVoting');
       addVote(true, room);
+      addVote(false, room);
       const users = getUsers(room);
 
       users.forEach((user) => {
@@ -190,13 +210,12 @@ io.on('connection', (socket: Socket) => {
     const votes = getVotes(room);
     const users = getUsers(room);
 
-    if (votes.length + 1 === users.length) {
+    if (votes.length === users.length) {
       const result = getResult(votes);
+      io.in(room).emit('endVoting');
 
       if (result) {
         deleteUser(id);
-        deleteVotes(room);
-        io.in(room).emit('endVoting');
         io.to(id).emit('logout');
         io.in(room).emit('users', getUsers(room));
         const messageId = nanoid();
@@ -208,6 +227,8 @@ io.on('connection', (socket: Socket) => {
           type: 'system',
         });
       }
+
+      deleteVotes(room);
     }
   });
 

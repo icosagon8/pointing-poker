@@ -57,8 +57,7 @@ export function LobbyForm(props: Props): JSX.Element {
   }, [dispatch, socket]);
 
   useEffect(() => {
-    socket?.on('redirectToGame', (users) => {
-      dispatch(addUsers(users));
+    socket?.on('redirectToGame', () => {
       history.push('/game');
     });
     socket?.on('rejectEnterToGame', () => {
@@ -109,12 +108,12 @@ export function LobbyForm(props: Props): JSX.Element {
           <Controller
             name="role"
             control={control}
-            defaultValue="observer"
+            defaultValue="player"
             render={({ field }) => (
               <FormControlLabel
                 control={
                   <Switch
-                    color="default"
+                    color="primary"
                     {...field}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       const value = e.target.value === 'observer' ? 'player' : 'observer';

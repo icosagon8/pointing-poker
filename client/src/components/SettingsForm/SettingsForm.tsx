@@ -29,7 +29,7 @@ export const SettingsForm = (): JSX.Element => {
   const [gameCards, setGameCards] = useState<GameCardType[]>([]);
 
   const getCardValues = (n: number, cb: (n: number) => number) => {
-    const numbers: number[] = [];
+    const numbers: number[] = [0];
     let i = 0;
 
     while (numbers.length < n) {
@@ -90,12 +90,10 @@ export const SettingsForm = (): JSX.Element => {
                 className="settings-form__block-switch"
                 label={<Typography className="settings-form__label">Scram master as player:</Typography>}
                 labelPlacement="start"
-                control={<Switch {...field} checked={field.value} />}
+                control={<Switch {...field} checked={field.value} color="primary" />}
               />
             )}
           />
-        </>
-        <>
           <Controller
             name="admitNewUser"
             control={control}
@@ -105,16 +103,14 @@ export const SettingsForm = (): JSX.Element => {
                 className="settings-form__block-switch"
                 label={
                   <Typography className="settings-form__label">
-                    Automatically admit all new player, if the game has already started
+                    Automatically admit all new player, if the game has already started:
                   </Typography>
                 }
                 labelPlacement="start"
-                control={<Switch {...field} checked={field.value} />}
+                control={<Switch {...field} checked={field.value} color="primary" />}
               />
             )}
           />
-        </>
-        <>
           <Controller
             name="changingCard"
             control={control}
@@ -124,12 +120,10 @@ export const SettingsForm = (): JSX.Element => {
                 className="settings-form__block-switch"
                 label={<Typography className="settings-form__label">Changing card in round end:</Typography>}
                 labelPlacement="start"
-                control={<Switch {...field} checked={field.value} />}
+                control={<Switch {...field} checked={field.value} color="primary" />}
               />
             )}
           />
-        </>
-        <>
           <Controller
             name="timerIsNeeded"
             control={control}
@@ -139,10 +133,32 @@ export const SettingsForm = (): JSX.Element => {
                 className="settings-form__block-switch"
                 label={<Typography className="settings-form__label">Is timer needed:</Typography>}
                 labelPlacement="start"
-                control={<Switch {...field} checked={field.value} />}
+                control={<Switch {...field} checked={field.value} color="primary" />}
               />
             )}
           />
+          {watchTimer && (
+            <div className="settings-form__block">
+              <div className="settings-form__input-block">
+                <Title title="Round time:" />
+                <Timer register={register} start={false} location="lobby-page" />
+              </div>
+              <>
+                {errors.timerHours?.type === 'required' && (
+                  <p className="settings-form__error-text">{errors.timerHours.types?.required}</p>
+                )}
+                {errors.timerHours?.type === 'pattern' && (
+                  <p className="settings-form__error-text">{errors.timerHours.types?.pattern}</p>
+                )}
+                {errors.timerMinutes?.type === 'required' && (
+                  <p className="settings-form__error-text">{errors.timerMinutes.types?.required}</p>
+                )}
+                {errors.timerMinutes?.type === 'pattern' && (
+                  <p className="settings-form__error-text">{errors.timerMinutes.types?.pattern}</p>
+                )}
+              </>
+            </div>
+          )}
         </>
         <div className="settings-form__block">
           <div className="settings-form__input-block">
@@ -159,10 +175,6 @@ export const SettingsForm = (): JSX.Element => {
                   value: 30,
                   message: 'Max length is 30',
                 },
-                pattern: {
-                  value: /^[\w]*$/m,
-                  message: 'This input must match the pattern',
-                },
               })}
             />
           </div>
@@ -172,9 +184,6 @@ export const SettingsForm = (): JSX.Element => {
             )}
             {errors.scoreType?.type === 'required' && (
               <p className="settings-form__error-text">{errors.scoreType.types?.required}</p>
-            )}
-            {errors.scoreType?.type === 'pattern' && (
-              <p className="settings-form__error-text">{errors.scoreType.types?.pattern}</p>
             )}
           </>
         </div>
@@ -193,10 +202,6 @@ export const SettingsForm = (): JSX.Element => {
                   value: 2,
                   message: 'Max length is 2',
                 },
-                pattern: {
-                  value: /^[\w]*$/m,
-                  message: 'This input must match the pattern',
-                },
               })}
             />
           </div>
@@ -207,48 +212,21 @@ export const SettingsForm = (): JSX.Element => {
             {errors.scoreTypeShort?.type === 'required' && (
               <p className="settings-form__error-text">{errors.scoreTypeShort.types?.required}</p>
             )}
-            {errors.scoreTypeShort?.type === 'pattern' && (
-              <p className="settings-form__error-text">{errors.scoreTypeShort.types?.pattern}</p>
-            )}
           </>
         </div>
-        {watchTimer && (
-          <div className="settings-form__block">
-            <div className="settings-form__input-block">
-              <Title title="Round time:" />
-              <Timer register={register} start={false} location="lobby-page" />
-            </div>
-            <>
-              {errors.timerHours?.type === 'maxLength' && (
-                <p className="settings-form__error-text">{errors.timerHours.types?.maxLength}</p>
-              )}
-              {errors.timerHours?.type === 'required' && (
-                <p className="settings-form__error-text">{errors.timerHours.types?.required}</p>
-              )}
-              {errors.timerHours?.type === 'pattern' && (
-                <p className="settings-form__error-text">{errors.timerHours.types?.pattern}</p>
-              )}
-              {errors.timerMinutes?.type === 'maxLength' && (
-                <p className="settings-form__error-text">{errors.timerMinutes.types?.maxLength}</p>
-              )}
-              {errors.timerMinutes?.type === 'required' && (
-                <p className="settings-form__error-text">{errors.timerMinutes.types?.required}</p>
-              )}
-              {errors.timerMinutes?.type === 'pattern' && (
-                <p className="settings-form__error-text">{errors.timerMinutes.types?.pattern}</p>
-              )}
-            </>
-          </div>
-        )}
         <div className="settings-form__block">
           <div className="settings-form__input-block">
             <label htmlFor="card-set" className="settings-form__label">
               Choose your card set:
             </label>
-            <select id="card-set" className="settings-form__input" {...register('cardSet')}>
+            <select
+              id="card-set"
+              className="settings-form__input settings-form__input--select"
+              {...register('cardSet')}
+            >
               <option value="Own">Own</option>
-              <option value="Fibonacci">Fibonacci</option>
-              <option value="Powers of 2">Powers of 2</option>
+              <option value="Fibonacci">Fibonacci (0, 1, 2, 3, 5, 8, 13, 21, 34, 55, &#9749;)</option>
+              <option value="Powers of 2">Powers of 2 (0, 1, 2, 4, 8, 16, 32, 64, 128, 256, &#9749;)</option>
             </select>
           </div>
         </div>

@@ -15,7 +15,9 @@ import { off } from '../../store/slices/chatSlice';
 import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
 import { endVoting, startVoting } from '../../store/slices/votingSlice';
 import { EditableTitle } from '../../components/EditableTitle/EditableTitle';
-import { setTitle } from '../../store/slices/titleSlice';
+import { resetTitle, setTitle } from '../../store/slices/titleSlice';
+import { cleanIssues } from '../../store/slices/issuesSlice';
+import { deleteUsers } from '../../store/slices/usersSlice';
 
 export const LobbyPage = (): JSX.Element => {
   const isOpen = useAppSelector((state) => state.chat.isOpen);
@@ -32,8 +34,12 @@ export const LobbyPage = (): JSX.Element => {
       if (chatOpen) {
         dispatch(off());
       }
+
       dispatch(beforeGameStatusGame());
       dispatch(deleteUser());
+      dispatch(resetTitle());
+      dispatch(cleanIssues());
+      dispatch(deleteUsers());
       history.push('/');
       socket?.disconnect();
     });
