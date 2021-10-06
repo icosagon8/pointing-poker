@@ -17,22 +17,25 @@
     font-size: 24px;
   }
 
-  &__link-block {
+  &__link-container {
     display: flex;
     align-items: center;
     margin-bottom: 30px;
   }
 
+  &__link-text-wrapper {
+    min-width: 100px;
+    max-width: 276px;
+  }
+
   &__link {
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
+    padding: 10px;
     overflow: hidden;
     white-space: nowrap;
+    text-overflow: ellipsis;
     font-size: 24px;
     font-family: 'Roboto';
     font-weight: 300;
-    width: 276px;
     height: 47px;
     margin: 0;
     border: none;

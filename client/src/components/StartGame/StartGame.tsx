@@ -3,18 +3,14 @@ import { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { UserModel } from '../../models/userModel';
-import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
-import { off } from '../../store/slices/chatSlice';
-import { cleanIssues } from '../../store/slices/issuesSlice';
+import { useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
 import './StartGame.scss';
 
 export const StartGame = (): JSX.Element => {
-  const dispatch = useAppDispatch();
   const { socket } = useContext(SocketContext);
   const history = useHistory();
   const room = useAppSelector((state) => state.room.room);
-  const chatOpen = useAppSelector((state) => state.chat.isOpen);
   const link = `http://localhost:3000/${room}`;
   const users = useAppSelector((state) => state.users.users);
   const scramMaster = users.find((user) => user.role === 'scram-master') as UserModel;
@@ -24,14 +20,7 @@ export const StartGame = (): JSX.Element => {
     socket?.on('redirectToNewGame', () => {
       history.push('/game');
     });
-    socket?.on('redirectToHomePage', () => {
-      if (chatOpen) {
-        dispatch(off());
-      }
-      dispatch(cleanIssues());
-      history.push('/');
-    });
-  }, [socket, dispatch, history, chatOpen]);
+  }, [socket, history]);
 
   const handleClickCancel = () => {
     socket?.emit('cancelGame', room);
@@ -54,12 +43,14 @@ export const StartGame = (): JSX.Element => {
       {user?.role === 'scram-master' && (
         <>
           <h3 className="start-game__to-lobby">Link to lobby:</h3>
-          <div className="start-game__link-block">
-            <p className="start-game__link">{link}</p>
+          <div className="start-game__link-container">
+            <div className="start-game__link-text-wrapper">
+              <p className="start-game__link">{link}</p>
+            </div>
             <Button
               variant="contained"
               color="primary"
-              className="start-game__btn start-game__copy"
+              className="btn btn--small"
               onClick={() => navigator.clipboard.writeText(link)}
             >
               Copy
@@ -70,20 +61,14 @@ export const StartGame = (): JSX.Element => {
       <div className="start-game__btn-block">
         {user?.role === 'scram-master' ? (
           <>
-            <Button
-              form="modalForm"
-              variant="contained"
-              type="submit"
-              color="primary"
-              className="start-game__btn start-game__copy"
-            >
+            <Button form="modalForm" variant="contained" type="submit" className="btn btn--small">
               Start game
             </Button>
 
             <Button
               variant="outlined"
               color="primary"
-              className="start-game__btn start-game__cancel"
+              className="btn btn--small btn--cancel"
               onClick={handleClickCancel}
             >
               Cancel game

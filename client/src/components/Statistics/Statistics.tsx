@@ -18,7 +18,7 @@ export function Statistics(): JSX.Element {
           <li className="statistics__item" key={card.id}>
             <GameCard title={title} value={card.value} id={card.id} />
             <div className="statistics__percent">
-              {results && results.find((res) => res.cardId === card.id)?.percent.toFixed(2)}%
+              {results && results.find((res) => res.cardId === card.id)?.percent.toFixed(1)}%
             </div>
           </li>
         ))}

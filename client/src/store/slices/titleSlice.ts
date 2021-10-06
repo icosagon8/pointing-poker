@@ -15,9 +15,12 @@ const titleSlice = createSlice({
     setTitle: (state, action) => {
       state.title = action.payload;
     },
+    resetTitle: (state) => {
+      state.title = initialState.title;
+    },
   },
 });
 
-export const { setTitle } = titleSlice.actions;
+export const { setTitle, resetTitle } = titleSlice.actions;
 
 export default titleSlice.reducer;

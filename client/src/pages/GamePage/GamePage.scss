@@ -41,8 +41,14 @@
     gap: 10px;
   }
 
-  .card-list {
+  &__cards {
     margin-top: 60px;
+  }
+
+  &__cards-title {
+    font-size: 28px;
+    text-align: center;
+    font-family: 'Ruda';
   }
 }
 
