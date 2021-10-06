@@ -9,6 +9,7 @@
   margin-bottom: 20px;
 
   &__block-switch {
+    cursor: auto;
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -37,13 +38,19 @@
     outline: 0;
   }
 
+  &__input--select {
+    font-size: 14px;
+    letter-spacing: -0.7px;
+    flex-shrink: 0;
+  }
+
   &__input-block {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
   }
 
   &__label {
-    cursor: pointer;
     font-family: 'Ruda';
     font-size: 24px;
     font-weight: 700;
@@ -75,4 +82,10 @@
 
 .settings-form-wrapper {
   max-width: 550px;
+}
+
+@media (max-width: 640px) {
+  .settings-form__input-block {
+    flex-wrap: wrap;
+  }
 }

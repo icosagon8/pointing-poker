@@ -20,6 +20,11 @@ export const gameInProgress = (room: string): void => {
   statusGame.statusGame = 'game-in-progress';
 };
 
+export const roundInProgress = (room: string): void => {
+  const statusGame = statusGames.find((item) => item.room === room) as StatusGameModel;
+  statusGame.statusGame = 'round-in-progress';
+};
+
 export const endGame = (room: string): void => {
   const statusGame = statusGames.find((item) => item.room === room) as StatusGameModel;
   statusGame.statusGame = 'end-game';

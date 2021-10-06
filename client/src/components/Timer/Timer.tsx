@@ -60,13 +60,10 @@ export function Timer(props: TimeType): JSX.Element {
             className="timer__edit-input"
             type="text"
             autoComplete="off"
+            maxLength={2}
             {...(register && {
               ...register('timerHours', {
                 required: 'Enter the time',
-                maxLength: {
-                  value: 2,
-                  message: 'Max length is 2',
-                },
                 pattern: {
                   value: /^[\d]*$/m,
                   message: 'This input must match the pattern',
@@ -79,13 +76,10 @@ export function Timer(props: TimeType): JSX.Element {
             className="timer__edit-input"
             type="text"
             autoComplete="off"
+            maxLength={2}
             {...(register && {
               ...register('timerMinutes', {
                 required: 'Enter the time',
-                maxLength: {
-                  value: 2,
-                  message: 'Max length is 2',
-                },
                 pattern: {
                   value: /^[\d]*$/m,
                   message: 'This input must match the pattern',
