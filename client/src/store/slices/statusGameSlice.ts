@@ -27,9 +27,13 @@ const statusGameSlice = createSlice({
     endGame: (state) => {
       state.statusGame = 'end-game';
     },
+    getStatusGame: (state, action) => {
+      state.statusGame = action.payload;
+    },
   },
 });
 
-export const { waitingGame, gameInProgress, endGame, beforeGameStatusGame, roundInProgress } = statusGameSlice.actions;
+export const { waitingGame, gameInProgress, endGame, beforeGameStatusGame, roundInProgress, getStatusGame } =
+  statusGameSlice.actions;
 
 export default statusGameSlice.reducer;

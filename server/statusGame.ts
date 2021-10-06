@@ -43,3 +43,8 @@ export const checkStatusGame = (room: string): string => {
   }
   return statusGame.statusGame;
 };
+
+export const getStatusGame = (room: string): string => {
+  const statusGame = statusGames.find((item) => item.room === room) as StatusGameModel;
+  return statusGame.statusGame;
+};
