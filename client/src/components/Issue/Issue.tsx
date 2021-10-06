@@ -1,8 +1,7 @@
 import './Issue.scss';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import { Card, IconButton, Popper } from '@material-ui/core';
-import { createStyles, Theme } from '@material-ui/core/styles';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { useLocation } from 'react-router-dom';
 import { IssueDialog } from '../IssueDialog/IssueDialog';
@@ -23,12 +22,8 @@ export const Issue = (props: IssueModel): JSX.Element => {
   const room = useAppSelector((state) => state.room.room);
   const scoreTypeShort = useAppSelector((state) => state.settings.settings?.scoreTypeShort);
   const status = useAppSelector((state) => state.statusGame.statusGame);
-
-  useEffect(() => {
-    socket?.on('scoreIssue', (scoreIssue) => {
-      setValueScore(scoreIssue);
-    });
-  }, [socket]);
+  const issues = useAppSelector((state) => state.issues.issues);
+  const issueCurrent = issues.find((item) => item.id === id) as IssueModel;
 
   const handleClickCard = () => {
     if (user?.role === 'scram-master' && location.pathname === '/game') {
@@ -66,7 +61,7 @@ export const Issue = (props: IssueModel): JSX.Element => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
-  const handlehoverPopperClose = (event: React.MouseEvent<HTMLElement>) => {
+  const handlehoverPopperClose = () => {
     setAnchorEl(null);
   };
 
@@ -98,7 +93,7 @@ export const Issue = (props: IssueModel): JSX.Element => {
           </>
         )}
         <div className="issue__score">
-          {user?.role === 'scram-master' ? (
+          {user?.role === 'scram-master' && status !== 'end-game' ? (
             <label className="issue__score-label" htmlFor="score">
               Score:
               <input
@@ -113,7 +108,7 @@ export const Issue = (props: IssueModel): JSX.Element => {
           ) : (
             <p className="issue__score-text">
               <span className="issue__score-title">Score:</span>
-              {valueScore !== '-' ? `${valueScore} ${scoreTypeShort}` : '-'}
+              {issueCurrent.score !== undefined ? `${issueCurrent.score} ${scoreTypeShort}` : '-'}
             </p>
           )}
         </div>
@@ -124,8 +119,8 @@ export const Issue = (props: IssueModel): JSX.Element => {
         </a>
       )}
       {description && (
-        <Popper id={idPopper} open={openPopper} anchorEl={anchorEl}>
-          <div className="issue__popper">{description}</div>
+        <Popper id={idPopper} open={openPopper} anchorEl={anchorEl} placement="top-start">
+          <div className="issue__popper-text">{description}</div>
         </Popper>
       )}
     </Card>

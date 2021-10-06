@@ -23,14 +23,7 @@
     flex-wrap: wrap;
     list-style: none;
     padding: 0;
-  }
-
-  &__item {
-    margin-right: 14px;
-
-    &:last-child {
-      margin-right: 0;
-    }
+    gap: 14px;
   }
 
   &__percent {

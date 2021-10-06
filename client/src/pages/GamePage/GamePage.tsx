@@ -13,7 +13,6 @@ import { CardList } from '../../components/CardList/CardList';
 import { AcceptUserModal } from '../../components/AcceptUserModal/AcceptUserModal';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { SocketContext } from '../../socketContext';
-
 import { beforeGameStatusGame, endGame, gameInProgress, roundInProgress } from '../../store/slices/statusGameSlice';
 import { UserModel } from '../../models/userModel';
 import { addVote } from '../../store/slices/gameVoteSlice';
@@ -216,11 +215,11 @@ export function GamePage(): JSX.Element {
           <Grid container className="page-result">
             <Title title={title} />
             <div className="page-result__wrapper">
-              <div className="page-result">
+              <div className="page-result__results">
                 {results.map((res) => (
                   <div className="page-result__block" key={res.issueId}>
                     <Issue
-                      roomId="r1"
+                      roomId={room}
                       key={res.issueId}
                       id={res.issueId}
                       title={issues.find((issue) => issue.id === res.issueId)?.title as string}
@@ -228,7 +227,6 @@ export function GamePage(): JSX.Element {
                       current={issues.find((issue) => issue.id === res.issueId)?.current as boolean}
                       link={issues.find((issue) => issue.id === res.issueId)?.link as string}
                       description={issues.find((issue) => issue.id === res.issueId)?.description as string}
-                      isResult
                     />
                     <Statistics issueId={res.issueId} />
                   </div>
