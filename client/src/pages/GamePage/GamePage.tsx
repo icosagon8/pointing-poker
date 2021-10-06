@@ -113,6 +113,8 @@ export function GamePage(): JSX.Element {
       priority: PriorityEnum.low,
       roomId: 'r1',
       current: false,
+      link: '1',
+      description: '1',
     },
     {
       id: '2',
@@ -120,6 +122,8 @@ export function GamePage(): JSX.Element {
       priority: PriorityEnum.low,
       roomId: 'r1',
       current: false,
+      link: '1',
+      description: '1',
     },
     {
       id: '3',
@@ -127,6 +131,8 @@ export function GamePage(): JSX.Element {
       priority: PriorityEnum.low,
       roomId: 'r1',
       current: false,
+      link: '1',
+      description: '1',
     },
     {
       id: '4',
@@ -134,6 +140,8 @@ export function GamePage(): JSX.Element {
       priority: PriorityEnum.low,
       roomId: 'r1',
       current: true,
+      link: '1',
+      description: '1',
     },
   ];
 
@@ -254,32 +262,32 @@ export function GamePage(): JSX.Element {
                 </Button>
               )}
             </Grid>
-           {user?.role === 'scram-master' && !play ? (
-            <div className="page-game__btn-container">
-              <Button
-                className="page-game__btn page-game__btn-primary"
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  socket?.emit('startTimer', room);
-                }}
-              >
-                Run Round
-              </Button>
-              <Button
-                className="page-game__btn page-game__btn-primary"
-                variant="contained"
-                color="primary"
-                onClick={handleClickNextIssue}
-              >
-                Next ISSUE
-              </Button>
-            </div>
-          ) : null}
-          <IssueList />
-          {(user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) && cards && (
-            <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
-          )}
+            {user?.role === 'scram-master' && !play ? (
+              <div className="page-game__btn-container">
+                <Button
+                  className="page-game__btn page-game__btn-primary"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    socket?.emit('startTimer', room);
+                  }}
+                >
+                  Run Round
+                </Button>
+                <Button
+                  className="page-game__btn page-game__btn-primary"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleClickNextIssue}
+                >
+                  Next ISSUE
+                </Button>
+              </div>
+            ) : null}
+            <IssueList />
+            {(user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) && cards && (
+              <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
+            )}
           </Grid>
           <Grid item xs={12} md={5} lg={4} className="page-game__aside">
             <MemberCardList />
@@ -299,6 +307,8 @@ export function GamePage(): JSX.Element {
                   title={mockIssues.find((issue) => issue.id === res.issueId)?.title as string}
                   priority={mockIssues.find((issue) => issue.id === res.issueId)?.priority as PriorityEnum}
                   current={mockIssues.find((issue) => issue.id === res.issueId)?.current as boolean}
+                  link={mockIssues.find((issue) => issue.id === res.issueId)?.link as string}
+                  description={mockIssues.find((issue) => issue.id === res.issueId)?.description as string}
                   isResult
                 />
                 <Statistics issueId={res.issueId} />
