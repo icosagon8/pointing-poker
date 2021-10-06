@@ -8,6 +8,7 @@ export interface IssueModel {
   description: string;
   score?: string;
   isResult?: boolean;
+}
 
 export enum PriorityEnum {
   low = 'low',

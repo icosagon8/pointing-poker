@@ -3,7 +3,8 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import { useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useRef, useState, useEffect } from 'react';
 import GameCardType from '../../models/iGameCard';
 
 export const GameCard = (props: GameCardType): JSX.Element => {
@@ -11,6 +12,14 @@ export const GameCard = (props: GameCardType): JSX.Element => {
   const [cardNumber, setCardNumber] = useState<string>(value);
   const [edit, setEdit] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/lobby') {
+      ref.current?.focus();
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value);
     if (gameCards && setGameCards) {
