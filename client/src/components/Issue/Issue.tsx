@@ -10,7 +10,7 @@ import { SocketContext } from '../../socketContext';
 import { useAppSelector } from '../../store/hooks/hooks';
 
 export const Issue = (props: IssueModel): JSX.Element => {
-  const { title, priority, id, current, roomId, isResult } = props;
+  const { title, priority, id, current, roomId } = props;
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { socket } = useContext(SocketContext);
