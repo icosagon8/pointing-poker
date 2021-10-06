@@ -100,8 +100,9 @@
     font-weight: 300;
   }
 
-  &__popper {
-    border: 1px solid #ececec;
+  &__popper-text {
+    max-width: 300px;
+    border: 1px solid #66999b;
     border-radius: 5px;
     font-family: 'Roboto';
     padding: 5px;

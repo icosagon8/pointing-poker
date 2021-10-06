@@ -29,8 +29,8 @@ export function Statistics(props: StatisticState): JSX.Element {
             <li className="statistics__item" key={card.id}>
               <GameCard title={title} value={card.value} id={card.id} />
               <div className="statistics__percent">
-                {results && !endResults && results.find((res) => res.cardId === card.id)?.percent.toFixed(2)}
-                {endResults && endResults.find((res) => res.cardId === card.id)?.percent.toFixed(2)}%
+                {results && !endResults && results.find((res) => res.cardId === card.id)?.percent.toFixed(1)}
+                {endResults && endResults.find((res) => res.cardId === card.id)?.percent.toFixed(1)}%
               </div>
             </li>
           ))}

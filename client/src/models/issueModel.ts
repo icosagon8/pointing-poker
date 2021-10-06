@@ -7,7 +7,6 @@ export interface IssueModel {
   current: boolean;
   description: string;
   score?: string;
-  isResult?: boolean;
 }
 
 export enum PriorityEnum {

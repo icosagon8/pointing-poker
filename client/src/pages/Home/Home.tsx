@@ -11,7 +11,7 @@ export function Home(): JSX.Element {
   const { setSocket } = useContext(SocketContext);
 
   useEffect(() => {
-    const ENDPOINT = 'http://localhost:8080';
+    const ENDPOINT = 'https://pointing-poker-server-rss.herokuapp.com/';
     const newSocket = io(ENDPOINT, { transports: ['websocket', 'polling'] });
     setSocket(newSocket);
   }, [setSocket]);

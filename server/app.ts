@@ -160,7 +160,7 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('setScoreIssue', (id, score, room) => {
     setScoreIssue(id, score);
-    io.in(room).emit('scoreIssue', score);
+    io.in(room).emit('issues', getIssues(room));
   });
 
   socket.on('disconnect', () => {
