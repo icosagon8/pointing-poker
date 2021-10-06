@@ -16,7 +16,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
     if (lobbyPage) {
       ref.current?.focus();
     }
-  }, []);
+  }, [location.pathname]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value);

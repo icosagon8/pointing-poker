@@ -15,13 +15,15 @@ export function App(): JSX.Element {
         <Provider store={store}>
           <SocketProvider>
             <Router>
-              <Header />
-              <Switch>
-                {ROUTES.map((route) => (
-                  <Route path={route.path} exact={route.exact} component={route.component} key={route.path} />
-                ))}
-              </Switch>
-              <Footer />
+              <div className="app">
+                <Header />
+                <Switch>
+                  {ROUTES.map((route) => (
+                    <Route path={route.path} exact={route.exact} component={route.component} key={route.path} />
+                  ))}
+                </Switch>
+                <Footer />
+              </div>
             </Router>
           </SocketProvider>
         </Provider>

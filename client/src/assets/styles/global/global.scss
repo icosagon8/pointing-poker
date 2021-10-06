@@ -60,3 +60,13 @@ img {
   }
 
 }
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__main {
+    flex-grow: 1;
+  }
+}

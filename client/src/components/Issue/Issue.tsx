@@ -12,7 +12,7 @@ import { useAppSelector } from '../../store/hooks/hooks';
 
 export const Issue = (props: IssueModel): JSX.Element => {
   const [valueScore, setValueScore] = useState<string>('-');
-  const { title, link, priority, id, current, roomId, description, isResult } = props;
+  const { title, link, priority, id, current, roomId, description } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const openPopper = Boolean(anchorEl);
   const idPopper = openPopper ? 'simple-popper' : undefined;
@@ -118,12 +118,16 @@ export const Issue = (props: IssueModel): JSX.Element => {
           )}
         </div>
       </div>
-      <a className="issue__link" href={link} target="_blank" rel="noreferrer" onClick={handleClickLink}>
-        link on issue {`>`}
-      </a>
-      <Popper id={idPopper} open={openPopper} anchorEl={anchorEl}>
-        <div className="issue__popper">{description}</div>
-      </Popper>
+      {link && (
+        <a className="issue__link" href={link} target="_blank" rel="noreferrer" onClick={handleClickLink}>
+          link on issue {`>`}
+        </a>
+      )}
+      {description && (
+        <Popper id={idPopper} open={openPopper} anchorEl={anchorEl}>
+          <div className="issue__popper">{description}</div>
+        </Popper>
+      )}
     </Card>
   );
 };
