@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Issue = (props: IssueModel): JSX.Element => {
   const classes = useStyles();
   const [valueScore, setValueScore] = useState<string>('-');
-  const { title, link, priority, id, current, roomId, description, isResult } = props;
+  const { title, link, priority, id, current, roomId, description } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const openPopover = Boolean(anchorEl);
   const [open, setOpen] = useState(false);
@@ -89,7 +89,6 @@ export const Issue = (props: IssueModel): JSX.Element => {
       aria-haspopup="true"
       onMouseEnter={handlePopoverOpen}
       onMouseLeave={handlePopoverClose}
-
     >
       <div className="issue__text">
         {current && location.pathname === '/game' && status !== 'end-game' && (
@@ -131,32 +130,36 @@ export const Issue = (props: IssueModel): JSX.Element => {
           )}
         </div>
       </div>
-      <a className="issue__link" href={link} target="_blank" rel="noreferrer" onClick={handleClickLink}>
-        link on issue {`>`}
-      </a>
-      <Popover
-        id="mouse-over-popover"
-        className={classes.popover}
-        classes={{
-          paper: classes.paper,
-        }}
-        open={openPopover}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus
-        disableAutoFocus
-        disableEnforceFocus
-      >
-        <Typography>{description}</Typography>
-      </Popover>
+      {link && (
+        <a className="issue__link" href={link} target="_blank" rel="noreferrer" onClick={handleClickLink}>
+          link on issue {`>`}
+        </a>
+      )}
+      {description && (
+        <Popover
+          id="mouse-over-popover"
+          className={classes.popover}
+          classes={{
+            paper: classes.paper,
+          }}
+          open={openPopover}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+          disableAutoFocus
+          disableEnforceFocus
+        >
+          <Typography>{description}</Typography>
+        </Popover>
+      )}
     </Card>
   );
 };

@@ -84,6 +84,7 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
               <input
                 id="title"
                 className="issue-dialog__form__input"
+                autoComplete="off"
                 {...register('title', {
                   required: 'Enter issue title',
                   maxLength: {
@@ -108,11 +109,10 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
               <input
                 id="link"
                 className="issue-dialog__form__input"
+                autoComplete="off"
                 {...register('link', {
-                  required: 'Enter link',
                   pattern: {
-                    value:
-                      /https?:\/\/(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]{1,6}\b([-a-zA-Z\d()@:%_+.~#?&//=]*)/i,
+                    value: /https?:\/\/(www\.)?[-a-z\d@:%._+~#=]{1,256}[.:][a-z\d()]{1,6}\b([-a-z\d()@:%_+.~#?&//=]*)/i,
                     message: 'This input must match the pattern.',
                   },
                 })}
@@ -120,9 +120,6 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
             </div>
             {errors.link?.type === 'pattern' && (
               <p className="issue-dialog__form__error-text">{errors.link.types?.pattern}</p>
-            )}
-            {errors.link?.type === 'required' && (
-              <p className="issue-dialog__form__error-text">{errors.link.types?.required}</p>
             )}
           </div>
           <div className="issue-dialog__form__block">
@@ -133,8 +130,8 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
               <input
                 id="description"
                 className="issue-dialog__form__input"
+                autoComplete="off"
                 {...register('description', {
-                  required: 'Enter issue description',
                   maxLength: {
                     value: 120,
                     message: 'Max length is 120',
@@ -144,9 +141,6 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
             </div>
             {errors.description?.type === 'maxLength' && (
               <p className="issue-dialog__form__error-text">{errors.description.types?.maxLength}</p>
-            )}
-            {errors.description?.type === 'required' && (
-              <p className="issue-dialog__form__error-text">{errors.description.types?.required}</p>
             )}
           </div>
           <div className="issue-dialog__form__block issue-dialog__form__priority">

@@ -70,26 +70,28 @@ export const LobbyPage = (): JSX.Element => {
   };
 
   return (
-    <Container>
-      <Grid container>
-        <Grid item xs={12} md={7} lg={8} className="lobby-page__info">
-          <EditableTitle title={title} onSave={handleSave} editButtonDisplay={user?.role === 'scram-master'} />
-          <StartGame />
-          <MembersList />
-          {user?.role === 'scram-master' && (
-            <>
-              <IssueList />
-              <GameSettings />
-            </>
+    <main className="app__main">
+      <Container>
+        <Grid container>
+          <Grid item xs={12} md={7} lg={8} className="lobby-page__info">
+            <EditableTitle title={title} onSave={handleSave} editButtonDisplay={user?.role === 'scram-master'} />
+            <StartGame />
+            <MembersList />
+            {user?.role === 'scram-master' && (
+              <>
+                <IssueList />
+                <GameSettings />
+              </>
+            )}
+          </Grid>
+          {isOpen && (
+            <Grid item xs={12} md={5} lg={4}>
+              <Chat />
+            </Grid>
           )}
         </Grid>
-        {isOpen && (
-          <Grid item xs={12} md={5} lg={4}>
-            <Chat />
-          </Grid>
-        )}
-      </Grid>
-      <KickUserModal />
-    </Container>
+        <KickUserModal />
+      </Container>
+    </main>
   );
 };

@@ -17,7 +17,7 @@ export function Home(): JSX.Element {
   }, [setSocket]);
 
   return (
-    <main className="page page-home">
+    <main className="page page-home app__main">
       <Container>
         <div className="page__wrapper page-home__wrapper">
           <div className="page-home__title-wrapper">

@@ -18,7 +18,7 @@ export const GameCard = (props: GameCardType): JSX.Element => {
     if (location.pathname === '/lobby') {
       ref.current?.focus();
     }
-  }, []);
+  }, [location.pathname]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value);

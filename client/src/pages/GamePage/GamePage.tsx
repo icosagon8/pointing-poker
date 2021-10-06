@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { useHistory } from 'react-router-dom';
 import './GamePage.scss';
 import { useState, useContext, useEffect } from 'react';
@@ -40,7 +41,6 @@ export function GamePage(): JSX.Element {
   const [timerIsOver, setTimerIsOver] = useState<boolean>(false);
   const settings = useAppSelector((state) => state.settings.settings);
   const [currentId, setCurrentId] = useState<string>('');
-  const gameStatus = useAppSelector((state) => state.statusGame.statusGame) === 'end-game';
   const results = useAppSelector((state) => state.statistic.statistics);
   const history = useHistory();
   const chatOpen = useAppSelector((state) => state.chat.isOpen);
@@ -53,7 +53,7 @@ export function GamePage(): JSX.Element {
     };
   });
   const xlsxData: unknown[] = [];
-  if (gameStatus) {
+  if (gameStatus === 'end-game') {
     issues.forEach((issue) => {
       const result = results.find((res) => res.issueId === issue.id)?.results;
       cards?.forEach((card) => {
@@ -135,109 +135,113 @@ export function GamePage(): JSX.Element {
   };
 
   return (
-    <Container className="page-game">
-      {gameStatus !== 'end-game' ? (
-        <Grid container>
-          <Grid className="page-game__main" item xs={12} md={7} lg={8}>
-            <Title title={title} />
-            <Grid className="page-game__start" container alignItems="flex-end" justifyContent="space-between">
-              <MemberCard
-                name={scramMaster?.firstname}
-                lastname={scramMaster?.lastname}
-                src={scramMaster?.avatar}
-                position={scramMaster?.position}
-                kickButtonDisplay={false}
-              />
-              {settings?.timerIsNeeded && (
-                <Timer start={play} timerIsOverHandler={timerIsOverHandler} location={location} />
-              )}
-              {user?.role === 'scram-master' && play ? (
-                <Button
-                  className="btn btn--small btn--cancel"
-                  variant="outlined"
-                  onClick={() => {
-                    socket?.emit('stopTimer', room);
-                  }}
-                >
-                  Stop Game
-                </Button>
-              ) : (
-                <Button
-                  className="btn btn--small btn--cancel"
-                  variant="outlined"
-                  onClick={() => {
-                    if (user?.role === 'scram-master') {
-                      dispatch(endGame());
-                    } else {
-                      socket?.emit('exitUser', room);
-                    }
-                  }}
-                >
-                  {user?.role === 'scram-master' ? 'Stop Game' : 'Exit'}
-                </Button>
-              )}
+    <main className="page page-home app__main">
+      <Container className="page-game">
+        {gameStatus !== 'end-game' ? (
+          <Grid container>
+            <Grid className="page-game__main" item xs={12} md={7} lg={8}>
+              <Title title={title} />
+              <Grid className="page-game__start" container alignItems="flex-end" justifyContent="space-between">
+                <MemberCard
+                  name={scramMaster?.firstname}
+                  lastname={scramMaster?.lastname}
+                  src={scramMaster?.avatar}
+                  position={scramMaster?.position}
+                  kickButtonDisplay={false}
+                />
+                {settings?.timerIsNeeded && (
+                  <Timer start={play} timerIsOverHandler={timerIsOverHandler} location={location} />
+                )}
+                {user?.role === 'scram-master' && play ? (
+                  <Button
+                    className="btn btn--small btn--cancel"
+                    variant="outlined"
+                    onClick={() => {
+                      socket?.emit('stopTimer', room);
+                    }}
+                  >
+                    Stop Game
+                  </Button>
+                ) : (
+                  <Button
+                    className="btn btn--small btn--cancel"
+                    variant="outlined"
+                    onClick={() => {
+                      if (user?.role === 'scram-master') {
+                        dispatch(endGame());
+                      } else {
+                        socket?.emit('exitUser', room);
+                      }
+                    }}
+                  >
+                    {user?.role === 'scram-master' ? 'Stop Game' : 'Exit'}
+                  </Button>
+                )}
+              </Grid>
+              {user?.role === 'scram-master' && !play ? (
+                <div className="page-game__btn-container">
+                  <Button
+                    className="btn btn--small"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      socket?.emit('startTimer', room);
+                    }}
+                  >
+                    Run Round
+                  </Button>
+                  <Button className="btn btn--small" variant="contained" color="primary" onClick={handleClickNextIssue}>
+                    Next ISSUE
+                  </Button>
+                </div>
+              ) : null}
+              <IssueList />
+              {gameStatus === 'round-in-progress' &&
+                (user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) &&
+                cards && (
+                  <div className="page-game__cards">
+                    <p className="page-game__cards-title">
+                      Currently voting on issue {currentIssue?.title} is in progress. Choose a card below
+                    </p>
+                    <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
+                  </div>
+                )}
             </Grid>
-            {user?.role === 'scram-master' && !play ? (
-              <div className="page-game__btn-container">
-                <Button
-                  className="btn btn--small"
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    socket?.emit('startTimer', room);
-                  }}
-                >
-                  Run Round
-                </Button>
-                <Button className="btn btn--small" variant="contained" color="primary" onClick={handleClickNextIssue}>
-                  Next ISSUE
-                </Button>
+            <Grid item xs={12} md={5} lg={4} className="page-game__aside">
+              <MemberCardList />
+              <Statistics />
+            </Grid>
+          </Grid>
+        ) : (
+          <Grid container className="page-result">
+            <Title title={title} />
+            <div className="page-result__wrapper">
+              <div className="page-result">
+                {results.map((res) => (
+                  <div className="page-result__block" key={res.issueId}>
+                    <Issue
+                      roomId="r1"
+                      key={res.issueId}
+                      id={res.issueId}
+                      title={issues.find((issue) => issue.id === res.issueId)?.title as string}
+                      priority={issues.find((issue) => issue.id === res.issueId)?.priority as PriorityEnum}
+                      current={issues.find((issue) => issue.id === res.issueId)?.current as boolean}
+                      link={issues.find((issue) => issue.id === res.issueId)?.link as string}
+                      description={issues.find((issue) => issue.id === res.issueId)?.description as string}
+                      isResult
+                    />
+                    <Statistics issueId={res.issueId} />
+                  </div>
+                ))}
               </div>
-            ) : null}
-            <IssueList />
-            {gameStatus === 'round-in-progress' &&
-              (user?.role === 'player' || (user?.role === 'scram-master' && settings?.masterAsPlayer)) &&
-              cards && (
-                <div className="page-game__cards">
-                  <p className="page-game__cards-title">
-                    Currently voting on issue {currentIssue.title} is in progress. Choose a card below
-                  </p>
-                  <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
-                </div>
-              )}
-          </Grid>
-          <Grid item xs={12} md={5} lg={4} className="page-game__aside">
-            <MemberCardList />
-            <Statistics />
-          </Grid>
-        </Grid>
-      ) : (
-        <Grid container className="page-result">
-          <Title title={title} />
-          <div className="page-result__wrapper">
-            <div className="page-result">
-              {results.map((res) => (
-                <div className="page-result__block" key={res.issueId}>
-                  <Issue
-                    roomId="r1"
-                    key={res.issueId}
-                    id={res.issueId}
-                    title={issues.find((issue) => issue.id === res.issueId)?.title as string}
-                    priority={issues.find((issue) => issue.id === res.issueId)?.priority as PriorityEnum}
-                    current={issues.find((issue) => issue.id === res.issueId)?.current as boolean}
-                    isResult
-                  />
-                  <Statistics issueId={res.issueId} />
-                </div>
-              ))}
+              <ExportXLSX fileName="game_results" xlsxData={xlsxData} />
             </div>
-            <ExportXLSX fileName="game_results" xlsxData={xlsxData} />
-          </div>
-        </Grid>
-      )}
+          </Grid>
+        )}
 
-      <AcceptUserModal />
-      <KickUserModal />
-    </Container>
+        <AcceptUserModal />
+        <KickUserModal />
+      </Container>
+    </main>
   );
 }
