@@ -13,6 +13,7 @@ import {
   setCurrentIssueClick,
   nextIssue,
   deleteIssuesInRoom,
+  setScoreIssue,
 } from './issues';
 import { sendSettings, getSettings, getSettingsAdmitUser } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
@@ -142,6 +143,11 @@ io.on('connection', (socket: Socket) => {
   socket.on('nextIssue', (room) => {
     nextIssue(room);
     io.in(room).emit('issues', getIssues(room));
+  });
+
+  socket.on('setScoreIssue', (id, score, room) => {
+    setScoreIssue(id, score);
+    io.in(room).emit('scoreIssue', score);
   });
 
   socket.on('disconnect', () => {
