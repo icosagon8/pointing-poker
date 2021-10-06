@@ -52,14 +52,19 @@
 }
 
 .page-result {
-  width: 50%;
   margin-top: 20px;
-  margin-bottom: 20px;
-  margin-left: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
+
+  &__wrapper {
+    width: 50%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
 
   &__block {
     width: 100%;
