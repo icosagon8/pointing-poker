@@ -78,6 +78,12 @@
     justify-content: space-between;
     gap: 20px;
   }
+
+  &__text-absence {
+    font-size: 28px;
+    text-align: center;
+    font-family: 'Ruda';
+  }
 }
 
 @media (max-width: 959px) {

@@ -28,7 +28,7 @@ import { sendSettings, getSettings, getSettingsAdmitUser } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
 import { addGameVote, getGameVotes } from './gameVote';
-import { getStat } from './statistic';
+import { getStat, deleteStat } from './statistic';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -147,7 +147,9 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('deleteIssue', (id, room) => {
     deleteIssue(id, room);
+    deleteStat(id);
     io.in(room).emit('issues', getIssues(room));
+    io.in(room).emit('getStatistic', getStat(room));
   });
 
   socket.on('setCurrentIssue', (id, room) => {
