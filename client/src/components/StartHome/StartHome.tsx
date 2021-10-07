@@ -92,7 +92,7 @@ export function StartHome(): JSX.Element {
             {...register('url', {
               required: 'This input is required.',
               pattern: {
-                value: /https?:\/\/(www\.)?[-a-z\d@:%._+~#=]{1,256}[.:][a-z\d()]{1,6}\b([-a-z\d()@:%_+.~#?&//=]*)/i,
+                value: /https:\/\/clever-kirch-c3b9cb.netlify.app\b([-a-z\d()@:%_+.~#?&//=]*)/i,
                 message: 'This input must match the pattern.',
               },
             })}
