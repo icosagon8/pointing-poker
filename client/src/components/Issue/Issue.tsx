@@ -26,7 +26,7 @@ export const Issue = (props: IssueModel): JSX.Element => {
   const issueCurrent = issues.find((item) => item.id === id) as IssueModel;
 
   const handleClickCard = () => {
-    if (user?.role === 'scram-master' && location.pathname === '/game') {
+    if (user?.role === 'scram-master' && location.pathname === '/game' && !open) {
       socket?.emit('setCurrentIssue', id, roomId);
     }
   };
@@ -40,7 +40,8 @@ export const Issue = (props: IssueModel): JSX.Element => {
     e.stopPropagation();
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     setOpen(true);
   };
 
