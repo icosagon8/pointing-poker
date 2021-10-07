@@ -18,6 +18,7 @@ export function MemberCardList(): JSX.Element {
   const players = users.filter(
     (currentUser) => currentUser.role === 'player' || (settings?.masterAsPlayer && currentUser.role === 'scram-master')
   );
+  const members = users.filter((currentUser) => currentUser.role !== 'scram-master');
 
   return (
     <div className="member-list">
@@ -46,7 +47,7 @@ export function MemberCardList(): JSX.Element {
               position={member.position}
               src={member.avatar}
               role={member.role}
-              kickButtonDisplay={checkUser(socket, member, players, isVoting)}
+              kickButtonDisplay={checkUser(socket, member, members, isVoting)}
               onKick={() => {
                 kickMember(socket, member, user);
               }}
