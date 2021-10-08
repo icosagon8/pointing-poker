@@ -61,11 +61,13 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
       setValue('link', issueEdit.link);
       setValue('priority', issueEdit.priority);
       setValue('description', issueEdit.description);
+      setValue('score', issueEdit.score);
     } else {
       setValue('title', '');
       setValue('link', '');
       setValue('priority', PriorityEnum.low);
       setValue('description', '');
+      setValue('score', '');
     }
 
     onClose();

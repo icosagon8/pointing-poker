@@ -76,7 +76,7 @@ export const Issue = (props: IssueModel): JSX.Element => {
       )}
       <div className="issue__main">
         <h3 className="issue__title">{title}</h3>
-        {user?.role === 'scram-master' && status !== 'end-game' && (
+        {user?.role === 'scram-master' && status !== 'end-game' && (status !== 'round-in-progress' || !current) && (
           <div className="issue__btn-container">
             <IconButton className="issue__edit-btn" onClick={handleClickOpen} size="small">
               <EditIcon />
