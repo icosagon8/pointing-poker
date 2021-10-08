@@ -26,7 +26,7 @@ import {
 import { sendSettings, getSettings, getSettingsAdmitUser } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
-import { addGameVote, getGameVotes } from './gameVote';
+import { addGameVote, deleteRoundVotingUsers, getGameVotes, addRoundVotingUsers } from './gameVote';
 import { getStat, deleteStat } from './statistic';
 
 const PORT = process.env.PORT || 8080;
@@ -122,6 +122,7 @@ io.on('connection', (socket: Socket) => {
     if (addGameVote(vote)) {
       io.in(vote.roomId).emit('getGameVote', getGameVotes(vote.roomId));
       io.in(vote.roomId).emit('getStatistic', getStat(vote.roomId));
+      deleteRoundVotingUsers(vote.roomId);
     }
   });
 
@@ -165,7 +166,8 @@ io.on('connection', (socket: Socket) => {
     deleteUser(socket.id);
   });
 
-  socket.on('startTimer', (room) => {
+  socket.on('startTimer', (room, usersCount) => {
+    addRoundVotingUsers({ room, count: usersCount });
     io.in(room).emit('startTimerUsers');
   });
 

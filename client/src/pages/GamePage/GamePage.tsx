@@ -197,7 +197,7 @@ export function GamePage(): JSX.Element {
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                      socket?.emit('startTimer', room);
+                      socket?.emit('startTimer', room, users.length);
                     }}
                   >
                     Run Round
