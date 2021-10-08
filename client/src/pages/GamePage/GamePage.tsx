@@ -98,7 +98,7 @@ export function GamePage(): JSX.Element {
 
     socket?.on('stopTimerUsers', () => {
       setPlay(false);
-      setTimerIsOver(false);
+      setTimerIsOver(true);
       setCurrentId('');
     });
 
@@ -171,7 +171,7 @@ export function GamePage(): JSX.Element {
                       socket?.emit('stopTimer', room);
                     }}
                   >
-                    Stop Game
+                    Stop Round
                   </Button>
                 ) : (
                   <Button
