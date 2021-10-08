@@ -244,6 +244,7 @@ export function GamePage(): JSX.Element {
                           current={issue.current}
                           link={issue.link}
                           description={issue.description}
+                          score={issue.score}
                         />
                         <Statistics issueId={res.issueId} />
                       </div>

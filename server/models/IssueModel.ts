@@ -6,7 +6,7 @@ export interface IssueModel {
   roomId: string;
   current: boolean;
   description: string;
-  score?: string;
+  score: string;
 }
 
 enum PriorityEnum {

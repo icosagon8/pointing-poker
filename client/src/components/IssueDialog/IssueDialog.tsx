@@ -29,6 +29,7 @@ interface IFormInput {
   roomId: string;
   current: boolean;
   description: string;
+  score: string;
 }
 
 export const IssueDialog = (props: IissueDialog): JSX.Element => {
@@ -50,14 +51,23 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
       setValue('link', issueEdit.link);
       setValue('priority', issueEdit.priority);
       setValue('description', issueEdit.description);
+      setValue('score', issueEdit.score);
     }
   }, [setValue, issueEdit, edit]);
 
   const handleClose = () => {
-    setValue('title', '');
-    setValue('link', '');
-    setValue('priority', PriorityEnum.low);
-    setValue('description', '');
+    if (edit) {
+      setValue('title', issueEdit.title);
+      setValue('link', issueEdit.link);
+      setValue('priority', issueEdit.priority);
+      setValue('description', issueEdit.description);
+    } else {
+      setValue('title', '');
+      setValue('link', '');
+      setValue('priority', PriorityEnum.low);
+      setValue('description', '');
+    }
+
     onClose();
   };
 
@@ -68,6 +78,7 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
       data.id = nanoid();
       socket?.emit('saveIssue', { ...data, roomId: room, current: false });
     }
+
     handleClose();
   };
 
@@ -141,6 +152,27 @@ export const IssueDialog = (props: IissueDialog): JSX.Element => {
             </div>
             {errors.description?.type === 'maxLength' && (
               <p className="issue-dialog__form__error-text">{errors.description.types?.maxLength}</p>
+            )}
+          </div>
+          <div className="issue-dialog__form__block">
+            <div className="issue-dialog__form__input-wrapper">
+              <label htmlFor="score" className="issue-dialog__form__label">
+                Score:
+              </label>
+              <input
+                id="score"
+                className="issue-dialog__form__input"
+                autoComplete="off"
+                {...register('score', {
+                  pattern: {
+                    value: /^\d{1,3}$/i,
+                    message: 'This input must match the pattern.',
+                  },
+                })}
+              />
+            </div>
+            {errors.score?.type === 'pattern' && (
+              <p className="issue-dialog__form__error-text">{errors.score.types?.pattern}</p>
             )}
           </div>
           <div className="issue-dialog__form__block issue-dialog__form__priority">
