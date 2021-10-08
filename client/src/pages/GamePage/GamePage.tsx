@@ -30,6 +30,7 @@ import { IssueModel } from '../../models/issueModel';
 import { deleteUser } from '../../store/slices/userSlice';
 import { off } from '../../store/slices/chatSlice';
 import { ExportXLSX } from '../../components/ExportXLSX/ExportXLSX';
+import { Chat } from '../../components/Chat/Chat';
 
 export function GamePage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -220,8 +221,14 @@ export function GamePage(): JSX.Element {
                 )}
             </Grid>
             <Grid item xs={12} md={5} lg={4} className="page-game__aside">
-              <MemberCardList />
-              <Statistics />
+              {chatOpen ? (
+                <Chat />
+              ) : (
+                <>
+                  <MemberCardList />
+                  <Statistics />
+                </>
+              )}
             </Grid>
           </Grid>
         ) : (
