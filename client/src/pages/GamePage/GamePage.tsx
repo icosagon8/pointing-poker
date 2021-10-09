@@ -198,7 +198,12 @@ export function GamePage(): JSX.Element {
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                      socket?.emit('startTimer', room, users.length);
+                      const players = users.filter(
+                        (currentUser) =>
+                          currentUser.role === 'player' ||
+                          (settings?.masterAsPlayer && currentUser.role === 'scram-master')
+                      );
+                      socket?.emit('startTimer', room, players.length);
                     }}
                   >
                     Run Round
