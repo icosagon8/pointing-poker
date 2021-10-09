@@ -217,7 +217,8 @@ export function GamePage(): JSX.Element {
                 cards && (
                   <div className="page-game__cards">
                     <p className="page-game__cards-title">
-                      Currently voting on issue {currentIssue?.title} is in progress. Choose a card below
+                      Currently voting on issue <span className="page-game__cards-issue">{currentIssue?.title}</span> is
+                      in progress. Choose a card below
                     </p>
                     <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
                   </div>
