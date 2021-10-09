@@ -24,7 +24,6 @@ import { UserModel } from '../../models/userModel';
 import { addVote } from '../../store/slices/gameVoteSlice';
 import { addStatistic } from '../../store/slices/statisticSlice';
 import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
-import { DELAY_WITHOUT_TIMER } from '../../helpers/constants';
 import { Issue } from '../../components/Issue/Issue';
 import { IssueModel } from '../../models/issueModel';
 import { deleteUser } from '../../store/slices/userSlice';
@@ -109,7 +108,6 @@ export function GamePage(): JSX.Element {
 
     socket?.on('startTimerUsers', () => {
       setPlay(true);
-      if (!settings?.timerIsNeeded) setTimeout(() => setTimerIsOver(true), DELAY_WITHOUT_TIMER);
       setTimerIsOver(false);
       dispatch(roundInProgress());
     });
