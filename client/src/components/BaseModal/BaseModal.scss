@@ -1,0 +1,22 @@
+.modal {
+  width: 85%;
+  max-width: 876px;
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: #ffffff;
+}
+
+.modal-overlay {
+  overflow: scroll;
+}
+
+@media (max-height: 748px) {
+  .modal {
+    top: 0;
+    transform: translate(-50%, 0);
+  }
+}

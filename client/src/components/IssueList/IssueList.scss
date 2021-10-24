@@ -1,0 +1,18 @@
+.issue-list {
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  &__block {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 620px) {
+  .issue-list {
+    &__block {
+      justify-content: center;
+    }
+  }
+}

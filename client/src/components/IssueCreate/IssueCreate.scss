@@ -1,0 +1,14 @@
+.issue-create {
+  width: 250px;
+  min-height: 59px;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  font-family: 'Roboto';
+
+  &__title {
+    margin: 0;
+    font-weight: 300;
+  }
+}

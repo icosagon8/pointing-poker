@@ -1,0 +1,29 @@
+.kick-user-modal {
+  font-family: 'Ruda';
+
+  &__title {
+    font-weight: bold;
+    font-size: 64px;
+    line-height: 75px;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  &__text {
+    font-size: 36px;
+    line-height: 42px;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 180px;
+  }
+
+  &__username {
+    color: #66999b;
+  }
+
+  &__btn-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+}

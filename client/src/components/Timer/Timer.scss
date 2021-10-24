@@ -1,0 +1,41 @@
+.timer {
+  font-family: 'Ruda';
+  width: 120px;
+  padding: 5px;
+  overflow: visible;
+
+  &__titles {
+    display: flex;
+    justify-content: space-around;
+    font-size: 10px;
+    font-weight: 100;
+  }
+
+  &__edit {
+    height: 38px;
+    display: flex;
+    font-size: 42px;
+    line-height: 1;
+  }
+
+  &__edit-dots {
+    margin-top: -2px;
+  }
+
+  &__edit-input {
+    padding: 0;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: inset 1px 3px 5px 1px rgba(238, 238, 238, 1);
+    outline: none;
+    line-height: 1;
+  }
+
+  &__counter {
+    font-weight: 700;
+    font-size: 37px;
+    line-height: 1;
+    text-align: center;
+  }
+}
