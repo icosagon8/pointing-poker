@@ -50,14 +50,22 @@ export const LobbyPage = (): JSX.Element => {
   }, [dispatch]);
 
   useEffect(() => {
-    socket?.on('startVoting', () => {
+    const handleStartVoting = () => {
       dispatch(startVoting());
-    });
+    };
 
-    socket?.on('endVoting', () => {
+    const handleEndVoting = () => {
       dispatch(endVoting());
-    });
-  }, [socket, dispatch]);
+    };
+
+    socket?.on('startVoting', handleStartVoting);
+    socket?.on('endVoting', handleEndVoting);
+
+    return () => {
+      socket?.off('startVoting', handleStartVoting);
+      socket?.off('endVoting', handleEndVoting);
+    };
+  }, [dispatch, socket]);
 
   useEffect(() => {
     socket?.on('titleSent', (newTitle) => {

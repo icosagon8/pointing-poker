@@ -1,14 +1,16 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import './MemberCardList.scss';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { ScoreCard } from '../ScoreCard/ScoreCard';
 import { UserModel } from '../../models/userModel';
 import { SocketContext } from '../../socketContext';
-import { useAppSelector } from '../../store/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { checkUser, kickMember } from '../../helpers/utils';
+import { endVoting, startVoting } from '../../store/slices/votingSlice';
 
 export function MemberCardList(): JSX.Element {
   const { socket } = useContext(SocketContext);
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.user) as UserModel;
   const currentIssue = useAppSelector((state) => state.issues.issues.find((issue) => issue.current));
   const votes = useAppSelector((state) => state.gameVotes.votes);
@@ -18,6 +20,25 @@ export function MemberCardList(): JSX.Element {
   const players = users.filter(
     (currentUser) => currentUser.role === 'player' || (settings?.masterAsPlayer && currentUser.role === 'scram-master')
   );
+  const members = users.filter((currentUser) => currentUser.role !== 'scram-master');
+
+  useEffect(() => {
+    const handleStartVoting = () => {
+      dispatch(startVoting());
+    };
+
+    const handleEndVoting = () => {
+      dispatch(endVoting());
+    };
+
+    socket?.on('startVoting', handleStartVoting);
+    socket?.on('endVoting', handleEndVoting);
+
+    return () => {
+      socket?.off('startVoting', handleStartVoting);
+      socket?.off('endVoting', handleEndVoting);
+    };
+  }, [dispatch, socket]);
 
   return (
     <div className="member-list">
@@ -46,7 +67,7 @@ export function MemberCardList(): JSX.Element {
               position={member.position}
               src={member.avatar}
               role={member.role}
-              kickButtonDisplay={checkUser(socket, member, players, isVoting)}
+              kickButtonDisplay={checkUser(socket, member, members, isVoting)}
               onKick={() => {
                 kickMember(socket, member, user);
               }}

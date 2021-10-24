@@ -24,6 +24,7 @@ export const IssueList = (): JSX.Element => {
               current={item.current}
               roomId={item.roomId}
               description={item.description}
+              score={item.score}
             />
           );
         })}

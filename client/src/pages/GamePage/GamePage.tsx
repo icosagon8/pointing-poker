@@ -24,12 +24,12 @@ import { UserModel } from '../../models/userModel';
 import { addVote } from '../../store/slices/gameVoteSlice';
 import { addStatistic } from '../../store/slices/statisticSlice';
 import { KickUserModal } from '../../components/KickUserModal/KickUserModal';
-import { DELAY_WITHOUT_TIMER } from '../../helpers/constants';
 import { Issue } from '../../components/Issue/Issue';
-import { PriorityEnum, IssueModel } from '../../models/issueModel';
+import { IssueModel } from '../../models/issueModel';
 import { deleteUser } from '../../store/slices/userSlice';
 import { off } from '../../store/slices/chatSlice';
 import { ExportXLSX } from '../../components/ExportXLSX/ExportXLSX';
+import { Chat } from '../../components/Chat/Chat';
 
 export function GamePage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -98,7 +98,7 @@ export function GamePage(): JSX.Element {
 
     socket?.on('stopTimerUsers', () => {
       setPlay(false);
-      setTimerIsOver(false);
+      setTimerIsOver(true);
       setCurrentId('');
     });
 
@@ -108,7 +108,6 @@ export function GamePage(): JSX.Element {
 
     socket?.on('startTimerUsers', () => {
       setPlay(true);
-      if (!settings?.timerIsNeeded) setTimeout(() => setTimerIsOver(true), DELAY_WITHOUT_TIMER);
       setTimerIsOver(false);
       dispatch(roundInProgress());
     });
@@ -171,7 +170,7 @@ export function GamePage(): JSX.Element {
                       socket?.emit('stopTimer', room);
                     }}
                   >
-                    Stop Game
+                    Stop Round
                   </Button>
                 ) : (
                   <Button
@@ -197,7 +196,12 @@ export function GamePage(): JSX.Element {
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                      socket?.emit('startTimer', room);
+                      const players = users.filter(
+                        (currentUser) =>
+                          currentUser.role === 'player' ||
+                          (settings?.masterAsPlayer && currentUser.role === 'scram-master')
+                      );
+                      socket?.emit('startTimer', room, players.length);
                     }}
                   >
                     Run Round
@@ -213,43 +217,58 @@ export function GamePage(): JSX.Element {
                 cards && (
                   <div className="page-game__cards">
                     <p className="page-game__cards-title">
-                      Currently voting on issue {currentIssue?.title} is in progress. Choose a card below
+                      Currently voting on issue <span className="page-game__cards-issue">{currentIssue?.title}</span> is
+                      in progress. Choose a card below
                     </p>
                     <CardList gameCards={cards} currentId={currentId} setCurrentId={setCurrentId} />
                   </div>
                 )}
             </Grid>
             <Grid item xs={12} md={5} lg={4} className="page-game__aside">
-              <MemberCardList />
-              <Statistics />
+              {chatOpen ? (
+                <Chat />
+              ) : (
+                <>
+                  <MemberCardList />
+                  <Statistics />
+                </>
+              )}
             </Grid>
           </Grid>
         ) : (
           <Grid container className="page-result">
             <Title title={title} />
-            <div className="page-result__wrapper">
-              <div className="page-result__results">
-                {results.map((res) => (
-                  <div className="page-result__block" key={res.issueId}>
-                    <Issue
-                      roomId={room}
-                      key={res.issueId}
-                      id={res.issueId}
-                      title={issues.find((issue) => issue.id === res.issueId)?.title as string}
-                      priority={issues.find((issue) => issue.id === res.issueId)?.priority as PriorityEnum}
-                      current={issues.find((issue) => issue.id === res.issueId)?.current as boolean}
-                      link={issues.find((issue) => issue.id === res.issueId)?.link as string}
-                      description={issues.find((issue) => issue.id === res.issueId)?.description as string}
-                    />
-                    <Statistics issueId={res.issueId} />
-                  </div>
-                ))}
+            {results.length ? (
+              <div className="page-result__wrapper">
+                <div className="page-result__results">
+                  {results.map((res) => {
+                    const issue = issues.find((item) => item.id === res.issueId) as IssueModel;
+
+                    return (
+                      <div className="page-result__block" key={res.issueId}>
+                        <Issue
+                          roomId={room}
+                          key={res.issueId}
+                          id={res.issueId}
+                          title={issue.title}
+                          priority={issue.priority}
+                          current={issue.current}
+                          link={issue.link}
+                          description={issue.description}
+                          score={issue.score}
+                        />
+                        <Statistics issueId={res.issueId} />
+                      </div>
+                    );
+                  })}
+                </div>
+                <ExportXLSX fileName="game_results" xlsxData={xlsxData} />
               </div>
-              <ExportXLSX fileName="game_results" xlsxData={xlsxData} />
-            </div>
+            ) : (
+              <p className="page-result__text-absence">You have not solved a single issue</p>
+            )}
           </Grid>
         )}
-
         <AcceptUserModal />
         <KickUserModal />
       </Container>

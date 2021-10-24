@@ -3,7 +3,7 @@ import IconButton from '@material-ui/core/IconButton';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface Props {
   title: string;
@@ -16,6 +16,11 @@ export const EditableTitle = (props: Props): JSX.Element => {
   const editButtonDisplay = propsEditButtonDisplay === undefined ? true : propsEditButtonDisplay;
   const [editing, setEditing] = useState<boolean>(false);
   const [value, setValue] = useState<string>(title);
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, [editing]);
 
   const handleEdit = () => {
     setEditing(true);
@@ -39,7 +44,7 @@ export const EditableTitle = (props: Props): JSX.Element => {
     <div className="editable-title">
       {editing ? (
         <>
-          <input className="editable-title__field" type="text" value={value} onChange={handleChange} />
+          <input className="editable-title__field" type="text" value={value} onChange={handleChange} ref={ref} />
           <div className="editable-title__btn-container">
             <IconButton className="editable-title__confirm-btn" size="small" onClick={handleConfirm}>
               <CheckIcon />

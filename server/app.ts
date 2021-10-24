@@ -22,13 +22,12 @@ import {
   setCurrentIssueClick,
   nextIssue,
   deleteIssuesInRoom,
-  setScoreIssue,
 } from './issues';
 import { sendSettings, getSettings, getSettingsAdmitUser } from './settings';
 import { addVote, deleteVotes, getResult, getVotes } from './votes';
 import { addTitle, checkTitle, editTitle, getTitle } from './title';
-import { addGameVote, getGameVotes } from './gameVote';
-import { getStat } from './statistic';
+import { addGameVote, deleteRoundVotingUsers, getGameVotes, addRoundVotingUsers } from './gameVote';
+import { getStat, deleteStat } from './statistic';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -123,6 +122,7 @@ io.on('connection', (socket: Socket) => {
     if (addGameVote(vote)) {
       io.in(vote.roomId).emit('getGameVote', getGameVotes(vote.roomId));
       io.in(vote.roomId).emit('getStatistic', getStat(vote.roomId));
+      deleteRoundVotingUsers(vote.roomId);
     }
   });
 
@@ -147,7 +147,9 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('deleteIssue', (id, room) => {
     deleteIssue(id, room);
+    deleteStat(id);
     io.in(room).emit('issues', getIssues(room));
+    io.in(room).emit('getStatistic', getStat(room));
   });
 
   socket.on('setCurrentIssue', (id, room) => {
@@ -160,16 +162,12 @@ io.on('connection', (socket: Socket) => {
     io.in(room).emit('issues', getIssues(room));
   });
 
-  socket.on('setScoreIssue', (id, score, room) => {
-    setScoreIssue(id, score);
-    io.in(room).emit('issues', getIssues(room));
-  });
-
   socket.on('disconnect', () => {
     deleteUser(socket.id);
   });
 
-  socket.on('startTimer', (room) => {
+  socket.on('startTimer', (room, usersCount) => {
+    addRoundVotingUsers({ room, count: usersCount });
     io.in(room).emit('startTimerUsers');
   });
 

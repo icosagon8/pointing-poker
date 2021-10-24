@@ -6,8 +6,9 @@ import { SocketContext } from '../../socketContext';
 import { MemberCard } from '../MemberCard/MemberCard';
 import { Message } from '../../models/Message';
 import { UserModel } from '../../models/userModel';
-import { useAppSelector } from '../../store/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/hooks';
 import { checkUser, kickMember } from '../../helpers/utils';
+import { off } from '../../store/slices/chatSlice';
 
 export function Chat(): JSX.Element {
   const user = useAppSelector((state) => state.user.user) as UserModel;
@@ -18,6 +19,7 @@ export function Chat(): JSX.Element {
   const users = useAppSelector((state) => state.users.users);
   const members = users.filter((member) => member.role !== 'scram-master');
   const isVoting = useAppSelector((state) => state.voting.isVoting);
+  const dispatch = useAppDispatch();
 
   const handleMessages = (chatMessage: Message) => {
     setMessages((chatMessages) => [...chatMessages, chatMessage]);
@@ -28,8 +30,9 @@ export function Chat(): JSX.Element {
 
     return () => {
       socket?.off('message', handleMessages);
+      dispatch(off());
     };
-  }, [socket]);
+  }, [dispatch, socket]);
 
   const scrollToBottom = () => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

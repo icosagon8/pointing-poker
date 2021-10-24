@@ -10,7 +10,6 @@ import { SocketContext } from '../../socketContext';
 import { useAppSelector } from '../../store/hooks/hooks';
 
 export const Issue = (props: IssueModel): JSX.Element => {
-  const [valueScore, setValueScore] = useState<string>('-');
   const { title, link, priority, id, current, roomId, description } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const openPopper = Boolean(anchorEl);
@@ -19,14 +18,13 @@ export const Issue = (props: IssueModel): JSX.Element => {
   const location = useLocation();
   const { socket } = useContext(SocketContext);
   const user = useAppSelector((state) => state.user.user);
-  const room = useAppSelector((state) => state.room.room);
   const scoreTypeShort = useAppSelector((state) => state.settings.settings?.scoreTypeShort);
   const status = useAppSelector((state) => state.statusGame.statusGame);
   const issues = useAppSelector((state) => state.issues.issues);
   const issueCurrent = issues.find((item) => item.id === id) as IssueModel;
 
   const handleClickCard = () => {
-    if (user?.role === 'scram-master' && location.pathname === '/game') {
+    if (user?.role === 'scram-master' && location.pathname === '/game' && !open) {
       socket?.emit('setCurrentIssue', id, roomId);
     }
   };
@@ -40,21 +38,13 @@ export const Issue = (props: IssueModel): JSX.Element => {
     e.stopPropagation();
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleChangeScore = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValueScore(e.target.value);
-    socket?.emit('setScoreIssue', id, e.target.value, room);
-  };
-
-  const handleClickScore = (e: React.MouseEvent<HTMLInputElement>) => {
-    e.stopPropagation();
   };
 
   const handlehoverPopperOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -67,57 +57,45 @@ export const Issue = (props: IssueModel): JSX.Element => {
 
   return (
     <Card
-      className={current && status !== 'end-game' && location.pathname === '/game' ? 'issue active' : 'issue'}
+      className={current && status !== 'end-game' && location.pathname === '/game' ? 'issue issue--active' : 'issue'}
       onClick={handleClickCard}
       aria-describedby={idPopper}
       onMouseEnter={handlehoverPopperOpen}
       onMouseLeave={handlehoverPopperClose}
     >
-      <div className="issue__text">
-        {current && location.pathname === '/game' && status !== 'end-game' && (
-          <span className="issue__text-current">current</span>
-        )}
-        <h3 className="issue__text-title">{title}</h3>
-        <p className="issue__text-priority">{priority}</p>
-      </div>
-      <div className="issue__box-score">
-        {user?.role === 'scram-master' && status !== 'end-game' && (
-          <>
-            <IconButton className="issue__edit-btn" onClick={handleClickOpen}>
+      {location.pathname === '/game' && (
+        <div className="issue__header">
+          {current && status !== 'end-game' && <span className="issue__text-current">current</span>}
+          <p className="issue__score-text">
+            Score:&nbsp;
+            <span className="issue__score">
+              {issueCurrent.score !== '' ? `${issueCurrent.score} ${scoreTypeShort}` : '-'}
+            </span>
+          </p>
+        </div>
+      )}
+      <div className="issue__main">
+        <h3 className="issue__title">{title}</h3>
+        {user?.role === 'scram-master' && status !== 'end-game' && (status !== 'round-in-progress' || !current) && (
+          <div className="issue__btn-container">
+            <IconButton className="issue__edit-btn" onClick={handleClickOpen} size="small">
               <EditIcon />
             </IconButton>
-            <IconButton onClick={handleClickDelete}>
-              <DeleteOutlineIcon className="issue__delete-btn" />
+            <IconButton className="issue__delete-btn" onClick={handleClickDelete} size="small">
+              <DeleteOutlineIcon />
             </IconButton>
             <IssueDialog edit id={id} open={open} onClose={handleClose} />
-          </>
+          </div>
         )}
-        <div className="issue__score">
-          {user?.role === 'scram-master' && status !== 'end-game' ? (
-            <label className="issue__score-label" htmlFor="score">
-              Score:
-              <input
-                className="issue__score-input"
-                name="score"
-                type="text"
-                value={valueScore}
-                onChange={handleChangeScore}
-                onClick={handleClickScore}
-              />
-            </label>
-          ) : (
-            <p className="issue__score-text">
-              <span className="issue__score-title">Score:</span>
-              {issueCurrent.score !== undefined ? `${issueCurrent.score} ${scoreTypeShort}` : '-'}
-            </p>
-          )}
-        </div>
       </div>
-      {link && (
-        <a className="issue__link" href={link} target="_blank" rel="noreferrer" onClick={handleClickLink}>
-          link on issue {`>`}
-        </a>
-      )}
+      <div className="issue__footer">
+        <span className="issue__text-priority">{priority}</span>
+        {link && (
+          <a className="issue__link" href={link} target="_blank" rel="noreferrer" onClick={handleClickLink}>
+            link on issue {`>`}
+          </a>
+        )}
+      </div>
       {description && (
         <Popper id={idPopper} open={openPopper} anchorEl={anchorEl} placement="top-start">
           <div className="issue__popper-text">{description}</div>
